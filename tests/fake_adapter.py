@@ -21,6 +21,7 @@ class FakeAdapter:
             "ATZ": "ELM327 v1.5\r>",
             "ATE0": "OK\r>", "ATL0": "OK\r>", "ATH0": "OK\r>",
             "ATH1": "OK\r>", "ATSP0": "OK\r>",
+            "ATSH7E0": "OK\r>", "ATSH7E1": "OK\r>", "ATSH7DF": "OK\r>",
             "0100": "7E8 06 41 00 08 18 00 00\r7E9 06 41 00 00 18 00 00\r>",
             "010C": "7E8 04 41 0C 1A F8\r7E9 04 41 0C 0F A0\r>",
             "0105": "7E8 03 41 05 7B\r>",

@@ -17,6 +17,7 @@ from scanner_outo.config import PROJECT_ROOT
 from scanner_outo.ui.workers import Worker
 
 SCENARIOS = ("healthy", "rough_idle_p0301", "multiple_dtcs", "no_data", "connection_loss", "car")
+SCENARIO_NAMES = ("Motor saudável", "Ralenti irregular | P0301", "Múltiplas avarias", "ECU sem dados", "Perda de ligação", "Veículo original (car)")
 
 
 class SimulatorPanel(QWidget):
@@ -59,8 +60,9 @@ class SimulatorPanel(QWidget):
         layout = QVBoxLayout(self)
         form = QFormLayout()
         self.scenario = QComboBox()
-        self.scenario.addItems(SCENARIOS)
-        self.scenario.setCurrentText("rough_idle_p0301")
+        for name, identifier in zip(SCENARIO_NAMES, SCENARIOS):
+            self.scenario.addItem(name, identifier)
+        self.scenario.setCurrentIndex(self.scenario.findData("rough_idle_p0301"))
         self.port = QSpinBox()
         self.port.setRange(1, 65535)
         self.port.setValue(35000)
@@ -88,6 +90,9 @@ class SimulatorPanel(QWidget):
         self.resolve_button = button("Resolver causa", lambda: self.request("resolve"), icons.SP_DialogApplyButton)
         self.reset_button = button("Repor cenário", lambda: self.before_change.emit("reset"), icons.SP_BrowserReload)
         self.status_button = button("Actualizar estado", lambda: self.request("status"), icons.SP_BrowserReload)
+        self.start_button.setToolTip("Iniciar simulador não liga automaticamente o scanner.")
+        self.cycle_button.setToolTip("Novo ciclo exige nova consulta OBD para actualizar a tabela de avarias.")
+        self.resolve_button.setToolTip("Resolver causa não elimina os códigos já guardados.")
         layout.addLayout(row)
         self.process_status = QLabel("Parado; nenhum processo gerido")
         self.process_status.setWordWrap(True)
@@ -112,7 +117,7 @@ class SimulatorPanel(QWidget):
         self.reset_button.setEnabled(controls)
         self.status_button.setEnabled(controls)
         for button in (self.cycle_button, self.resolve_button):
-            button.setEnabled(controls and self.scenario.currentText() not in ("car", "no_data"))
+            button.setEnabled(controls and self.scenario.currentData() not in ("car", "no_data"))
 
     def start(self):
         if self.owned or self.busy:
@@ -145,7 +150,7 @@ class SimulatorPanel(QWidget):
         self.process.setWorkingDirectory(str(PROJECT_ROOT))
         self.process.setProgram(str(interpreter))
         self.process.setArguments(["-X", "utf8", "-u", str(PROJECT_ROOT / "scripts/run_fault_emulator.py"),
-                                   "--scenario", self.scenario.currentText(), "--port", str(self.port.value()),
+                                   "--scenario", self.scenario.currentData(), "--port", str(self.port.value()),
                                    "--loss-after-requests", str(self.loss_count.value())])
         self.process_status.setText(f"A iniciar processo gerido em 127.0.0.1:{self.port.value()}…")
         self.process.start()
@@ -169,7 +174,7 @@ class SimulatorPanel(QWidget):
             try:
                 info = json.loads(line[8:])
                 port = info["port"]
-                if type(port) is not int or not 1 <= port <= 65535 or info["token"] != self.token or self.process.processId() not in (info["pid"], info.get("parent_pid")) or info["scenario"] != self.scenario.currentText():
+                if type(port) is not int or not 1 <= port <= 65535 or info["token"] != self.token or self.process.processId() not in (info["pid"], info.get("parent_pid")) or info["scenario"] != self.scenario.currentData():
                     raise ValueError()
             except (ValueError, KeyError, TypeError):
                 self.process_status.setText("Identificação do processo inválida.")
@@ -188,7 +193,8 @@ class SimulatorPanel(QWidget):
             self.ready = True
             if not self.stopping:
                 self.deadline.stop()
-            self.process_status.setText(f"Simulador gerido · PID {info['pid']} · 127.0.0.1:{self.port.value()} · controlo 127.0.0.1:{port}")
+            self.process_status.setText(f"Simulador em execução | {self.scenario.currentText()} | 127.0.0.1:{self.port.value()}")
+            self.process_status.setToolTip(f"PID {info['pid']} | Controlo local: 127.0.0.1:{port}")
             self.request("shutdown" if self.stopping else "status")
             self.changed.emit()
 

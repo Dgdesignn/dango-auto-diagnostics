@@ -75,7 +75,11 @@ O meio de transporte nao determina a origem: seleccione explicitamente `Veiculo 
 
 ## Dados e avarias
 
-A aplicacao consulta suporte pelo PID 0100 e apresenta RPM, temperatura do liquido de arrefecimento e velocidade, separados por ECU. Cada leitura mostra unidade, instante local e disponibilidade. Valores ausentes sao `--`; o ultimo valor valido pode permanecer com estado `Sem dados`, `Erro de resposta` ou `Desactualizado`. Zero so e apresentado quando recebido e descodificado como zero.
+A aplicação descobre suporte por ECU em `0100`, `0120` e `0140`, seguindo apenas os indicadores de continuação recebidos. Estão registados 12 parâmetros: carga, temperatura do líquido, correcções curta/longa do banco 1, MAP, RPM, velocidade, avanço, temperatura de admissão, MAF, borboleta e tensão do módulo. Num veículo real, consulta apenas o suporte anunciado. Cada leitura mostra unidade, instante, estado e motivo; `--` não é zero.
+
+Em **Dados > Parâmetros**, marque os PIDs a consultar; os três anteriores continuam seleccionados por defeito. **Leituras** mostra a tabela e **Gráfico** permite escolher um dos parâmetros seleccionados, com um eixo de unidade própria e linhas separadas por ECU. São conservadas no máximo 300 amostras por PID/ECU; falhas são lacunas. Parar conserva as amostras, e nova ligação/reposição começa novas séries. **Guardar sessão** continua a guardar uma fotografia, sem séries. Os gráficos usam `PySide6.QtCharts`, incluído na dependência PySide6 existente, sem instalação adicional.
+
+**Consultar avarias** também consulta `0101`; **Consultar MIL e monitores** consulta-o separadamente. A aba Avarias apresenta MIL, contagem anunciada, tipo de ignição e apenas os monitores suportados, por ECU e instante. MIL apagada não significa consulta indisponível, nem garante ausência de pendentes. A leitura é sempre OBD, não estado interno do painel do simulador.
 
 Em `Avarias`, pode consultar os modos 03/07 e o freeze frame 0 do modo 02, quando houver respostas. A tabela de descricoes e pequena: para codigos fora da tabela e apresentada `Descricao nao disponivel`. Uma consulta falhada ou NO DATA nao significa que nao existam avarias. O cenario `car` validado devolveu respostas sem codigos confirmados/pendentes e `NO DATA` para freeze frame.
 
@@ -99,7 +103,9 @@ O modelo, limite diario e intervalo minimo tambem podem ser ajustados na interfa
 
 Apenas `Analisar com Gemini` envia dados. `Rever dados` mostra o retrato JSON. O pedido omite configuracao de ligacao, VIN e identificadores pessoais estruturados; remova informacao pessoal introduzida nos sintomas antes de enviar. Limites: 4000 caracteres de sintomas, 24 KiB de entrada normal, 4096 tokens de saida e timeout HTTP de 20 segundos, sem repeticao automatica.
 
-A resposta distingue factos, hipoteses, evidencias, informacao em falta e proximos testes. Nao controla componentes nem pode limpar codigos. Resultados equivalentes usam cache SQLite. As tentativas falhadas tambem contam para o limite local; o dia e contado em UTC e o intervalo persiste entre arranques. Esses limites nao garantem um tecto financeiro da conta Google. Tokens sao mostrados quando informados pela API; a cache mostra a contagem da chamada original.
+A resposta distingue factos, hipóteses, evidências, informação em falta e próximos testes. Não controla componentes nem pode limpar códigos. O pedido identifica a captura, idade/validade das leituras, estado da ligação e avisos de falta de leituras recentes/consultas concluídas. A resposta regista o instante da análise. A interface conserva o resultado anterior e mostra **Dados alterados desde esta análise** quando a fotografia deixa de corresponder aos dados; só o botão faz uma nova análise.
+
+A cache v2 considera valores, estados, sintomas, MIL e faixas temporais (recente, até 1 minuto, até 5 minutos, mais de 5 minutos ou instante desconhecido). Segundos exactos não invalidam uma fotografia equivalente; a cache expira após 300 segundos. Mostra sempre captura e resposta originais, não um instante novo fictício. As tentativas falhadas também contam para o limite local; dia UTC e intervalo persistente. Estes limites não garantem um tecto financeiro da conta Google. Tokens em cache pertencem à chamada original. Política, referências e roteiro: [docs/EVOLUCAO_DIAGNOSTICO.md](docs/EVOLUCAO_DIAGNOSTICO.md).
 
 ### Validacao real Gemini
 
@@ -157,8 +163,8 @@ Esta fase nao inclui BLE, suporte universal a marcas, UDS completo, ISO-TP bruto
 ## Simulador com estados
 
 A nova área **Simulador local** permite iniciar/parar uma instância própria e
-seleccionar `healthy`, `rough_idle_p0301`, `multiple_dtcs`, `no_data`,
-`connection_loss` ou o `car` original. Mostra processo, portas e estado modelado;
+seleccionar Motor saudável, Ralenti irregular | P0301, Múltiplas avarias, ECU sem dados,
+Perda de ligação ou Veículo original (car), mantendo os IDs técnicos no launcher. Mostra estado e endereço; detalhes de processo ficam na ajuda do estado;
 inclui **Novo ciclo**, **Resolver causa** e **Repor cenário**. Os controlos só
 gerem a instância iniciada pela janela; um servidor externo nunca é terminado.
 

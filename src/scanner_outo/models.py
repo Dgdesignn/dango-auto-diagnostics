@@ -62,6 +62,7 @@ class Reading:
     timestamp: str | None = None
     detail: str = ""
     stale: bool = False
+    attempted_at: str | None = None
 
 
 @dataclass
@@ -80,6 +81,9 @@ class Session:
     adapter_status: str = "Desligado"
     ecu_status: str = "Não consultada"
     supported: dict[str, list[int]] = field(default_factory=dict)
+    support_queries: dict = field(default_factory=dict)
+    monitor_status: dict = field(default_factory=dict)
+    monitor_query: dict = field(default_factory=lambda: {"status": NOT_QUERIED})
     readings: list[Reading] = field(default_factory=list)
     codes: list[TroubleCode] = field(default_factory=list)
     code_queries: dict = field(default_factory=lambda: {kind: {"status": NOT_QUERIED} for kind in ("Confirmado", "Pendente")})

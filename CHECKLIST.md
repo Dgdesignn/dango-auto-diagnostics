@@ -134,3 +134,41 @@ Dados de sessoes dos testes ficam apenas em pastas temporarias; capturas em arti
 
 Comandos, roteiro e limites em `docs/SIMULADOR_ESTADOS.md`. Os resultados de
 seccoes anteriores sao historicos e nao substituem esta validacao.
+
+## Evolução: 12 PIDs, MIL, gráficos e fotografia IA
+
+- [x] Repositório inicialmente limpo em main; instruções e versão actual inspeccionadas.
+- [x] Registo extensível dos 12 PIDs com funções próprias, unidades e comprimentos exactos.
+- [x] Fórmulas e monitores conferidos nas fontes primárias python-OBD; endereçamento no manual ELM327.
+- [x] Descoberta 0100/0120/0140 por continuação de cada ECU, incluindo tensão no PID 42.
+- [x] Pedidos só para PIDs anunciados; endereçamento físico CAN para subconjuntos, com restauração funcional.
+- [x] Mapas incompletos não autorizam adivinhar suporte; payload inválido de uma ECU não invalida outra.
+- [x] Selecção de PIDs, incluindo todos/iniciais; worker sequencial sem acumular ciclos.
+- [x] Cenários saudável/P0301/múltiplas com 12 valores sintéticos; causa resolvida passa a saudável sem apagar códigos.
+- [x] Freeze frame de 12 parâmetros, vector independente das leituras ao vivo.
+- [x] MIL, contagem anunciada, motor e monitores suportados descodificados de 0101 pelo transporte OBD.
+- [x] MIL apagada, não consultado, indisponível e falha continuam distintos; nenhuma leitura do painel injectada no scanner.
+- [x] Gráficos QtCharts, hora local/unidade, série por ECU, lacunas e limite de 300 amostras por PID/ECU.
+- [x] Parar conserva pontos; nova ligação/reposição limpa séries; Guardar conserva fotografia, não séries.
+- [x] Captura/instante da resposta, idades, validade e avisos explícitos no pedido Gemini.
+- [x] Resultado anterior conservado e marcado após mudanças; sem chamadas automáticas.
+- [x] Cache v2 por estados/faixas temporais, TTL 300 s e apresentação do pedido/instante original.
+- [x] Origem consistente, limites, esquema estrito e credenciais externas preservados.
+- [x] Estados independentes do simulador, scanner e consultas; nomes portugueses e ajuda junto dos controlos.
+- [x] Sessões antigas sem campos novos guardadas/abertas/exportadas sem alteração; sem migração SQL.
+- [x] 12 testes novos aprovados em 26,315 s; TCP real do pacote 4.0.0, Gemini apenas simulado.
+- [x] Primeira regressão completa: 89 testes aprovados, sem ignorados, em 258,718 s.
+- [x] Execução final completa: 93 testes aprovados (81 existentes e 12 novos), sem falhas/ignorados, em 278,498 s, em 11/10/2026.
+- [x] Janela efectivamente aberta e operada em testes Qt, callbacks e contador de responsividade.
+- [x] Capturas finais 1120x740 e 860x600 inspeccionadas: dados/gráfico, avarias/MIL, IA e simulador.
+- [x] Ajuste do intervalo inicial do eixo temporal e tipografia compacta; horas e unidades legíveis.
+- [x] compileall, pip check e diff --check aprovados; nenhum ficheiro de site-packages alterado.
+- [x] Instâncias de teste próprias em portas livres; simulador do utilizador, .env, ambientes e base local preservados.
+- [x] Nenhum commit, push ou alteração de autoria nesta tarefa; HEAD mantém ab3ce82.
+- [ ] Hardware USB/SPP, Android, ECU real, múltiplas ECUs físicas e Gemini remoto: validação externa pendente.
+- [ ] Persistência de séries e modelo físico do motor: não implementados nesta evolução.
+
+Roteiro exacto, referências, política da cache e limites:
+[docs/EVOLUCAO_DIAGNOSTICO.md](docs/EVOLUCAO_DIAGNOSTICO.md).
+As contagens acima distinguem a primeira execução, os testes dedicados
+e a regressão final completa. Nenhuma chamada Gemini remota foi feita.

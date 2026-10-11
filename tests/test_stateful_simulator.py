@@ -248,14 +248,14 @@ class StatefulTcpTests(unittest.TestCase):
         self.assertEqual(state["confirmed"], ["P0301"])
 
     def test_connection_loss_marks_values_stale_and_reset_recovers(self):
-        simulator = self.simulator("connection_loss", loss=4)
+        simulator = self.simulator("connection_loss", loss=6)
         service = self.service(simulator)
         self.assertEqual(len([r for r in service.poll()["readings"] if r["value"] is not None]), 3)
         with self.assertRaises(TransportError):
             service.poll()
         snapshot = service.session.to_dict()
         self.assertEqual(snapshot["adapter_status"], "Desligado")
-        self.assertTrue(all(r["stale"] for r in snapshot["readings"]))
+        self.assertTrue(all(r["stale"] for r in snapshot["readings"] if r["value"] is not None))
         self.assertTrue(simulator.control("status")[1]["state"]["loss_latched"])
         simulator.control("reset")
         service.connect(ConnectionConfig(port=simulator.port, timeout=1))
@@ -302,7 +302,7 @@ class SimulatorGuiTests(unittest.TestCase):
     def start(self, scenario="rough_idle_p0301", loss=12, as_real=False):
         panel = self.window.simulator
         panel.port.setValue(free_port())
-        panel.scenario.setCurrentText(scenario)
+        panel.scenario.setCurrentIndex(panel.scenario.findData(scenario))
         panel.loss_count.setValue(loss)
         panel.start_button.click()
         self.until(lambda: panel.ready)
@@ -398,14 +398,14 @@ class SimulatorGuiTests(unittest.TestCase):
         self.assertEqual(window.codes_table.item(2, 2).text(), "Pendente")
 
     def test_loss_gui_stale_and_no_data_gui(self):
-        self.start("connection_loss", loss=4)
+        self.start("connection_loss", loss=6)
         window, panel = self.window, self.window.simulator
         window.poll()
         self.idle()
         window.poll()
         self.idle()
         self.assertEqual(window.state["adapter_status"], "Desligado")
-        self.assertTrue(all(r["stale"] for r in window.snapshot()["readings"]))
+        self.assertTrue(all(r["stale"] for r in window.snapshot()["readings"] if r["value"] is not None))
         panel.stop_button.click()
         self.until(lambda: not panel.owned)
         self.idle()

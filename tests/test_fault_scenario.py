@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 import json
+import http.client
 import os
 from pathlib import Path
 import socket
@@ -51,14 +52,18 @@ class FaultScenarioTests(unittest.TestCase):
             [str(interpreter), "-X", "utf8", "-u", str(ROOT / "scripts/run_fault_emulator.py"),
              "--port", str(cls.port), "--stop-after", "120"],
             cwd=ROOT, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
             text=True, encoding="utf-8", errors="replace",
         )
         cls.output = []
+        cls.control_info = None
         cls.ready = threading.Event()
 
         def read_output():
             for line in cls.process.stdout:
                 cls.output.append(line)
+                if line.startswith("CONTROL "):
+                    cls.control_info = json.loads(line[8:])
                 if "READY ELM327-emulator 4.0.0" in line:
                     cls.ready.set()
 
@@ -78,7 +83,18 @@ class FaultScenarioTests(unittest.TestCase):
     @classmethod
     def stop_emulator(cls):
         if cls.process.poll() is None:
-            cls.process.terminate()
+            try:
+                if cls.control_info:
+                    connection = http.client.HTTPConnection("127.0.0.1", cls.control_info["port"], timeout=2)
+                    try:
+                        connection.request("POST", "/control", json.dumps({"action": "shutdown"}), {"Authorization": "Bearer " + cls.control_info["token"]})
+                        connection.getresponse().read()
+                    finally:
+                        connection.close()
+                else:
+                    cls.process.terminate()
+            except (OSError, http.client.HTTPException):
+                cls.process.terminate()
         try:
             cls.process.wait(timeout=5)
         except subprocess.TimeoutExpired:
@@ -110,6 +126,7 @@ class FaultScenarioTests(unittest.TestCase):
                  "--port", str(port), "--stop-after", "1"],
                 cwd=temp, env={**os.environ, "ELM327_PYTHON": str(self.interpreter)},
                 capture_output=True, text=True, encoding="utf-8", timeout=15,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0,
             )
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertIn(f"car em 127.0.0.1:{port}", result.stdout)
@@ -118,6 +135,8 @@ class FaultScenarioTests(unittest.TestCase):
             self.assertFalse((Path(temp) / "elm.log").exists())
 
     def assert_recent(self, readings):
+        self.assertEqual(len(readings), 12)
+        readings = [r for r in readings if r["value"] is not None]
         self.assertEqual(len(readings), 3)
         for reading in readings:
             self.assertEqual(reading["status"], AVAILABLE)
@@ -147,8 +166,9 @@ class FaultScenarioTests(unittest.TestCase):
             freeze = service.read_freeze_frame()
             self.assertEqual(freeze["freeze_codes"], {"7E8": ["P0301"]})
             self.assertEqual(freeze["freeze_status"], COMPLETE)
-            self.assertEqual({r["pid"]: r["value"] for r in freeze["freeze_frame"]}, {"0C": 710, "05": 88, "0D": 0})
-            unsupported = service.client.send("0110").response
+            self.assertEqual(len(freeze["freeze_frame"]), 12)
+            self.assertEqual({r["pid"]: r["value"] for r in freeze["freeze_frame"] if r["pid"] in ("0C", "05", "0D")}, {"0C": 710, "05": 88, "0D": 0})
+            unsupported = service.client.send("0112").response
             self.assertIn("NO DATA", unsupported)
             mil = service.client.send("0101").response
             self.assertIn("41 01 81", mil)
@@ -270,7 +290,7 @@ class FaultScenarioTests(unittest.TestCase):
             remote.assert_not_called()
             window.disconnect_button.click()
             wait()
-            self.assertTrue(all(r["stale"] for r in window.snapshot()["readings"]))
+            self.assertTrue(all(r["stale"] for r in window.snapshot()["readings"] if r["value"] is not None))
             window.close()
             wait()
         print("GUI: P0301 via OBD, leituras recentes, sintomas, Gemini simulado, cache, guardar/abrir/exportar e desactualizacao aprovados.")

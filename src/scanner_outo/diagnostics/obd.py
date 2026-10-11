@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from collections.abc import Callable
 
 
 class ObdDecodeError(ValueError):
@@ -28,12 +29,57 @@ class PidDefinition:
     name: str
     unit: str
     length: int
+    decoder: Callable[[bytes], float]
+
+
+def percentage(data: bytes) -> float:
+    return data[0] * 100 / 255
+
+
+def temperature(data: bytes) -> float:
+    return float(data[0] - 40)
+
+
+def fuel_trim(data: bytes) -> float:
+    return (data[0] - 128) * 100 / 128
+
+
+def byte_value(data: bytes) -> float:
+    return float(data[0])
+
+
+def rpm(data: bytes) -> float:
+    return int.from_bytes(data, "big") / 4
+
+
+def timing(data: bytes) -> float:
+    return data[0] / 2 - 64
+
+
+def mass_air_flow(data: bytes) -> float:
+    return int.from_bytes(data, "big") / 100
+
+
+def module_voltage(data: bytes) -> float:
+    return int.from_bytes(data, "big") / 1000
+
+
+DEFAULT_PIDS = (0x0C, 0x05, 0x0D)
 
 
 PIDS = {
-    0x0C: PidDefinition(0x0C, "RPM", "rpm", 2),
-    0x05: PidDefinition(0x05, "Temperatura do líquido de arrefecimento", "°C", 1),
-    0x0D: PidDefinition(0x0D, "Velocidade", "km/h", 1),
+    0x0C: PidDefinition(0x0C, "RPM", "rpm", 2, rpm),
+    0x05: PidDefinition(0x05, "Temperatura do líquido de arrefecimento", "°C", 1, temperature),
+    0x0D: PidDefinition(0x0D, "Velocidade", "km/h", 1, byte_value),
+    0x04: PidDefinition(0x04, "Carga calculada do motor", "%", 1, percentage),
+    0x06: PidDefinition(0x06, "Correcção curta de combustível (banco 1)", "%", 1, fuel_trim),
+    0x07: PidDefinition(0x07, "Correcção longa de combustível (banco 1)", "%", 1, fuel_trim),
+    0x0B: PidDefinition(0x0B, "Pressão absoluta no colector", "kPa", 1, byte_value),
+    0x0E: PidDefinition(0x0E, "Avanço de ignição", "°", 1, timing),
+    0x0F: PidDefinition(0x0F, "Temperatura do ar de admissão", "°C", 1, temperature),
+    0x10: PidDefinition(0x10, "Caudal de massa de ar (MAF)", "g/s", 2, mass_air_flow),
+    0x11: PidDefinition(0x11, "Posição da borboleta", "%", 1, percentage),
+    0x42: PidDefinition(0x42, "Tensão do módulo de controlo", "V", 2, module_voltage),
 }
 
 DTC_DESCRIPTIONS = {
@@ -129,11 +175,32 @@ def decode_pid(frame: ObdFrame, pid: int, service: int = 1) -> float:
     definition = PIDS[pid]
     if len(payload) != definition.length:
         raise ObdDecodeError(f"Comprimento inválido para {definition.name}.")
-    if pid == 0x0C:
-        return int.from_bytes(payload, "big") / 4
-    if pid == 0x05:
-        return float(payload[0] - 40)
-    return float(payload[0])
+    return definition.decoder(payload)
+
+
+def decode_monitor_status(frame: ObdFrame) -> dict:
+    data = matching_payload(frame, 1, 1)
+    if len(data) != 4:
+        raise ObdDecodeError("Comprimento inválido para MIL e monitores.")
+    a, b, c, d = data
+    compression = bool(b & 8)
+    monitors = []
+    for bit, name in enumerate(("Falhas de combustão", "Sistema de combustível", "Componentes")):
+        if b & (1 << bit):
+            monitors.append({"name": name, "complete": not bool(b & (1 << (bit + 4)))})
+    specific = (
+        {0: "Catalisador NMHC", 1: "Pós-tratamento NOx/SCR", 3: "Pressão de sobrealimentação",
+         5: "Sensor de gases de escape", 6: "Filtro de partículas", 7: "EGR/VVT"}
+        if compression else
+        {0: "Catalisador", 1: "Catalisador aquecido", 2: "Sistema evaporativo",
+         3: "Ar secundário", 5: "Sonda de oxigénio", 6: "Aquecimento da sonda", 7: "EGR/VVT"}
+    )
+    for bit, name in specific.items():
+        if c & (1 << bit):
+            monitors.append({"name": name, "complete": not bool(d & (1 << bit))})
+    return {"mil": bool(a & 128), "confirmed_count": a & 127,
+            "engine_type": "Ignição por compressão" if compression else "Ignição por faísca",
+            "monitors": monitors}
 
 
 def decode_rpm(response: str) -> float:

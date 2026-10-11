@@ -10,7 +10,7 @@ from scanner_outo.communication.bluetooth import BluetoothElmTransport
 from scanner_outo.diagnostics.elm327 import Elm327Client
 from scanner_outo.diagnostics.obd import (
     PIDS, DTC_DESCRIPTIONS, ObdDecodeError, NoDataError, parse_frames,
-    decode_pid, decode_supported, decode_dtcs, matching_payload,
+    decode_pid, decode_supported, decode_dtcs, matching_payload, DEFAULT_PIDS, decode_monitor_status,
 )
 from scanner_outo.models import (
     ConnectionConfig, Session, Reading, TroubleCode, now_iso, NOT_QUERIED,
@@ -55,8 +55,7 @@ class DiagnosticService:
             self.client.enable_headers()
             self.session.adapter_status = "Ligado"
             try:
-                frames = self.query("0100")
-                self.session.supported = {f.ecu: sorted(decode_supported(f)) for f in frames}
+                self.session.supported = self.discover_support()
                 self.session.ecu_status = "Comunicação confirmada"
             except ObdDecodeError as exc:
                 self.session.ecu_status = f"Sem confirmação: {exc}"
@@ -71,7 +70,8 @@ class DiagnosticService:
         for ecu, supported in self.session.supported.items():
             for pid, definition in PIDS.items():
                 self.session.readings.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu,
-                    status=NOT_QUERIED if pid in supported else "Não suportado"))
+                    status=NOT_QUERIED if pid in supported else "Não suportado",
+                    detail="" if pid in supported else "PID não anunciado nos mapas recebidos desta ECU."))
         if not self.session.readings:
             self.session.readings = [Reading(f"{pid:02X}", d.name, d.unit, "Não identificada", status="Suporte não confirmado") for pid, d in PIDS.items()]
 
@@ -86,11 +86,61 @@ class DiagnosticService:
             self.session.ecu_status = "Comunicação interrompida"
             raise
 
-    def poll(self) -> dict:
+    def targeted_query(self, command: str, targets: list[str], all_ecus) -> list:
+        if set(targets) == set(all_ecus):
+            return self.query(command)
+        frames = []
+        for ecu in targets:
+            # Physical addressing is only inferred for standard ISO 15765 CAN IDs.
+            if len(ecu) == 3 and 0x7E8 <= int(ecu, 16) <= 0x7EF:
+                header, functional = f"{int(ecu, 16) - 8:03X}", "7DF"
+            elif len(ecu) == 8 and ecu.startswith("18DAF1"):
+                header, functional = f"18DA{ecu[-2:]}F1", "18DB33F1"
+            else:
+                raise ObdDecodeError("Endereçamento individual desta ECU não suportado; pedido não enviado.")
+            self.check_cancel()
+            try:
+                if "OK" not in self.client.send("ATSH" + header).response.upper():
+                    raise ObdDecodeError("Adaptador recusou endereçamento individual; pedido não enviado.")
+                frames.extend(f for f in self.query(command) if f.ecu == ecu)
+            finally:
+                if self.client is not None:
+                    if "OK" not in self.client.send("ATSH" + functional).response.upper():
+                        self.disconnect()
+                        raise TransportError("Não foi possível restaurar o endereçamento funcional.")
+        if not frames:
+            raise NoDataError("A ECU seleccionada não respondeu.")
+        return frames
+
+    def discover_support(self, service: int = 1) -> dict[str, list[int]]:
+        suffix = "00" if service == 2 else ""
+        supported = {f.ecu: decode_supported(f, service=service)
+                     for f in self.query(f"{service:02X}00{suffix}")}
+        for base in (0x20, 0x40):
+            targets = [ecu for ecu, pids in supported.items() if base in pids]
+            groups = [targets] if targets and set(targets) == set(supported) else [[ecu] for ecu in targets]
+            for group in groups:
+                try:
+                    frames = self.targeted_query(f"{service:02X}{base:02X}{suffix}", group, supported)
+                except ObdDecodeError as exc:
+                    for ecu in group:
+                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": QUERY_FAILED, "detail": str(exc)}
+                    continue
+                for ecu in group:
+                    try:
+                        frame = next((f for f in frames if f.ecu == ecu), None)
+                        if frame is None:
+                            raise NoDataError("Esta ECU não respondeu ao mapa de suporte.")
+                        supported[ecu].update(decode_supported(frame, base, service))
+                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": COMPLETE}
+                    except ObdDecodeError as exc:
+                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": QUERY_FAILED, "detail": str(exc)}
+        return {ecu: sorted(pids) for ecu, pids in supported.items()}
+
+    def poll(self, selected_pids=None) -> dict:
         if not self.session.supported:
             try:
-                frames = self.query("0100")
-                self.session.supported = {f.ecu: sorted(decode_supported(f)) for f in frames}
+                self.session.supported = self.discover_support()
                 self._initial_readings()
             except ObdDecodeError as exc:
                 self.session.ecu_status = f"Sem confirmação: {exc}"
@@ -98,32 +148,39 @@ class DiagnosticService:
         any_valid = False
         failures = False
         for pid in PIDS:
+            if pid not in (DEFAULT_PIDS if selected_pids is None else selected_pids):
+                continue
             targets = [r for r in self.session.readings if r.pid == f"{pid:02X}" and r.status != "Não suportado"]
             if not targets:
                 continue
-            try:
-                frames = self.query(f"01{pid:02X}")
-                seen = set()
-                for frame in frames:
-                    value = decode_pid(frame, pid)
-                    reading = next((r for r in targets if r.ecu == frame.ecu), None)
-                    if reading is None:
-                        raise ObdDecodeError("Resposta de ECU não anunciada no mapa de suporte.")
-                    reading.value, reading.timestamp = value, now_iso()
-                    reading.status, reading.detail, reading.stale = AVAILABLE, "", False
-                    seen.add(frame.ecu)
-                    any_valid = True
-                for reading in targets:
-                    if reading.ecu not in seen:
-                        reading.status, reading.detail = UNAVAILABLE, "Esta ECU não respondeu."
+            for reading in targets:
+                reading.attempted_at = now_iso()
+            groups = [targets] if {r.ecu for r in targets} == set(self.session.supported) else [[r] for r in targets]
+            for group in groups:
+                try:
+                    frames = self.targeted_query(f"01{pid:02X}", [r.ecu for r in group], self.session.supported)
+                except ObdDecodeError as exc:
+                    failures = True
+                    for reading in group:
+                        reading.status = UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED
+                        reading.detail = str(exc)
+                        reading.stale = reading.value is not None
+                    continue
+                for reading in group:
+                    try:
+                        frame = next((f for f in frames if f.ecu == reading.ecu), None)
+                        if frame is None:
+                            raise NoDataError("Esta ECU não respondeu.")
+                        value = decode_pid(frame, pid)
+                        reading.value, reading.timestamp = value, now_iso()
+                        reading.attempted_at = reading.timestamp
+                        reading.status, reading.detail, reading.stale = AVAILABLE, "", False
+                        any_valid = True
+                    except ObdDecodeError as exc:
+                        reading.status = UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED
+                        reading.detail = str(exc)
                         reading.stale = reading.value is not None
                         failures = True
-            except ObdDecodeError as exc:
-                failures = True
-                for reading in targets:
-                    reading.status = UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED
-                    reading.detail = str(exc)
-                    reading.stale = reading.value is not None
         self.session.ecu_status = "Comunicação parcial" if any_valid and failures else "Comunicação confirmada" if any_valid else "Sem leituras válidas"
         return self.session.to_dict()
 
@@ -148,6 +205,35 @@ class DiagnosticService:
                 queries[label] = {"status": QUERY_FAILED, "success": False, "detail": "Ligação interrompida", "timestamp": now_iso()}
                 raise
         self.session.codes, self.session.code_queries = codes, queries
+        self.read_monitor_status()
+        return self.session.to_dict()
+
+    def read_monitor_status(self) -> dict:
+        self.session.monitor_status = {ecu: {"status": UNAVAILABLE, "detail": "PID 01 não anunciado pela ECU.", "timestamp": now_iso()}
+                                       for ecu, pids in self.session.supported.items() if 1 not in pids}
+        self.session.monitor_query = {"status": QUERYING}
+        targets = [ecu for ecu, pids in self.session.supported.items() if 1 in pids]
+        if not targets:
+            self.session.monitor_query = {"status": UNAVAILABLE, "detail": "PID 01 não anunciado pela ECU.", "timestamp": now_iso()}
+            return self.session.to_dict()
+        try:
+            for frame in self.targeted_query("0101", targets, self.session.supported):
+                if frame.ecu not in targets:
+                    continue
+                try:
+                    self.session.monitor_status[frame.ecu] = {**decode_monitor_status(frame), "status": COMPLETE, "timestamp": now_iso()}
+                except ObdDecodeError as exc:
+                    self.session.monitor_status[frame.ecu] = {"status": QUERY_FAILED, "detail": str(exc), "timestamp": now_iso()}
+            for ecu in targets:
+                self.session.monitor_status.setdefault(ecu, {"status": UNAVAILABLE, "detail": "Esta ECU não respondeu.", "timestamp": now_iso()})
+            self.session.monitor_query = {"status": COMPLETE if all(self.session.monitor_status[ecu]["status"] == COMPLETE for ecu in targets) else QUERY_FAILED, "timestamp": now_iso()}
+        except ObdDecodeError as exc:
+            self.session.monitor_query = {"status": UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, "detail": str(exc), "timestamp": now_iso()}
+            for ecu in targets:
+                self.session.monitor_status[ecu] = dict(self.session.monitor_query)
+        except TransportError:
+            self.session.monitor_query = {"status": QUERY_FAILED, "detail": "Ligação interrompida", "timestamp": now_iso()}
+            raise
         return self.session.to_dict()
 
     def read_freeze_frame(self) -> dict:
@@ -156,7 +242,7 @@ class DiagnosticService:
         self.session.freeze_status = QUERYING
         self.session.freeze_detail = ""
         try:
-            support = {f.ecu: decode_supported(f, service=2) for f in self.query("020000")}
+            support = self.discover_support(service=2)
             code_detail = ""
             try:
                 for frame in self.query("020200"):
@@ -170,21 +256,24 @@ class DiagnosticService:
                 targets = [ecu for ecu, pids in support.items() if pid in pids]
                 if not targets:
                     continue
-                try:
-                    frames = self.query(f"02{pid:02X}00")
-                    seen = set()
-                    for frame in frames:
-                        if frame.ecu not in targets:
-                            raise ObdDecodeError("ECU freeze frame não anunciada.")
-                        value = decode_pid(frame, pid, service=2)
-                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, frame.ecu, value, AVAILABLE, now_iso()))
-                        seen.add(frame.ecu)
-                    for ecu in set(targets) - seen:
-                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status=UNAVAILABLE))
-                except ObdDecodeError as exc:
-                    for ecu in targets:
-                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status=UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, detail=str(exc)))
-            self.session.freeze_status = COMPLETE
+                groups = [targets] if set(targets) == set(support) else [[ecu] for ecu in targets]
+                for group in groups:
+                    try:
+                        frames = self.targeted_query(f"02{pid:02X}00", group, support)
+                    except ObdDecodeError as exc:
+                        for ecu in group:
+                            self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status=UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, detail=str(exc)))
+                        continue
+                    for ecu in group:
+                        try:
+                            frame = next((f for f in frames if f.ecu == ecu), None)
+                            if frame is None:
+                                raise NoDataError("Esta ECU não respondeu.")
+                            value = decode_pid(frame, pid, service=2)
+                            self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, value, AVAILABLE, now_iso()))
+                        except ObdDecodeError as exc:
+                            self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status=UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, detail=str(exc)))
+            self.session.freeze_status = COMPLETE if all(r.status == AVAILABLE for r in self.session.freeze_frame) else QUERY_FAILED
             self.session.freeze_detail = "Frame 0" + code_detail
         except ObdDecodeError as exc:
             self.session.freeze_status = UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED

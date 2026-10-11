@@ -7,12 +7,12 @@ from pathlib import Path
 from collections.abc import Callable
 
 from PySide6.QtCore import QThreadPool, QTimer, Qt
-from PySide6.QtGui import QCloseEvent
+from PySide6.QtGui import QCloseEvent, QAction
 from PySide6.QtWidgets import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QFormLayout,
     QComboBox, QLineEdit, QSpinBox, QDoubleSpinBox, QPushButton,
     QLabel, QTabWidget, QTableWidget, QTableWidgetItem, QHeaderView,
-    QPlainTextEdit, QMessageBox, QFileDialog, QDialog, QStyle, QApplication,
+    QPlainTextEdit, QMessageBox, QFileDialog, QDialog, QStyle, QApplication, QMenu,
 )
 
 from scanner_outo.config import Settings
@@ -22,7 +22,10 @@ from scanner_outo.models import (
 )
 from scanner_outo.services import DiagnosticService
 from scanner_outo.persistence import SessionStore
-from scanner_outo.gemini import GeminiService, analysis_payload, AnalysisError, ANALYSIS_LABELS
+from scanner_outo.gemini import GeminiService, analysis_payload, analysis_fingerprint, AnalysisError, ANALYSIS_LABELS
+from scanner_outo.diagnostics.obd import PIDS, DEFAULT_PIDS
+from scanner_outo.diagnostics.timeseries import ReadingSeries
+from scanner_outo.ui.charts import ReadingChart
 from scanner_outo.ui.workers import Worker
 from scanner_outo.ui.theme import apply_theme, STYLESHEET
 from scanner_outo.ui.simulator import SimulatorPanel
@@ -48,6 +51,10 @@ class MainWindow(QMainWindow):
         self.last_error = ""
         self.history_rows: list[dict] = []
         self.readings_paused = False
+        self.series = ReadingSeries()
+        self.last_analysis = None
+        self.last_analysis_input = None
+        self.last_analysis_session = None
         self.poll_timer = QTimer(self)
         self.poll_timer.timeout.connect(self.poll)
         self.age_timer = QTimer(self)
@@ -165,11 +172,54 @@ class MainWindow(QMainWindow):
             row.addWidget(widget)
         row.addStretch()
         layout.addLayout(row)
+        selection = QHBoxLayout()
+        self.pid_button = self.button("Parâmetros", lambda: None)
+        menu = QMenu(self.pid_button)
+        menu.addAction("Seleccionar todos", lambda: self.set_selected_pids(PIDS))
+        menu.addAction("Selecção inicial", lambda: self.set_selected_pids(DEFAULT_PIDS))
+        menu.addSeparator()
+        self.pid_actions = {}
+        for pid, definition in PIDS.items():
+            action = QAction(f"{pid:02X} | {definition.name} ({definition.unit})", menu)
+            action.setCheckable(True)
+            action.setChecked(pid in DEFAULT_PIDS)
+            action.toggled.connect(self.selection_changed)
+            menu.addAction(action)
+            self.pid_actions[pid] = action
+        self.pid_button.setMenu(menu)
+        selection.addWidget(self.pid_button)
+        self.selection_label = QLabel()
+        selection.addWidget(self.selection_label)
+        selection.addStretch()
+        layout.addLayout(selection)
         self.data_table = self.table(["Parâmetro", "ECU", "Valor", "Unidade", "Leitura (local)", "Disponibilidade", "Detalhe"])
-        layout.addWidget(self.data_table)
+        self.data_views = QTabWidget()
+        self.data_views.addTab(self.data_table, "Leituras")
+        self.reading_chart = ReadingChart(self.series)
+        self.data_views.addTab(self.reading_chart, "Gráfico")
+        layout.addWidget(self.data_views, 1)
         self.support_label = QLabel()
         self.support_label.setWordWrap(True)
         layout.addWidget(self.support_label)
+        self.stop_button.setToolTip("Parar consultas conserva os pontos e não encerra o simulador.")
+        self.selection_changed()
+
+    def selected_pids(self) -> tuple[int, ...]:
+        return tuple(pid for pid, action in self.pid_actions.items() if action.isChecked())
+
+    def set_selected_pids(self, pids) -> None:
+        for pid, action in self.pid_actions.items():
+            action.blockSignals(True)
+            action.setChecked(pid in pids)
+            action.blockSignals(False)
+        self.selection_changed()
+
+    def selection_changed(self, *_):
+        selected = self.selected_pids()
+        self.series.interrupt([f"{pid:02X}" for pid in PIDS if pid not in selected])
+        self.selection_label.setText(f"{len(selected)} / {len(PIDS)} seleccionados")
+        if hasattr(self, "reading_chart"):
+            self.reading_chart.select_pids(selected)
 
     def _codes_tab(self) -> None:
         layout = self.page("Avarias")
@@ -186,6 +236,15 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.codes_status)
         self.codes_table = self.table(["Código", "Descrição", "Estado", "ECU"])
         layout.addWidget(self.codes_table, 2)
+        monitor_row = QHBoxLayout()
+        self.monitor_button = self.button("Consultar MIL e monitores", self.read_monitors, QStyle.StandardPixmap.SP_BrowserReload)
+        monitor_row.addWidget(self.monitor_button)
+        self.monitor_label = QLabel("MIL e prontidão: Não consultado")
+        self.monitor_label.setWordWrap(True)
+        monitor_row.addWidget(self.monitor_label, 1)
+        layout.addLayout(monitor_row)
+        self.monitor_table = self.table(["ECU", "MIL", "DTCs anunciados", "Motor", "Monitores suportados", "Consulta (local)", "Estado / motivo"])
+        layout.addWidget(self.monitor_table, 1)
         self.freeze_label = QLabel("Freeze frame: não consultado")
         self.freeze_label.setWordWrap(True)
         layout.addWidget(self.freeze_label)
@@ -228,6 +287,9 @@ class MainWindow(QMainWindow):
         self.ai_status = QLabel("Sem pedido de análise")
         self.ai_status.setWordWrap(True)
         layout.addWidget(self.ai_status)
+        self.analysis_validity = QLabel()
+        self.analysis_validity.setWordWrap(True)
+        layout.addWidget(self.analysis_validity)
         self.ai_views = QTabWidget()
         self.ai_input = QPlainTextEdit()
         self.ai_input.setReadOnly(True)
@@ -239,6 +301,7 @@ class MainWindow(QMainWindow):
         self.model.textChanged.connect(self.update_controls)
         self.daily.valueChanged.connect(self.update_controls)
         self.ai_interval.valueChanged.connect(self.update_controls)
+        self.symptoms.textChanged.connect(self.render_analysis_validity)
 
     def _history_tab(self) -> None:
         layout = self.page("Histórico")
@@ -252,6 +315,7 @@ class MainWindow(QMainWindow):
         row.addStretch()
         layout.addLayout(row)
         self.history_table = self.table(["ID", "Data (local)", "Origem", "Registo", "Verificação"])
+        layout.addWidget(QLabel("Tipo de registo: fotografia da sessão; séries temporais não incluídas."))
         self.history_table.cellDoubleClicked.connect(lambda *_: self.open_history())
         layout.addWidget(self.history_table)
 
@@ -297,7 +361,7 @@ class MainWindow(QMainWindow):
         diag_free = not self.busy["diag"] and not self.closing
         self.connect_button.setEnabled(diag_free and not connected)
         self.disconnect_button.setEnabled(connected or self.busy["diag"])
-        for button in (self.read_button, self.codes_button, self.freeze_button):
+        for button in (self.read_button, self.codes_button, self.freeze_button, self.monitor_button):
             button.setEnabled(connected and diag_free)
         self.start_button.setEnabled(connected and diag_free and not self.poll_timer.isActive())
         self.stop_button.setEnabled(self.poll_timer.isActive())
@@ -313,7 +377,9 @@ class MainWindow(QMainWindow):
         other_free = not self.busy["other"] and not self.closing
         for widget in (self.analyze_button, self.model, self.daily, self.ai_interval, self.save_button, self.refresh_button, self.open_button, self.export_button):
             widget.setEnabled(other_free)
-        self.clear_button.setToolTip("Limpeza apenas em sessões de simulação; guarda uma fotografia e pede confirmação.")
+        self.clear_button.setToolTip("Limpar registos não repara a causa. Apenas em simulação; guarda fotografia e pede confirmação.")
+        self.pid_button.setEnabled(diag_free)
+        self.render_connection()
         reason = self.gemini.unavailable_reason(self.model.text(), self.daily.value())
         self.ai_availability.setText("Indisponível: " + reason if reason else "Gemini configurado; validação remota ao solicitar análise.")
 
@@ -341,9 +407,8 @@ class MainWindow(QMainWindow):
         self.stop_polling()
         def connected(state):
             self.symptoms.clear()
-            self.ai_input.clear()
-            self.ai_output.clear()
-            self.ai_status.setText("Sem pedido de análise")
+            if self.last_analysis is None:
+                self.ai_status.setText("Sem pedido de análise")
             self.apply_state(state)
             self.statusBar().showMessage("Ligação ao adaptador estabelecida.")
         self.launch("diag", lambda: self.service.connect(config), connected, "A ligar e consultar suporte OBD...")
@@ -358,7 +423,8 @@ class MainWindow(QMainWindow):
         self.launch("diag", self.service.disconnect, self.apply_state, "A desligar...")
 
     def poll(self) -> None:
-        if self.launch("diag", self.service.poll, self.apply_state, "A consultar parâmetros..."):
+        selected = self.selected_pids()
+        if self.launch("diag", lambda: self.service.poll(selected), self.apply_state, "A consultar parâmetros..."):
             self.readings_paused = False
 
     def start_polling(self) -> None:
@@ -368,6 +434,7 @@ class MainWindow(QMainWindow):
 
     def stop_polling(self) -> None:
         self.poll_timer.stop()
+        self.series.interrupt()
         self.readings_paused = True
         if hasattr(self, "data_table"):
             self.render_readings()
@@ -379,6 +446,10 @@ class MainWindow(QMainWindow):
             pending["codes"] = []
             pending["code_queries"] = {kind: {"status": QUERYING} for kind in ("Confirmado", "Pendente")}
             self.apply_state(pending)
+
+    def read_monitors(self) -> None:
+        if self.launch("diag", self.service.read_monitor_status, self.apply_state, "A consultar MIL e prontidão..."):
+            self.monitor_label.setText("MIL e prontidão: Consulta em curso")
 
     def read_freeze(self) -> None:
         if self.launch("diag", self.service.read_freeze_frame, self.apply_state, "A consultar freeze frame..."):
@@ -423,16 +494,28 @@ class MainWindow(QMainWindow):
             for key in ("analysis", "analysis_input"):
                 state[key] = self.state.get(key)
         self.state = state
+        self.series.ingest(state)
+        self.reading_chart.refresh()
         self.render_connection()
         self.render_readings()
         support = "; ".join(f"{ecu}: {', '.join(f'{pid:02X}' for pid in pids)}" for ecu, pids in state["supported"].items())
-        self.support_label.setText("PIDs anunciados (01 00): " + (support or "Suporte ainda não confirmado"))
+        failures = "; ".join(key + ": " + query.get("detail", query["status"]) for key, query in state.get("support_queries", {}).items() if query["status"] != "Consulta concluída")
+        self.support_label.setText("PIDs anunciados (0100 → 0120 → 0140): " + (support or "Suporte ainda não confirmado") + (" | " + failures if failures else ""))
         self.fill_table(self.codes_table, [[c["code"], c["description"], c["status"], c["ecu"]] for c in state["codes"]])
         query_text = " | ".join(f"{kind}: {q['status']}" + (f" ({q['detail']})" if q.get("detail") else "") for kind, q in state["code_queries"].items())
         self.codes_status.setText(query_text or "Codigos ainda não consultados")
         self.freeze_label.setText("Freeze frame: " + state["freeze_status"] + (" | " + state["freeze_detail"] if state.get("freeze_detail") else "") + (" | " + json.dumps(state["freeze_codes"], ensure_ascii=False) if state["freeze_codes"] else ""))
         self.fill_table(self.freeze_table, [[r["name"], r["ecu"], self.value_text(r["value"]), r["unit"], r["status"]] for r in state["freeze_frame"]])
         self.clear_label.setText(state["clear_status"])
+        query = state.get("monitor_query", {"status": "Não consultado"})
+        self.monitor_label.setText("MIL e prontidão: " + query["status"] + (" | " + query["detail"] if query.get("detail") else ""))
+        monitor_rows = []
+        for ecu, status in state.get("monitor_status", {}).items():
+            monitors = "; ".join(m["name"] + ": " + ("Concluído" if m["complete"] else "Incompleto") for m in status.get("monitors", []))
+            monitor_rows.append([ecu, ("Acesa" if status["mil"] else "Apagada") if "mil" in status else "--",
+                                 status.get("confirmed_count", "--"), status.get("engine_type", "--"), monitors or "--",
+                                 self.local_time(status.get("timestamp")), status["status"] + (" | " + status["detail"] if status.get("detail") else "") + (" (desactualizado)" if state["adapter_status"] != "Ligado" else "")])
+        self.fill_table(self.monitor_table, monitor_rows)
         if self.owns_connection() and self.simulator.ready and not self.closing:
             self.simulator.request("status")
         self.update_controls()
@@ -447,7 +530,9 @@ class MainWindow(QMainWindow):
         state = self.state
         connection = state.get("connection", {})
         management = "Simulador gerido" if self.owns_connection() else ("Servidor externo" if connection.get("kind") == "TCP" else "Ligação serial" if connection.get("kind") else "Sem ligação")
-        self.connection_status.setText(f"Sessão: {session_origin(state)}   |   {management}   |   Adaptador: {state['adapter_status']}   |   ECU: {state['ecu_status']}")
+        simulator = "Em execução" if self.simulator.ready else "A iniciar" if self.simulator.owned else "Parado (instância local)"
+        polling = "Activas" if self.poll_timer.isActive() else "Paradas"
+        self.connection_status.setText(f"Simulador: {simulator} | Scanner: {state['adapter_status']} | Consultas: {polling}\nSessão: {session_origin(state)} | {management} | ECU: {state['ecu_status']}")
 
     def change_simulator(self, action: str) -> None:
         if self.closing or self.simulator.transition:
@@ -472,8 +557,6 @@ class MainWindow(QMainWindow):
                 self.service.session = Session()
                 self.apply_state(self.service.session.to_dict())
                 self.symptoms.clear()
-                self.ai_input.clear()
-                self.ai_output.clear()
             if action == "stop":
                 self.simulator.stop()
             else:
@@ -501,6 +584,7 @@ class MainWindow(QMainWindow):
     def snapshot(self) -> dict:
         snapshot = copy.deepcopy(self.state)
         snapshot["symptoms"] = self.symptoms.toPlainText()
+        snapshot["freshness_seconds"] = max(10, self.interval.value() * 3)
         for reading in snapshot["readings"]:
             if reading["timestamp"] and reading["value"] is not None:
                 age = (datetime.now(timezone.utc) - datetime.fromisoformat(reading["timestamp"])).total_seconds()
@@ -513,6 +597,21 @@ class MainWindow(QMainWindow):
     def render_readings(self) -> None:
         snapshot = self.snapshot()
         self.fill_table(self.data_table, [[r["name"], r["ecu"], self.value_text(r["value"]), r["unit"], self.local_time(r["timestamp"]), self.reading_status(r), r["detail"]] for r in snapshot["readings"]])
+        self.render_analysis_validity()
+
+    def render_analysis_validity(self) -> None:
+        if not hasattr(self, "analysis_validity") or not hasattr(self, "symptoms"):
+            return
+        if self.last_analysis is None:
+            self.analysis_validity.setText("Sem análise guardada para comparação")
+            return
+        try:
+            current = analysis_payload(self.snapshot(), self.symptoms.toPlainText())
+            changed = (self.last_analysis_session != self.state["created_at"] or
+                       analysis_fingerprint(current) != analysis_fingerprint(self.last_analysis_input))
+        except AnalysisError:
+            changed = True
+        self.analysis_validity.setText("Dados alterados desde esta análise" if changed else "Análise corresponde à fotografia dos dados actuais")
 
     @staticmethod
     def reading_status(reading: dict) -> str:
@@ -548,11 +647,14 @@ class MainWindow(QMainWindow):
         model = self.model.text().strip()
         self.ai_status.setText("A aguardar Gemini...")
         def analyzed(result):
+            self.last_analysis = result
+            self.last_analysis_input = result.get("analysis_input", payload)
+            self.last_analysis_session = session_token
             if session_token != self.state["created_at"]:
                 self.ai_status.setText("Análise concluída para a sessão anterior; resultado não associado a esta ligação.")
-                return
-            self.state["analysis"] = result
-            self.state["analysis_input"] = payload
+            else:
+                self.state["analysis"] = result
+                self.state["analysis_input"] = self.last_analysis_input
             output = []
             for key, values in result["result"].items():
                 output.append(ANALYSIS_LABELS.get(key, key.replace("_", " ").capitalize()) + ":")
@@ -561,7 +663,9 @@ class MainWindow(QMainWindow):
             self.ai_output.setPlainText("\n".join(output))
             self.ai_views.setCurrentIndex(1)
             prefix = "Cache local; sem nova chamada. Tokens da resposta original: " if result["cache"] else "Análise concluída. Tokens informados pela API: "
-            self.ai_status.setText(prefix + json.dumps(result["tokens"], ensure_ascii=False))
+            self.ai_status.setText(prefix + json.dumps(result["tokens"], ensure_ascii=False) + " | Captura: " + self.local_time(result.get("captured_at")) + " | Resposta original: " + self.local_time(result.get("analyzed_at")))
+            self.ai_input.setPlainText(json.dumps(self.last_analysis_input, ensure_ascii=False, indent=2))
+            self.render_analysis_validity()
         self.launch("other", lambda: self.gemini.analyze(payload, model), analyzed, "A analisar a fotografia da sessão...")
 
     def save_session(self) -> None:
@@ -612,6 +716,12 @@ class MainWindow(QMainWindow):
             self.fill_table(codes, [[c["code"], c["description"], c["status"], c["ecu"]] for c in snapshot["codes"]])
             codes_layout.addWidget(codes)
             views.addTab(codes_page, "Avarias")
+            monitor = self.table(["ECU", "MIL", "DTCs anunciados", "Motor", "Monitores", "Consulta (local)", "Estado"])
+            self.fill_table(monitor, [[ecu, ("Acesa" if s["mil"] else "Apagada") if "mil" in s else "--",
+                                      s.get("confirmed_count", "--"), s.get("engine_type", "--"),
+                                      "; ".join(m["name"] + ": " + ("Concluído" if m["complete"] else "Incompleto") for m in s.get("monitors", [])),
+                                      self.local_time(s.get("timestamp")), s["status"]] for ecu, s in snapshot.get("monitor_status", {}).items()])
+            views.addTab(monitor, "MIL e prontidão")
             freeze_page = QWidget()
             freeze_layout = QVBoxLayout(freeze_page)
             freeze_label = QLabel(snapshot["freeze_status"] + (" | " + snapshot["freeze_detail"] if snapshot.get("freeze_detail") else ""))
@@ -626,6 +736,8 @@ class MainWindow(QMainWindow):
             content = ["Sintomas:", snapshot["symptoms"] or "Não registados", ""]
             if snapshot.get("analysis"):
                 content.append("Modelo: " + snapshot["analysis"]["model"])
+                content.append("Captura: " + self.local_time(snapshot["analysis"].get("captured_at")))
+                content.append("Resposta original: " + self.local_time(snapshot["analysis"].get("analyzed_at")))
                 for key, values in snapshot["analysis"]["result"].items():
                     content.append("\n" + ANALYSIS_LABELS.get(key, key.replace("_", " ").capitalize()) + ":")
                     content.extend("- " + value for value in values)

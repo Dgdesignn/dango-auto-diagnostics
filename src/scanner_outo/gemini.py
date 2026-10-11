@@ -5,12 +5,15 @@ import json
 import time
 import importlib.util
 from typing import Callable
+from copy import deepcopy
+from datetime import datetime, timezone
 
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
 
 from scanner_outo.config import Settings
 from scanner_outo.persistence import SessionStore, StorageError
 from scanner_outo.models import session_origin, OriginError
+from scanner_outo.diagnostics.validity import reading_validity, age_seconds, age_band, equivalent_data
 
 
 class AnalysisError(RuntimeError):
@@ -51,34 +54,49 @@ Apresenta causas apenas como hipoteses e testes de confirmacao, sem recomendar t
 """
 
 
-def analysis_payload(session: dict, symptoms: str) -> dict:
+def analysis_payload(session: dict, symptoms: str, captured_at: datetime | None = None) -> dict:
     try:
         origin = session_origin(session)
     except OriginError as exc:
         raise AnalysisError(str(exc)) from exc
     # Lista permitida: exclui ligação, VIN, identificadores e logs brutos.
+    instant = captured_at or datetime.now(timezone.utc)
+    recent = session.get("freshness_seconds", 10)
+    queries = deepcopy(session["code_queries"])
+    for query in queries.values():
+        age = age_seconds(query.get("timestamp"), instant)
+        query.update(idade_segundos=age, faixa_temporal=age_band(age, recent))
+    monitor_status = deepcopy(session.get("monitor_status", {}))
+    for status in monitor_status.values():
+        age = age_seconds(status.get("timestamp"), instant)
+        status.update(idade_segundos=age, faixa_temporal=age_band(age, recent))
     payload = {
+        "capturado_em": instant.isoformat(),
         "origem": origin,
+        "estado_ligacao": session.get("adapter_status", "Desligado"),
         "estado_ecu": session["ecu_status"],
-        "parametros": session["readings"],
-        "codigos": session["codes"],
-        "estado_consultas_codigos": session["code_queries"],
-        "freeze_frame": session["freeze_frame"],
-        "codigos_freeze_frame": session.get("freeze_codes", {}),
+        "parametros": [reading_validity(r, instant, session.get("adapter_status") == "Ligado", recent) for r in session["readings"]],
+        "codigos": deepcopy(session["codes"]),
+        "estado_consultas_codigos": queries,
+        "mil_monitores": monitor_status,
+        "estado_consulta_mil": deepcopy(session.get("monitor_query", {"status": "Não consultado"})),
+        "freeze_frame": deepcopy(session["freeze_frame"]),
+        "codigos_freeze_frame": deepcopy(session.get("freeze_codes", {})),
         "estado_freeze_frame": session["freeze_status"],
         "sintomas": symptoms.strip(),
     }
+    payload["avisos"] = []
+    if not any(r["validade"] == "Recente" for r in payload["parametros"]):
+        payload["avisos"].append("Sem leituras recentes; não interpretar valores antigos como actuais.")
+    if not all(q.get("success") is True for q in queries.values()) or not queries:
+        payload["avisos"].append("Consultas de avarias não concluídas; ausência de códigos não confirma ausência de avarias.")
     if len(symptoms) > 4000 or len(json.dumps(payload, ensure_ascii=False).encode("utf-8")) > 24000:
         raise AnalysisError("Entrada demasiado longa: sintomas até 4000 caracteres e sessão até 24 KiB.")
     return payload
 
 
-def _without_timestamps(value):
-    if isinstance(value, dict):
-        return {k: _without_timestamps(v) for k, v in value.items() if k != "timestamp"}
-    if isinstance(value, list):
-        return [_without_timestamps(v) for v in value]
-    return value
+def analysis_fingerprint(payload: dict) -> str:
+    return hashlib.sha256(json.dumps(equivalent_data(payload), sort_keys=True).encode()).hexdigest()
 
 
 def official_generate(settings: Settings, model: str, payload: dict) -> dict:
@@ -149,9 +167,9 @@ class GeminiService:
             raise AnalysisError("Indique um modelo Gemini válido.")
         if len(json.dumps(payload).encode("utf-8")) > 32000:
             raise AnalysisError("Entrada demasiado longa.")
-        key = hashlib.sha256(json.dumps({"version": 1, "instruction": SYSTEM_INSTRUCTION, "model": model, "data": _without_timestamps(payload)}, sort_keys=True).encode()).hexdigest()
+        key = hashlib.sha256(json.dumps({"version": 2, "instruction": SYSTEM_INSTRUCTION, "model": model, "data": equivalent_data(payload)}, sort_keys=True).encode()).hexdigest()
         cached = self.store.cache_get(key)
-        if cached is not None:
+        if cached is not None and 0 <= self.clock() - cached.get("analyzed_epoch", 0) <= 300:
             return {**cached, "cache": True}
         if not self.settings.api_key:
             raise AnalysisError("Chave Gemini não configurada. O diagnóstico continua disponível.")
@@ -172,7 +190,10 @@ class GeminiService:
             parsed = AnalysisResult.model_validate_json(text)
             if any(len(item) > 2000 for values in parsed.model_dump().values() for item in values):
                 raise ValueError
-            result = {"result": parsed.model_dump(), "tokens": raw.get("tokens", {}), "model": model, "cache": False}
+            instant = self.clock()
+            result = {"result": parsed.model_dump(), "tokens": raw.get("tokens", {}), "model": model, "cache": False,
+                      "captured_at": payload.get("capturado_em"), "analyzed_at": datetime.fromtimestamp(instant, timezone.utc).isoformat(),
+                      "analyzed_epoch": instant, "analysis_input": deepcopy(payload)}
         except (KeyError, TypeError, ValueError, ValidationError):
             raise AnalysisError("Resposta Gemini inválida ou incompleta; nenhuma conclusao apresentada.") from None
         self.store.cache_put(call_id, result)
