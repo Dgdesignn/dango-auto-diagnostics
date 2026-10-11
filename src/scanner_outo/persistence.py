@@ -5,6 +5,7 @@ import sqlite3
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
+from scanner_outo.models import session_origin, OriginError
 
 
 class StorageError(RuntimeError):
@@ -39,11 +40,15 @@ class SessionStore:
         finally:
             db.close()
 
-    def save(self, session: dict, label: str = "Sessao") -> int:
+    def save(self, session: dict, label: str = "Sessão") -> int:
+        try:
+            origin = session_origin(session)
+        except OriginError as exc:
+            raise StorageError(str(exc)) from exc
         with self.connect() as db:
             cursor = db.execute(
                 "INSERT INTO sessions(created_at, origin, label, payload) VALUES(?,?,?,?)",
-                (session["created_at"], "Emulador" if session["simulation"] else "Veiculo real", label,
+                (session["created_at"], origin, label,
                  json.dumps(session, ensure_ascii=False, allow_nan=False)),
             )
             return int(cursor.lastrowid)
@@ -51,13 +56,27 @@ class SessionStore:
     def list_sessions(self) -> list[dict]:
         with self.connect() as db:
             db.row_factory = sqlite3.Row
-            return [dict(row) for row in db.execute("SELECT id, created_at, origin, label FROM sessions ORDER BY id DESC")]
+            rows = [dict(row) for row in db.execute("SELECT id, created_at, origin, label, payload FROM sessions ORDER BY id DESC")]
+        for row in rows:
+            payload = json.loads(row.pop("payload"))
+            # Normaliza apenas a grafia apresentada; nunca modifica o registo.
+            row["origin"] = {"Emulador": "Emulador / simulação", "Veiculo real": "Veículo real"}.get(row["origin"], row["origin"])
+            row["origin_note"] = ""
+            try:
+                expected = session_origin(payload)
+                if row["origin"] != expected:
+                    row["origin_note"] = "Origem contraditória; confirmar"
+                elif not payload["simulation"] and payload.get("connection", {}).get("kind") == "TCP" and payload.get("connection", {}).get("host", "").lower() in ("127.0.0.1", "localhost", "::1"):
+                    row["origin_note"] = "TCP local: confirmar origem"
+            except OriginError:
+                row["origin_note"] = "Origem por confirmar"
+        return rows
 
     def load(self, session_id: int) -> dict:
         with self.connect() as db:
             row = db.execute("SELECT payload FROM sessions WHERE id=?", (session_id,)).fetchone()
         if row is None:
-            raise StorageError("Sessao nao encontrada.")
+            raise StorageError("Sessão não encontrada.")
         return json.loads(row[0])
 
     def export(self, session_id: int, path: Path) -> None:
@@ -75,9 +94,9 @@ class SessionStore:
             count = db.execute("SELECT COUNT(*) FROM ai_calls WHERE day=?", (day,)).fetchone()[0]
             last = db.execute("SELECT MAX(timestamp) FROM ai_calls").fetchone()[0]
             if count >= daily_limit:
-                raise StorageError("Limite local diario de chamadas atingido (dia UTC).")
+                raise StorageError("Limite local diário de chamadas atingido (dia UTC).")
             if last is not None and timestamp - last < interval:
-                raise StorageError("Aguarde o intervalo minimo entre chamadas Gemini.")
+                raise StorageError("Aguarde o intervalo mínimo entre chamadas Gemini.")
             cursor = db.execute("INSERT INTO ai_calls(timestamp, day, cache_key) VALUES(?,?,?)", (timestamp, day, key))
             return int(cursor.lastrowid)
 

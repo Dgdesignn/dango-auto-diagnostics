@@ -9,6 +9,7 @@ from scanner_outo.diagnostics.obd import ObdDecodeError
 from scanner_outo.services import OperationCancelled
 from scanner_outo.gemini import AnalysisError
 from scanner_outo.persistence import StorageError
+from scanner_outo.models import OriginError
 
 
 class WorkerSignals(QObject):
@@ -27,9 +28,9 @@ class Worker(QRunnable):
     def run(self) -> None:
         try:
             self.signals.succeeded.emit(self.operation())
-        except (TransportError, ObdDecodeError, OperationCancelled, AnalysisError, StorageError) as exc:
+        except (TransportError, ObdDecodeError, OperationCancelled, AnalysisError, StorageError, OriginError) as exc:
             self.signals.failed.emit(str(exc))
         except Exception:
-            self.signals.failed.emit("Operacao falhou. Verifique a ligacao ou o acesso aos ficheiros.")
+            self.signals.failed.emit("Operação falhou. Verifique a ligação ou o acesso aos ficheiros.")
         finally:
             self.signals.finished.emit()

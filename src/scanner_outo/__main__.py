@@ -17,7 +17,7 @@ def main() -> int:
         configure_logging(settings)
         window = MainWindow(settings)
     except Exception:
-        QMessageBox.critical(None, "Configuracao", "Nao foi possivel iniciar. Verifique a configuracao e permissoes da pasta de dados.")
+        QMessageBox.critical(None, "Configuração", "Não foi possivel iniciar. Verifique a configuração e permissões da pasta de dados.")
         return 1
     window.show()
     return app.exec()

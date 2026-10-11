@@ -3,12 +3,13 @@ import tempfile
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 from scanner_outo.config import Settings
 from scanner_outo.models import Session
+from scanner_outo.models import origin_label, OriginError, ConnectionConfig
 from scanner_outo.persistence import SessionStore
-from scanner_outo.gemini import GeminiService, AnalysisError, AnalysisQuotaError, analysis_payload, official_generate
+from scanner_outo.gemini import AnalysisResult, GeminiService, AnalysisError, AnalysisQuotaError, analysis_payload, official_generate
 
 
 VALID = {key: ["Exemplo de teste"] for key in ("factos_medidos", "hipoteses", "evidencias", "informacao_em_falta", "proximos_testes")}
@@ -82,7 +83,7 @@ class StorageGeminiTests(unittest.TestCase):
         clock[0] = 110
         service.analyze(self.payload, "test2")
         clock[0] = 120
-        with self.assertRaisesRegex(AnalysisError, "diario"):
+        with self.assertRaisesRegex(AnalysisError, "diário"):
             service.analyze(self.payload, "test3")
         clock[0] = 86500
         service.analyze(self.payload, "test3")
@@ -94,22 +95,22 @@ class StorageGeminiTests(unittest.TestCase):
         service = GeminiService(self.settings, self.store, fail, lambda: 100)
         with self.assertRaisesRegex(AnalysisError, "Indisponivel"):
             service.analyze(self.payload, "test")
-        with self.assertRaisesRegex(AnalysisError, "diario"):
+        with self.assertRaisesRegex(AnalysisError, "diário"):
             service.analyze(self.payload, "test2")
 
     def test_cache_keeps_states_and_model_in_key(self):
         self.settings.minimum_interval = 0
         service = GeminiService(self.settings, self.store, self.generate)
         first = service.analyze(self.payload, "test")
-        payload = {**self.payload, "estado_ecu": "Comunicacao interrompida"}
+        payload = {**self.payload, "estado_ecu": "Comunicação interrompida"}
         changed = service.analyze(payload, "test")
         self.assertFalse(first["cache"])
         self.assertFalse(changed["cache"])
 
     def test_payload_omits_identifiers_and_limits_size(self):
-        session = Session(connection={"vin": "nao-enviar"}).to_dict()
-        session["vin"] = "nao-enviar"
-        self.assertNotIn("nao-enviar", json.dumps(analysis_payload(session, "sintomas")))
+        session = Session(connection={"vin": "não-enviar"}).to_dict()
+        session["vin"] = "não-enviar"
+        self.assertNotIn("não-enviar", json.dumps(analysis_payload(session, "sintomas")))
         with self.assertRaises(AnalysisError):
             analysis_payload(session, "x" * 4001)
 
@@ -120,3 +121,44 @@ class StorageGeminiTests(unittest.TestCase):
             with self.assertRaises(AnalysisQuotaError) as error:
                 official_generate(self.settings, "test", self.payload)
         self.assertNotIn("segredo", str(error.exception))
+
+    def test_official_request_uses_json_schema(self):
+        client = MagicMock()
+        client.__enter__.return_value = client
+        client.models.generate_content.return_value = SimpleNamespace(
+            text=json.dumps(VALID),
+            usage_metadata=SimpleNamespace(
+                prompt_token_count=15, candidates_token_count=20, total_token_count=35,
+            ),
+        )
+        with patch("google.genai.Client", return_value=client):
+            result = official_generate(self.settings, "test", self.payload)
+        config = client.models.generate_content.call_args.kwargs["config"]
+        self.assertIsNone(config.response_schema)
+        self.assertEqual(config.response_json_schema, AnalysisResult.model_json_schema())
+        self.assertFalse(config.response_json_schema["additionalProperties"])
+        self.assertEqual(result["tokens"]["total"], 35)
+
+    def test_origin_inconsistency_is_rejected(self):
+        from scanner_outo.persistence import StorageError
+        snapshot = Session(simulation=True, connection={"simulation": False}).to_dict()
+        with self.assertRaises(StorageError):
+            self.store.save(snapshot)
+        with self.assertRaises(AnalysisError):
+            analysis_payload(snapshot, "teste")
+        with self.assertRaises(OriginError):
+            ConnectionConfig(simulation="false")
+
+    def test_old_local_vehicle_session_is_never_rewritten(self):
+        snapshot = Session(simulation=False, connection={"simulation": False, "kind": "TCP", "host": "127.0.0.1"}).to_dict()
+        encoded = json.dumps(snapshot)
+        with self.store.connect() as db:
+            cursor = db.execute("INSERT INTO sessions(created_at, origin, label, payload) VALUES(?,?,?,?)", (snapshot["created_at"], "Veiculo real", "Registo antigo", encoded))
+            session_id = cursor.lastrowid
+        row = self.store.list_sessions()[0]
+        self.assertEqual(row["origin"], origin_label(False))
+        self.assertIn("confirmar origem", row["origin_note"])
+        self.assertFalse(self.store.load(session_id)["simulation"])
+        with self.store.connect() as db:
+            original = db.execute("SELECT origin,payload FROM sessions WHERE id=?", (session_id,)).fetchone()
+        self.assertEqual(original, ("Veiculo real", encoded))

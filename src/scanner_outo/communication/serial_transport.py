@@ -30,7 +30,7 @@ class SerialElmTransport(ElmTransport):
                 self.port, baudrate=self.baudrate, timeout=0.1, write_timeout=self.timeout_seconds,
             )
         except (serial.SerialException, OSError) as exc:
-            raise TransportDisconnected(f"Nao foi possivel abrir a porta {self.port}.") from exc
+            raise TransportDisconnected(f"Não foi possível abrir a porta {self.port}.") from exc
 
     def close(self) -> None:
         port, self._serial = self._serial, None
@@ -39,7 +39,7 @@ class SerialElmTransport(ElmTransport):
 
     def request(self, command: str) -> str:
         if not command.strip() or any(c in command for c in "\r\n"):
-            raise TransportError("Comando ELM327 invalido.")
+            raise TransportError("Comando ELM327 inválido.")
         with self._lock:
             port = self._serial
             if port is None:
@@ -57,7 +57,7 @@ class SerialElmTransport(ElmTransport):
                 raise TransportTimeout("Tempo esgotado na porta serial; volte a ligar.")
             except (serial.SerialException, OSError) as exc:
                 self.close()
-                raise TransportDisconnected("Ligacao serial interrompida.") from exc
+                raise TransportDisconnected("Ligação serial interrompida.") from exc
             except TransportError:
                 self.close()
                 raise

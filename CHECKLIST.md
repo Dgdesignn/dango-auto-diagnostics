@@ -16,7 +16,7 @@
 - [x] SQLite, consulta de sessoes e exportacao JSON.
 - [x] Workers Qt, callbacks na thread GUI e encerramento sem workers abandonados.
 - [x] README, explicacao das camadas e comandos exactos.
-- [x] Nenhuma chave real adicionada, nenhum .env sobrescrito, sem commits/publicacao.
+- [x] Nenhuma chave real adicionada ao codigo ou Git; configuracao local em `.env` ignorado.
 
 ## Verificado
 
@@ -36,7 +36,7 @@
 - [ ] Adaptador USB/veiculo fisico.
 - [ ] Bluetooth SPP emparelhado e porta COM fisica.
 - [ ] Simulador Android na rede.
-- [ ] Chamada real Gemini com credencial de utilizador (nao efectuada nesta entrega).
+- [x] Chamada real Gemini com credencial autorizada: JSON validado e tokens recebidos.
 - [ ] Efeito do comando de limpeza no emulador (exige confirmacao na interface).
 - [ ] Freeze frame num dispositivo/cenario que o disponibilize.
 
@@ -51,3 +51,32 @@
 - Uma instancia temporaria do emulador separado foi iniciada para os testes e encerrada ao terminar. A instalacao em C:\Py\simulador_scanner nao foi alterada. Inicie-o no seu terminal antes de ligar pela aplicacao.
 
 Dados de sessoes dos testes ficam apenas em pastas temporarias; capturas em artifacts/ estao ignoradas no Git. Gemini real, hardware e efeito da limpeza continuam pendentes conforme a lista acima.
+
+## Revisão da interface
+
+- [x] Origem sem dependência da posição do selector e validação entre sessão e ligação.
+- [x] Histórico antigo preservado; casos de TCP local com origem real assinalados para confirmação.
+- [x] Confirmação ao configurar TCP local como veículo real.
+- [x] Tema Fusion com paleta e estilos completos; botões com ícone e texto visível.
+- [x] Modelo, limite diário, intervalo mínimo e motivo de indisponibilidade Gemini visíveis.
+- [x] Acentos em português e temperatura em °C.
+- [x] Estados separados: Não consultado, Consulta em curso, Nenhum código devolvido, Indisponível e Falha de consulta.
+- [x] Dados desactualizados após parar, falha de ligação ou expiração; flags também guardadas/exportadas/enviadas à IA.
+- [x] 51 testes aprovados na suite completa, incluindo contraste e Gemini simulado.
+- [x] Janela com emulador: 12 testes considerados, 8 aprovados e 4 ignorados por dependerem de falhas controladas/limpeza simulada.
+- [x] compileall e pip check aprovados.
+- [ ] Confirmar a origem real dos registos antigos 2 e 3 antes de qualquer reclassificação.
+- [x] Gemini validado posteriormente com a credencial autorizada, apenas no `.env` local ignorado.
+
+## Integracao Gemini real (11/10/2026)
+
+- [x] Autenticacao aceite pela API.
+- [x] Corrigido o pedido: `response_json_schema`, mantendo validacao Pydantic estrita.
+- [x] Modelo local `gemini-3.8-flash`, indicado pela API em substituicao de 2.5 Flash para esta conta.
+- [x] Dados ficticios: 850 rpm, origem emulador; JSON valido com as cinco seccoes.
+- [x] Tokens informados pela API: 318 entrada, 350 saida, 1400 total.
+- [x] Segunda consulta em cache, sem chamada adicional; teste de terminal com codigo de saida zero.
+- [x] Janela aberta: worker, apresentacao da resposta real via cache e chave ausente dos textos.
+- [x] 52 testes aprovados, incluindo regressao do formato do pedido Gemini.
+- [x] `.env` confirmado como ignorado; sem novos commits ou publicacao nesta alteracao.
+- [ ] Substituir a credencial partilhada por uma nova no `.env` local.

@@ -12,7 +12,10 @@ from scanner_outo.diagnostics.obd import (
     PIDS, DTC_DESCRIPTIONS, ObdDecodeError, NoDataError, parse_frames,
     decode_pid, decode_supported, decode_dtcs, matching_payload,
 )
-from scanner_outo.models import ConnectionConfig, Session, Reading, TroubleCode, now_iso
+from scanner_outo.models import (
+    ConnectionConfig, Session, Reading, TroubleCode, now_iso, NOT_QUERIED,
+    QUERYING, EMPTY_CODES, UNAVAILABLE, QUERY_FAILED, COMPLETE, AVAILABLE, STALE,
+)
 
 
 class OperationCancelled(RuntimeError):
@@ -20,7 +23,7 @@ class OperationCancelled(RuntimeError):
 
 
 class DiagnosticService:
-    """Uma unica fila de worker executa todas as operacoes desta sessao."""
+    """Uma unica fila de worker executa todas as operações desta sessão."""
 
     def __init__(self) -> None:
         self.transport: ElmTransport | None = None
@@ -30,7 +33,7 @@ class DiagnosticService:
 
     def check_cancel(self) -> None:
         if self.cancel.is_set():
-            raise OperationCancelled("Operacao cancelada.")
+            raise OperationCancelled("Operação cancelada.")
 
     def connect(self, config: ConnectionConfig) -> dict:
         self.disconnect()
@@ -43,7 +46,7 @@ class DiagnosticService:
             cls = BluetoothElmTransport if config.kind == "Bluetooth SPP" else SerialElmTransport
             self.transport = cls(config.serial_port, config.baudrate, config.timeout)
         else:
-            raise TransportError("Tipo de ligacao nao suportado; BLE nao implementado.")
+            raise TransportError("Tipo de ligação não suportado; BLE não implementado.")
         try:
             self.transport.open()
             self.client = Elm327Client(self.transport)
@@ -54,9 +57,9 @@ class DiagnosticService:
             try:
                 frames = self.query("0100")
                 self.session.supported = {f.ecu: sorted(decode_supported(f)) for f in frames}
-                self.session.ecu_status = "Comunicacao confirmada"
+                self.session.ecu_status = "Comunicação confirmada"
             except ObdDecodeError as exc:
-                self.session.ecu_status = f"Sem confirmacao: {exc}"
+                self.session.ecu_status = f"Sem confirmação: {exc}"
             self._initial_readings()
             return self.session.to_dict()
         except Exception:
@@ -68,9 +71,9 @@ class DiagnosticService:
         for ecu, supported in self.session.supported.items():
             for pid, definition in PIDS.items():
                 self.session.readings.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu,
-                    status="A aguardar leitura" if pid in supported else "Nao suportado"))
+                    status=NOT_QUERIED if pid in supported else "Não suportado"))
         if not self.session.readings:
-            self.session.readings = [Reading(f"{pid:02X}", d.name, d.unit, "Nao identificada", status="Suporte nao confirmado") for pid, d in PIDS.items()]
+            self.session.readings = [Reading(f"{pid:02X}", d.name, d.unit, "Não identificada", status="Suporte não confirmado") for pid, d in PIDS.items()]
 
     def query(self, command: str):
         self.check_cancel()
@@ -80,7 +83,7 @@ class DiagnosticService:
             return parse_frames(self.client.send(command).response, command)
         except TransportError:
             self.disconnect()
-            self.session.ecu_status = "Comunicacao interrompida"
+            self.session.ecu_status = "Comunicação interrompida"
             raise
 
     def poll(self) -> dict:
@@ -90,12 +93,12 @@ class DiagnosticService:
                 self.session.supported = {f.ecu: sorted(decode_supported(f)) for f in frames}
                 self._initial_readings()
             except ObdDecodeError as exc:
-                self.session.ecu_status = f"Sem confirmacao: {exc}"
+                self.session.ecu_status = f"Sem confirmação: {exc}"
                 return self.session.to_dict()
         any_valid = False
         failures = False
         for pid in PIDS:
-            targets = [r for r in self.session.readings if r.pid == f"{pid:02X}" and r.status != "Nao suportado"]
+            targets = [r for r in self.session.readings if r.pid == f"{pid:02X}" and r.status != "Não suportado"]
             if not targets:
                 continue
             try:
@@ -105,41 +108,44 @@ class DiagnosticService:
                     value = decode_pid(frame, pid)
                     reading = next((r for r in targets if r.ecu == frame.ecu), None)
                     if reading is None:
-                        raise ObdDecodeError("Resposta de ECU nao anunciada no mapa de suporte.")
+                        raise ObdDecodeError("Resposta de ECU não anunciada no mapa de suporte.")
                     reading.value, reading.timestamp = value, now_iso()
-                    reading.status, reading.detail = "Disponivel", ""
+                    reading.status, reading.detail, reading.stale = AVAILABLE, "", False
                     seen.add(frame.ecu)
                     any_valid = True
                 for reading in targets:
                     if reading.ecu not in seen:
-                        reading.status, reading.detail = "Sem dados", "Esta ECU nao respondeu."
+                        reading.status, reading.detail = UNAVAILABLE, "Esta ECU não respondeu."
+                        reading.stale = reading.value is not None
                         failures = True
             except ObdDecodeError as exc:
                 failures = True
                 for reading in targets:
-                    reading.status = "Sem dados" if isinstance(exc, NoDataError) else "Erro de resposta"
+                    reading.status = UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED
                     reading.detail = str(exc)
-        self.session.ecu_status = "Comunicacao parcial" if any_valid and failures else "Comunicacao confirmada" if any_valid else "Sem leituras validas"
+                    reading.stale = reading.value is not None
+        self.session.ecu_status = "Comunicação parcial" if any_valid and failures else "Comunicação confirmada" if any_valid else "Sem leituras válidas"
         return self.session.to_dict()
 
     def read_codes(self) -> dict:
         codes = []
-        queries = {}
+        queries = {kind: {"status": NOT_QUERIED} for kind in ("Confirmado", "Pendente")}
         self.session.codes = codes
         self.session.code_queries = queries
         for service, label in ((3, "Confirmado"), (7, "Pendente")):
+            queries[label] = {"status": QUERYING}
             try:
                 frames = self.query(f"{service:02X}")
                 counts = {}
                 for frame in frames:
                     decoded = decode_dtcs(frame, service)
                     counts[frame.ecu] = len(decoded)
-                    codes.extend(TroubleCode(code, DTC_DESCRIPTIONS.get(code, "Descricao nao disponivel"), label, frame.ecu) for code in decoded)
-                queries[label] = {"status": "Consulta concluida", "ecus": counts, "timestamp": now_iso()}
+                    codes.extend(TroubleCode(code, DTC_DESCRIPTIONS.get(code, "Descrição não disponível"), label, frame.ecu) for code in decoded)
+                queries[label] = {"status": COMPLETE if any(counts.values()) else EMPTY_CODES, "success": True, "ecus": counts, "timestamp": now_iso()}
             except ObdDecodeError as exc:
-                queries[label] = {"status": "Sem dados / suporte nao confirmado" if isinstance(exc, NoDataError) else "Consulta falhou", "detail": str(exc), "timestamp": now_iso()}
+                queries[label] = {"status": UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, "success": False, "detail": str(exc), "timestamp": now_iso()}
             except TransportError:
-                queries[label] = {"status": "Consulta falhou: ligacao interrompida", "timestamp": now_iso()}
+                queries[label] = {"status": QUERY_FAILED, "success": False, "detail": "Ligação interrompida", "timestamp": now_iso()}
                 raise
         self.session.codes, self.session.code_queries = codes, queries
         return self.session.to_dict()
@@ -147,7 +153,8 @@ class DiagnosticService:
     def read_freeze_frame(self) -> dict:
         self.session.freeze_frame = []
         self.session.freeze_codes = {}
-        self.session.freeze_status = "Consulta em curso"
+        self.session.freeze_status = QUERYING
+        self.session.freeze_detail = ""
         try:
             support = {f.ecu: decode_supported(f, service=2) for f in self.query("020000")}
             code_detail = ""
@@ -158,7 +165,7 @@ class DiagnosticService:
                         raise ObdDecodeError("Codigo de freeze frame incompleto.")
                     self.session.freeze_codes[frame.ecu] = decode_dtcs(type(frame)(frame.ecu, b"\x43" + payload), 3)
             except ObdDecodeError as exc:
-                code_detail = f"; codigo associado indisponivel: {exc}"
+                code_detail = f"; código associado indisponível: {exc}"
             for pid, definition in PIDS.items():
                 targets = [ecu for ecu, pids in support.items() if pid in pids]
                 if not targets:
@@ -168,35 +175,38 @@ class DiagnosticService:
                     seen = set()
                     for frame in frames:
                         if frame.ecu not in targets:
-                            raise ObdDecodeError("ECU freeze frame nao anunciada.")
+                            raise ObdDecodeError("ECU freeze frame não anunciada.")
                         value = decode_pid(frame, pid, service=2)
-                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, frame.ecu, value, "Disponivel", now_iso()))
+                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, frame.ecu, value, AVAILABLE, now_iso()))
                         seen.add(frame.ecu)
                     for ecu in set(targets) - seen:
-                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status="Sem dados"))
+                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status=UNAVAILABLE))
                 except ObdDecodeError as exc:
                     for ecu in targets:
-                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status="Sem dados", detail=str(exc)))
-            self.session.freeze_status = "Consulta concluida (frame 0)" + code_detail
+                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status=UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, detail=str(exc)))
+            self.session.freeze_status = COMPLETE
+            self.session.freeze_detail = "Frame 0" + code_detail
         except ObdDecodeError as exc:
-            self.session.freeze_status = f"Freeze frame indisponivel ou invalido: {exc}"
+            self.session.freeze_status = UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED
+            self.session.freeze_detail = str(exc)
         except TransportError:
-            self.session.freeze_status = "Consulta freeze frame falhou: ligacao interrompida"
+            self.session.freeze_status = QUERY_FAILED
+            self.session.freeze_detail = "Ligação interrompida"
             raise
         return self.session.to_dict()
 
     def clear_codes(self) -> dict:
         if not self.session.simulation:
-            raise TransportError("Limpeza permitida apenas em simulacao.")
-        self.session.clear_status = "Limpeza solicitada; ainda nao confirmada."
+            raise TransportError("Limpeza permitida apenas em simulação.")
+        self.session.clear_status = "Limpeza solicitada; ainda não confirmada."
         try:
             frames = self.query("04")
         except (TransportError, ObdDecodeError):
-            self.session.clear_status = "Limpeza nao confirmada; pedido falhou ou sem suporte."
+            self.session.clear_status = "Limpeza não confirmada; pedido falhou ou sem suporte."
             raise
         if not frames or any(f.data != b"\x44" for f in frames):
-            self.session.clear_status = "Limpeza nao confirmada; resposta diferente de 44."
-            raise ObdDecodeError("Limpeza nao confirmada pelo adaptador.")
+            self.session.clear_status = "Limpeza não confirmada; resposta diferente de 44."
+            raise ObdDecodeError("Limpeza não confirmada pelo adaptador.")
         acknowledged = {f.ecu for f in frames}
         self.session.clear_status = "Resposta 44 recebida; a verificar por releitura."
         self.session.freeze_frame = []
@@ -204,10 +214,10 @@ class DiagnosticService:
         self.session.freeze_status = "Dados anteriores a limpeza invalidados; voltar a consultar"
         self.read_codes()
         queries = self.session.code_queries
-        if all(queries.get(label, {}).get("status") == "Consulta concluida" and acknowledged <= set(queries[label].get("ecus", {})) for label in ("Confirmado", "Pendente")) and not self.session.codes:
-            self.session.clear_status = "Informacao de diagnostico limpa: resposta 44 e releitura confirmadas."
+        if all(queries.get(label, {}).get("success") is True and acknowledged <= set(queries[label].get("ecus", {})) for label in ("Confirmado", "Pendente")) and not self.session.codes:
+            self.session.clear_status = "Informacao de diagnóstico limpa: resposta 44 e releitura confirmadas."
         else:
-            self.session.clear_status = "Resposta 44 recebida; releitura inconclusiva ou codigos ainda presentes."
+            self.session.clear_status = "Resposta 44 recebida; releitura inconclusiva ou códigos ainda presentes."
         return self.session.to_dict()
 
     def disconnect(self) -> dict:
@@ -216,8 +226,9 @@ class DiagnosticService:
         self.transport = None
         self.client = None
         self.session.adapter_status = "Desligado"
-        self.session.ecu_status = "Nao ligada"
+        self.session.ecu_status = "Não ligada"
         for reading in self.session.readings:
             if reading.value is not None:
-                reading.status = "Desactualizado"
+                reading.status = STALE
+                reading.stale = True
         return self.session.to_dict()

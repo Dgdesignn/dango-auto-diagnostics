@@ -85,6 +85,29 @@ Apenas `Analisar com Gemini` envia dados. `Rever dados` mostra o retrato JSON. O
 
 A resposta distingue factos, hipoteses, evidencias, informacao em falta e proximos testes. Nao controla componentes nem pode limpar codigos. Resultados equivalentes usam cache SQLite. As tentativas falhadas tambem contam para o limite local; o dia e contado em UTC e o intervalo persiste entre arranques. Esses limites nao garantem um tecto financeiro da conta Google. Tokens sao mostrados quando informados pela API; a cache mostra a contagem da chamada original.
 
+### Validacao real Gemini
+
+A integracao foi validada em 11/10/2026 com a credencial autorizada pelo utilizador,
+guardada apenas no `.env` ignorado pelo Git. O modelo local passou a
+`gemini-3.8-flash`, indicado pela API porque `gemini-2.5-flash` deixou de estar
+disponivel para esta conta. O pedido usa `response_json_schema` para evitar a
+recusa do campo `additional_properties` no formato antigo.
+
+O teste enviou apenas dados ficticios (850 rpm, origem emulador), recebeu uma
+resposta JSON validada e 318 tokens de entrada, 350 de saida e 1400 totais,
+conforme informados pela API. O total pode incluir tokens de processamento
+interno. A repeticao usou cache e a janela apresentou esse resultado real.
+
+Para repetir o teste, respeitando a cache e os limites locais:
+
+```powershell
+.\.venv\Scripts\python.exe -X utf8 scripts\test_gemini.py
+```
+
+O teste pode consumir quota se nao existir resultado em cache. Reinicie a
+aplicacao para carregar alteracoes ao `.env`. Uma chave partilhada deve ser
+substituida no `.env` por uma nova credencial, sem a incluir no codigo ou no Git.
+
 ## Historico e ficheiros locais
 
 `Guardar sessao` guarda data, origem, estados, parametros, codigos, freeze frame, sintomas e analise com a fotografia enviada. O historico permite abrir um retrato separado e exportar JSON. Sessoes, cache e contagens locais ficam em `data/sessions.sqlite3`; pedidos/respostas ELM ficam em `data/scanner.log`, com rotacao. Estas pastas estao ignoradas no Git. `SCANNER_DATA_DIR` permite mudar a pasta de dados.
@@ -105,8 +128,10 @@ A suite usa servidores TCP e portas serial substitutos, SQLite temporario e Gemi
 
 ## Arquitectura e limites
 
+A revisão da interface, origem das sessões e estados de consulta está documentada em [docs/REVISAO_UI.md](docs/REVISAO_UI.md). Os botões usam ícone e texto, a temperatura usa °C e o tema inclui cores explícitas para estados normais, desactivados, seleccionados e em foco. A origem de novas sessões é capturada ao ligar e validada antes de guardar ou enviar ao Gemini. Registos antigos ambíguos são assinalados para confirmação, sem alteração automática.
+
 A explicacao de cada camada esta em [docs/IMPLEMENTACAO.md](docs/IMPLEMENTACAO.md): UI, workers, servicos, transportes, ELM, OBD, Gemini, modelos, configuracao e persistencia.
 
-Ainda exigem validacao real: USB serial, Bluetooth SPP, simulador Android e chamadas Gemini com uma chave de utilizador. A limpeza esta implementada, mas o seu efeito no cenario real nao foi testado. Freeze frame funcional foi validado com respostas controladas; o cenario instalado nao o disponibilizou.
+Ainda exigem validacao real: USB serial, Bluetooth SPP e simulador Android. Gemini foi validado com dados ficticios; nao foi feito um diagnostico mecanico de veiculo real. A limpeza esta implementada, mas o seu efeito no cenario real nao foi testado. Freeze frame funcional foi validado com respostas controladas; o cenario instalado nao o disponibilizou.
 
 Esta fase nao inclui BLE, suporte universal a marcas, UDS completo, ISO-TP bruto, firmware, programacao de ECU, testes de actuadores, aplicacao movel ou previsao fiavel de avarias futuras. Formatos de resposta desconhecidos produzem erro explicito. Nao foram feitos commits nem publicado o projecto.

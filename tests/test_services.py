@@ -22,17 +22,18 @@ class ServiceTests(unittest.TestCase):
         snapshot = self.service.poll()
         for reading in snapshot["readings"]:
             if reading["pid"] == "0C":
-                self.assertEqual(reading["status"], "Sem dados")
+                self.assertEqual(reading["status"], "Indisponível")
+                self.assertTrue(reading["stale"])
                 self.assertIsNotNone(reading["timestamp"])
                 self.assertNotEqual(reading["value"], 0)
 
     def test_codes_unknown_and_queries_failed(self):
         snapshot = self.service.read_codes()
         unknown = next(c for c in snapshot["codes"] if c["code"] == "U0123")
-        self.assertEqual(unknown["description"], "Descricao nao disponivel")
+        self.assertEqual(unknown["description"], "Descrição não disponível")
         self.adapter.responses["03"] = "CAN ERROR\r>"
         snapshot = self.service.read_codes()
-        self.assertEqual(snapshot["code_queries"]["Confirmado"]["status"], "Consulta falhou")
+        self.assertEqual(snapshot["code_queries"]["Confirmado"]["status"], "Falha de consulta")
 
     def test_freeze_frame(self):
         snapshot = self.service.read_freeze_frame()

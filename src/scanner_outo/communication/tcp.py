@@ -24,7 +24,7 @@ class TcpElmTransport(ElmTransport):
         except OSError as exc:
             self.close()
             raise TransportDisconnected(
-                f"Nao foi possivel ligar a {self.host}:{self.port}. Verifique o adaptador ou emulador."
+                f"Não foi possível ligar a {self.host}:{self.port}. Verifique o adaptador ou emulador."
             ) from exc
 
     def close(self) -> None:
@@ -38,7 +38,7 @@ class TcpElmTransport(ElmTransport):
 
     def request(self, command: str) -> str:
         if not command.strip() or any(c in command for c in "\r\n"):
-            raise TransportError("Comando ELM327 invalido.")
+            raise TransportError("Comando ELM327 inválido.")
         with self._lock:
             connection = self._socket
             if connection is None:
@@ -55,17 +55,17 @@ class TcpElmTransport(ElmTransport):
                     connection.settimeout(remaining)
                     chunk = connection.recv(4096)
                     if not chunk:
-                        raise TransportDisconnected("Ligacao TCP fechada pelo adaptador.")
+                        raise TransportDisconnected("Ligação TCP fechada pelo adaptador.")
                     response.extend(chunk)
                     if len(response) > 65536:
                         raise TransportError("Resposta ELM327 excede o limite de 64 KiB.")
                 return bytes(response[:response.index(b">") + 1]).decode("ascii", errors="replace")
             except TimeoutError as exc:
                 self.close()
-                raise TransportTimeout("Tempo esgotado; ligacao fechada para evitar respostas atrasadas.") from exc
+                raise TransportTimeout("Tempo esgotado; ligação fechada para evitar respostas atrasadas.") from exc
             except OSError as exc:
                 self.close()
-                raise TransportDisconnected("Falha na ligacao TCP ao adaptador.") from exc
+                raise TransportDisconnected("Falha na ligação TCP ao adaptador.") from exc
             except TransportError:
                 self.close()
                 raise
