@@ -80,3 +80,17 @@ Dados de sessoes dos testes ficam apenas em pastas temporarias; capturas em arti
 - [x] 52 testes aprovados, incluindo regressao do formato do pedido Gemini.
 - [x] `.env` confirmado como ignorado; sem novos commits ou publicacao nesta alteracao.
 - [ ] Substituir a credencial partilhada por uma nova no `.env` local.
+
+## Cenario P0301
+
+- [x] Versao 4.0.0 e documentacao do ELM327-emulator inspeccionadas.
+- [x] Cenario externo: P0301 confirmado, ralenti irregular, 88 graus Celsius, velocidade zero e freeze frame.
+- [x] Launcher com API real, loopback, verificacao de porta ocupada e sem alterar site-packages.
+- [x] Codigo recebido por TCP/OBD, descodificado e apresentado na janela, sem injectar dados na tabela.
+- [x] Gemini exclusivamente simulado: sintomas, origem, leituras recentes e causas apenas hipoteticas.
+- [x] Guardar, abrir, exportar, cache e desactualizacao apos desligar validados.
+- [x] Tres testes dedicados em 35001 e 55 testes na suite completa aprovados, sem skips.
+- [x] Capturas inspeccionadas, compileall e pip check aprovados.
+- [x] Instancia existente em 35000 preservada; comando exacto para essa porta documentado.
+- [x] Instrucoes e limites em `docs/CENARIO_P0301.md`; nenhuma chamada Gemini real automatica.
+- [x] Funcionalidade em branch `feature/cenario-p0301` a partir de `develop`.

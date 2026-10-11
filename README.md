@@ -49,6 +49,20 @@ cd C:\Py\scanner_outo
 .\.venv\Scripts\python.exe scripts\test_elm327_tcp.py
 ```
 
+## Cenario de avaria P0301
+
+Existe um cenario externo para o ELM327-emulator 4.0.0 com P0301 confirmado,
+ralenti irregular, 88 graus Celsius e velocidade zero. O launcher, comandos
+exactos, teste automatico sem chamadas Gemini reais e limites estao em
+[docs/CENARIO_P0301.md](docs/CENARIO_P0301.md). Nao altera `site-packages`.
+
+```powershell
+# Porta 35000 livre; usa o Python onde o emulador ja esta instalado:
+& C:\Py\simulador_scanner\.venv\Scripts\python.exe -u scripts\run_fault_emulator.py --port 35000
+# Teste automatico em porta livre, noutra execucao; Gemini sempre simulado:
+.\.venv\Scripts\python.exe -X utf8 scripts\verify_fault_scenario.py
+```
+
 ## TCP Android, USB e Bluetooth
 
 - Android: inicie o servidor ELM compativel no telefone, ligue ambos os dispositivos a mesma rede e configure na janela o IP do telefone e a porta anunciada pelo simulador. `127.0.0.1` refere-se ao computador, nao ao telefone. Seleccione origem de simulacao. TCP Android ainda precisa de validacao com o dispositivo.

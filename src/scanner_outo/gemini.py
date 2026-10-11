@@ -45,6 +45,9 @@ Não inventes medições, certeza de causa, percentagens de confiança ou previs
 de avarias futuras. Declara informação em falta e sugere testes de confirmação.
 Não recomendes programação de ECU nem acções autonomas. Não executes comandos.
 Considera explicitamente se a origem e um emulador. Responde apenas no esquema JSON.
+Um DTC descreve uma condicao detectada, nao identifica por si so uma peca avariada.
+P0301 indica falha de combustao no cilindro 1, nao prova falha de vela, bobina ou injector.
+Apresenta causas apenas como hipoteses e testes de confirmacao, sem recomendar troca de pecas sem evidencia.
 """
 
 
