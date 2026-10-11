@@ -1,0 +1,2 @@
+# Ambiente separado do simulador; nao instalar na .venv da aplicacao.
+ELM327-emulator==4.0.0

@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "compact": {"format": "%(asctime)s %(levelname)s %(message)s"}
+  },
+  "handlers": {
+    "file": {
+      "()": "scripts.emulator_environment.emulator_log_handler",
+      "formatter": "compact",
+      "filename": "logs/emulator/elm.log",
+      "level": "DEBUG",
+      "encoding": "utf-8",
+      "maxBytes": 1000000,
+      "backupCount": 2,
+      "mode": "a"
+    },
+    "console": {
+      "class": "logging.StreamHandler",
+      "formatter": "compact",
+      "level": "WARNING",
+      "stream": "ext://sys.stderr"
+    }
+  },
+  "root": {"level": "DEBUG", "handlers": ["file", "console"]}
+}

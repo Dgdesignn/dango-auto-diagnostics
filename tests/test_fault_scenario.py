@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
-import importlib.util
 import json
 import os
 from pathlib import Path
@@ -26,6 +25,7 @@ from scanner_outo.ui.main_window import MainWindow
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from scenarios.rough_idle import COOLANT_C, RPM_SEQUENCE, SYMPTOMS
+from scripts.emulator_environment import find_emulator_python
 
 
 class FaultScenarioTests(unittest.TestCase):
@@ -37,10 +37,8 @@ class FaultScenarioTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         configured = os.getenv("ELM327_PYTHON")
-        interpreter = Path(configured) if configured else Path("C:/Py/simulador_scanner/.venv/Scripts/python.exe")
-        if not configured and not interpreter.is_file() and importlib.util.find_spec("elm"):
-            interpreter = Path(sys.executable)
-        if not interpreter.is_file():
+        interpreter = find_emulator_python(ROOT)
+        if interpreter is None:
             message = "Defina ELM327_PYTHON com o Python que tem ELM327-emulator 4.0.0."
             if cls.require_emulator or configured:
                 raise RuntimeError(message)
@@ -101,6 +99,23 @@ class FaultScenarioTests(unittest.TestCase):
             self.assertEqual(result.returncode, 1)
             self.assertIn("ocupada/indisponivel", result.stderr)
             self.assertGreaterEqual(occupied.fileno(), 0)
+
+    def test_common_launcher_from_other_directory(self):
+        with tempfile.TemporaryDirectory() as temp, socket.socket() as probe:
+            probe.bind(("127.0.0.1", 0))
+            port = probe.getsockname()[1]
+            probe.close()
+            result = subprocess.run(
+                [sys.executable, "-X", "utf8", str(ROOT / "scripts/run_emulator.py"),
+                 "--port", str(port), "--stop-after", "1"],
+                cwd=temp, env={**os.environ, "ELM327_PYTHON": str(self.interpreter)},
+                capture_output=True, text=True, encoding="utf-8", timeout=15,
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertIn(f"car em 127.0.0.1:{port}", result.stdout)
+            self.assertIn(f"elm-{port}.log", result.stdout)
+            self.assertTrue((ROOT / f"logs/emulator/elm-{port}.log").is_file())
+            self.assertFalse((Path(temp) / "elm.log").exists())
 
     def assert_recent(self, readings):
         self.assertEqual(len(readings), 3)

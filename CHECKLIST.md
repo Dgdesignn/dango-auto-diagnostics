@@ -94,3 +94,16 @@ Dados de sessoes dos testes ficam apenas em pastas temporarias; capturas em arti
 - [x] Instancia existente em 35000 preservada; comando exacto para essa porta documentado.
 - [x] Instrucoes e limites em `docs/CENARIO_P0301.md`; nenhuma chamada Gemini real automatica.
 - [x] Funcionalidade em branch `feature/cenario-p0301` a partir de `develop`.
+
+## Organizacao dos ambientes
+
+- [x] Ambientes da aplicacao e do emulador mantidos separados, sem reinstalacao.
+- [x] `requirements-emulator.txt` fixa ELM327-emulator 4.0.0; reproducao documentada em `docs/AMBIENTES.md`.
+- [x] Descoberta por `ELM327_PYTHON`, pasta irma relativa ou Python corrente; erro explicito para override invalido.
+- [x] Launcher comum para car/P0301, independente da pasta de arranque.
+- [x] Configuracao externa de logging; logs em `logs/emulator/elm-<porta>.log`, append e rotacao.
+- [x] Nenhum ficheiro interno do emulador alterado; logs antigos, chaves e sessoes preservados.
+- [x] README actualizado com comandos e estado actual, distinguindo resultados historicos.
+- [x] 64 testes aprovados, sem skips, incluindo 8 testes de descoberta/logging e 4 testes integrados do emulador.
+- [x] compileall, pip check e diff --check aprovados; sem chamadas Gemini reais nesta alteracao.
+- [ ] Instalacao de raiz noutro computador: instrucoes disponibilizadas, nao executada nesta validacao.

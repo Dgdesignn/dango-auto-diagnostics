@@ -15,7 +15,7 @@ ELM inventado para configurar avarias.
   selecciona `rough_idle_p0301` e aplica o dicionario apenas a essa instancia.
 - `tests/test_fault_scenario.py`: inicia o pacote real num processo separado e usa os
   transportes, descodificador, servicos e janela existentes, sem injectar DTCs na tabela.
-- `scripts/verify_fault_scenario.py`: executa os tres testes integrados e termina apenas
+- `scripts/verify_fault_scenario.py`: executa os quatro testes integrados e termina apenas
   o processo que iniciou. Usa SQLite temporario, Gemini simulado e capturas ignoradas.
 
 Nenhum ficheiro de `site-packages` e alterado. Os dados OBD de `default` e `car`
@@ -61,6 +61,15 @@ Mantem este terminal aberto. `Ctrl+C` termina esta instancia. Se a porta estiver
 ocupada, o launcher falha com mensagem clara, sem terminar outros processos.
 O servidor fica limitado a loopback, sem acesso pela rede externa.
 
+Tambem podes usar a descoberta automatica, a partir da pasta do projecto:
+
+```powershell
+.\.venv\Scripts\python.exe scripts\run_emulator.py --scenario rough_idle_p0301 --port 35000
+```
+
+Ambos usam o Python do emulador e guardam logs em `logs/emulator/elm-35000.log`.
+Os ambientes e a sua reproducao estao em [AMBIENTES.md](AMBIENTES.md).
+
 3. Noutro terminal, abre a aplicacao:
 
 ```powershell
@@ -98,7 +107,6 @@ Usa a .venv da aplicacao para Qt e o Python do emulador para o servidor:
 
 ```powershell
 cd C:\Py\scanner_outo
-$env:ELM327_PYTHON = 'C:\Py\simulador_scanner\.venv\Scripts\python.exe'
 .\.venv\Scripts\python.exe -X utf8 scripts\verify_fault_scenario.py
 ```
 
@@ -124,6 +132,10 @@ Capturas: `artifacts/fault-p0301-codes.png` e `artifacts/fault-p0301-ai.png`.
 Se faltar o emulador, a suite geral assinala estes testes como ignorados;
 o verificador dedicado falha explicitamente. `ELM327_PYTHON` pode apontar para
 outro ambiente que tenha a mesma versao instalada.
+
+A pasta irma `simulador_scanner/.venv` e descoberta automaticamente, sem caminho
+fixo para `C:\Py`. O quarto teste verifica o launcher `car` a partir de outra
+pasta e a localizacao centralizada dos logs.
 
 ## Resultado da validacao
 

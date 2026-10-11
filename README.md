@@ -11,11 +11,11 @@ cd C:\Py\scanner_outo
 .\.venv\Scripts\python.exe scripts\run_app.py
 ```
 
-Na janela, seleccione `TCP`, origem `Emulador / simulacao`, host `127.0.0.1` e porta `35000`, e clique em `Ligar`. Em `Dados`, use `Consultar agora` ou `Iniciar actualizacao`. O intervalo inicial e 3 segundos; pedidos sao sequenciais e nao se acumulam quando uma consulta demora.
+Na janela, seleccione `TCP`, origem `Emulador / simulacao`, host `127.0.0.1` e porta `35000`, e clique em `Ligar`. Em `Dados`, use `Actualizar` ou `Iniciar actualizacao`. O intervalo inicial e 3 segundos; pedidos sao sequenciais e nao se acumulam quando uma consulta demora.
 
 ## Instalar no Windows
 
-O ambiente foi executado com Python 3.13.15 de 64 bits, PySide6 6.12.0 e pyserial 3.5. A integracao Gemini foi testada com cliente simulado e SDK google-genai 2.29.0 instalado.
+O ambiente foi executado com Python 3.13.15 de 64 bits, PySide6 6.12.0 e pyserial 3.5. A integracao Gemini foi validada com cliente simulado e uma chamada real com dados ficticios, usando SDK google-genai 2.29.0. Os testes automaticos nao fazem chamadas Gemini reais.
 
 Para preparar outro checkout:
 
@@ -36,11 +36,13 @@ A instalacao necessita de acesso ao PyPI. No ambiente actual, o pacote ja foi in
 Abra um terminal separado e mantenha-o aberto:
 
 ```powershell
-cd C:\Py\simulador_scanner
-.\.venv\Scripts\python.exe -m elm -s car -n 35000 -i 127.0.0.1
+cd C:\Py\scanner_outo
+.\.venv\Scripts\python.exe scripts\run_emulator.py --scenario car --port 35000
 ```
 
-O emulador existente e v4.0.0. A aplicacao principal nao instala nem altera esse ambiente. A opcao `-i` limita esta ligacao ao computador local. Nao abra duas instancias na mesma porta.
+O launcher descobre o Python de `simulador_scanner/.venv` ao lado do projecto e executa o ELM327-emulator 4.0.0 nesse ambiente separado. O servidor fica limitado a `127.0.0.1`. Nao abra duas instancias na mesma porta. `ELM327_PYTHON` permite indicar outra localizacao.
+
+A estrutura, comandos para ambos os ambientes, logs e instrucoes para reconstruir a .venv do emulador estao em [docs/AMBIENTES.md](docs/AMBIENTES.md). `requirements-emulator.txt` declara a versao validada; nao instala o emulador na .venv da aplicacao.
 
 O teste de terminal continua disponivel:
 
@@ -57,8 +59,8 @@ exactos, teste automatico sem chamadas Gemini reais e limites estao em
 [docs/CENARIO_P0301.md](docs/CENARIO_P0301.md). Nao altera `site-packages`.
 
 ```powershell
-# Porta 35000 livre; usa o Python onde o emulador ja esta instalado:
-& C:\Py\simulador_scanner\.venv\Scripts\python.exe -u scripts\run_fault_emulator.py --port 35000
+# Porta 35000 livre; o launcher descobre o ambiente separado:
+.\.venv\Scripts\python.exe scripts\run_emulator.py --scenario rough_idle_p0301 --port 35000
 # Teste automatico em porta livre, noutra execucao; Gemini sempre simulado:
 .\.venv\Scripts\python.exe -X utf8 scripts\verify_fault_scenario.py
 ```
@@ -77,7 +79,7 @@ A aplicacao consulta suporte pelo PID 0100 e apresenta RPM, temperatura do liqui
 
 Em `Avarias`, pode consultar os modos 03/07 e o freeze frame 0 do modo 02, quando houver respostas. A tabela de descricoes e pequena: para codigos fora da tabela e apresentada `Descricao nao disponivel`. Uma consulta falhada ou NO DATA nao significa que nao existam avarias. O cenario `car` validado devolveu respostas sem codigos confirmados/pendentes e `NO DATA` para freeze frame.
 
-`Limpar na simulacao` primeiro guarda uma fotografia dos dados/codigos disponiveis e pede confirmacao. Limpar registos nao repara a causa. E necessaria uma resposta 44 e releitura coerente para confirmar a limpeza. O cenario pode nao suportar o comando, ou continuar a devolver codigos. Nenhum teste envia automaticamente o comando 04.
+`Limpar registos` primeiro guarda uma fotografia dos dados/codigos disponiveis e pede confirmacao, apenas em simulacao. Limpar registos nao repara a causa. E necessaria uma resposta 44 e releitura coerente para confirmar a limpeza. O cenario pode nao suportar o comando, ou continuar a devolver codigos. Nenhum teste envia automaticamente o comando 04 ao emulador instalado.
 
 ## Gemini e consumo
 
@@ -126,6 +128,8 @@ substituida no `.env` por uma nova credencial, sem a incluir no codigo ou no Git
 
 `Guardar sessao` guarda data, origem, estados, parametros, codigos, freeze frame, sintomas e analise com a fotografia enviada. O historico permite abrir um retrato separado e exportar JSON. Sessoes, cache e contagens locais ficam em `data/sessions.sqlite3`; pedidos/respostas ELM ficam em `data/scanner.log`, com rotacao. Estas pastas estao ignoradas no Git. `SCANNER_DATA_DIR` permite mudar a pasta de dados.
 
+Os launchers do emulador guardam os seus logs em `logs/emulator/elm-<porta>.log`, independentemente da pasta de arranque. Logs antigos foram preservados. A execucao directa de `python -m elm` conserva o comportamento original do pacote.
+
 Ao fechar durante uma operacao, a janela aguarda o pedido em curso, cancela os proximos pedidos OBD e fecha sockets/portas. Um pedido Gemini em curso termina pelo seu timeout; nao e interrompido brutalmente.
 
 ## Testes e validacao
@@ -146,6 +150,6 @@ A revisão da interface, origem das sessões e estados de consulta está documen
 
 A explicacao de cada camada esta em [docs/IMPLEMENTACAO.md](docs/IMPLEMENTACAO.md): UI, workers, servicos, transportes, ELM, OBD, Gemini, modelos, configuracao e persistencia.
 
-Ainda exigem validacao real: USB serial, Bluetooth SPP e simulador Android. Gemini foi validado com dados ficticios; nao foi feito um diagnostico mecanico de veiculo real. A limpeza esta implementada, mas o seu efeito no cenario real nao foi testado. Freeze frame funcional foi validado com respostas controladas; o cenario instalado nao o disponibilizou.
+Ainda exigem validacao real: USB serial, Bluetooth SPP e simulador Android. Gemini foi validado com dados ficticios; nao foi feito um diagnostico mecanico de veiculo real. A limpeza esta implementada, mas o seu efeito no cenario real nao foi testado. Freeze frame funcional foi validado com respostas controladas e com o cenario personalizado P0301 no pacote instalado; o cenario original car nao o disponibilizou.
 
-Esta fase nao inclui BLE, suporte universal a marcas, UDS completo, ISO-TP bruto, firmware, programacao de ECU, testes de actuadores, aplicacao movel ou previsao fiavel de avarias futuras. Formatos de resposta desconhecidos produzem erro explicito. Nao foram feitos commits nem publicado o projecto.
+Esta fase nao inclui BLE, suporte universal a marcas, UDS completo, ISO-TP bruto, firmware, programacao de ECU, testes de actuadores, aplicacao movel ou previsao fiavel de avarias futuras. Formatos de resposta desconhecidos produzem erro explicito. Existem commits locais; o projecto nao foi publicado no GitHub nesta entrega.
