@@ -22,3 +22,6 @@ gemini = ["google-genai>=1,<3"]
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+scanner_outo = ["ui/assets/fonts/*", "ui/assets/icons/*"]
+

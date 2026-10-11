@@ -1,0 +1,398 @@
+<!DOCTYPE html><html class="h-full" lang="pt"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-surface":"#213145","on-primary-fixed":"#00201d","surface-bright":"#f8f9ff","on-error-container":"#93000a","outline":"#6e7977","on-error":"#ffffff","primary-fixed":"#9cf2e8","error-container":"#ffdad6","on-secondary":"#ffffff","on-secondary-fixed":"#141b2b","surface-variant":"#d3e4fe","surface-container":"#e5eeff","inverse-primary":"#80d5cb","on-tertiary-container":"#ffe5db","secondary":"#575e70","tertiary-container":"#9c573a","primary-container":"#0f766e","surface-container-highest":"#d3e4fe","outline-variant":"#bdc9c6","surface-dim":"#cbdbf5","primary":"#005c55","on-primary":"#ffffff","surface-tint":"#006a63","on-surface":"#0b1c30","primary-fixed-dim":"#80d5cb","tertiary":"#7f4025","secondary-container":"#d9dff5","inverse-on-surface":"#eaf1ff","surface":"#f8f9ff","secondary-fixed":"#dce2f7","surface-container-high":"#dce9ff","on-primary-container":"#a3faef","tertiary-fixed-dim":"#ffb598","on-tertiary-fixed-variant":"#72361b","on-surface-variant":"#3e4947","surface-container-lowest":"#ffffff","on-background":"#0b1c30","surface-container-low":"#eff4ff","secondary-fixed-dim":"#c0c6db","tertiary-fixed":"#ffdbce","on-primary-fixed-variant":"#00504a","on-tertiary":"#ffffff","on-tertiary-fixed":"#370e00","on-secondary-container":"#5c6274","background":"#f8f9ff","on-secondary-fixed-variant":"#404758","error":"#ba1a1a"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin":"1rem","space-sm":"0.5rem","space-xl":"2rem","gutter":"1rem","margin-panel":"1.5rem","space-md":"1rem","space-lg":"1.5rem","gutter-compact":"0.5rem","space-xs":"0.25rem"},"fontFamily":{"headline-xl":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"data-mono-sm":["JetBrains Mono"],"body-lg":["Inter"],"headline-lg":["Inter"],"label-md":["Inter"],"data-mono-lg":["JetBrains Mono"],"body-sm":["Inter"],"data-mono-md":["JetBrains Mono"]},"fontSize":{"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"data-mono-sm":["11px",{"lineHeight":"16px","fontWeight":"400"}],"body-lg":["15px",{"lineHeight":"22px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"data-mono-lg":["20px",{"lineHeight":"26px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"data-mono-md":["13px",{"lineHeight":"18px","fontWeight":"500"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[260px] bg-inverse-surface text-inverse-on-surface border-r border-outline-variant/30 z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="p-space-md border-b border-outline-variant/20"><div class="flex items-center gap-space-sm mb-space-xs"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm"><span class="material-symbols-outlined text-lg">directions_car</span></div><div class="flex flex-col"><span class="font-headline-md text-headline-md tracking-tight text-surface-container-lowest leading-none">DANGO</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Auto Diagnostics</span></div></div><div class="flex items-center justify-end mt-space-xs"><span class="font-data-mono-sm text-data-mono-sm text-primary-fixed-dim bg-primary-container/40 px-1.5 py-0.5 rounded">OBD-II</span></div><div class="mt-space-sm p-space-sm rounded-lg bg-surface-container-high/10 border border-outline-variant/20"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="font-label-sm text-label-sm text-surface-container-lowest font-bold tracking-wide">CONECTADO</span></div><div class="mt-1 font-data-mono-sm text-data-mono-sm text-outline-variant leading-tight truncate" title="OBDLink EX / USB-Serial / ISO 15765-4 CAN 11bit 500k">OBDLink EX · CAN 500k</div></div></div><nav class="flex flex-col gap-1 p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm"><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">dashboard</span><span class="font-body-md text-body-md">Visão geral</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="connection" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">cable</span><span class="font-body-md text-body-md">Conexão</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="diagnostics" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">warning</span><span class="font-body-md text-body-md">Diagnóstico</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-error text-on-error">1 Ativo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="live-data" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">query_stats</span><span class="font-body-md text-body-md">Dados ao vivo</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="ai-analysis" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">smart_toy</span><span class="font-body-md text-body-md">Análise com IA</span></div></a><a aria-current="page" class="flex items-center justify-between px-space-sm py-2 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm" data-path="history" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">history</span><span class="font-body-md text-body-md">Histórico</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="simulator" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">science</span><span class="font-body-md text-body-md">Simulador</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-secondary-container text-on-secondary-container">Demo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">settings</span><span class="font-body-md text-body-md">Definições</span></div></a></nav></div><div class="p-space-sm border-t border-outline-variant/20 flex flex-col gap-space-xs"><div class="px-space-xs py-1 flex items-center justify-between font-data-mono-sm text-data-mono-sm text-outline-variant"><span class="">Porta:</span><span class="text-primary-fixed font-semibold">COM3 @ 115200</span></div><div class="flex items-center justify-between px-space-xs py-1"><span class="font-body-sm text-body-sm text-outline-variant">Link Ativo</span><button class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-on-error-container hover:bg-error hover:text-on-error transition-colors" type="button">Desconectar</button></div><div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/10 text-outline-variant"><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="design-system" href="#"><span class="material-symbols-outlined text-sm">palette</span> Design System</a><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="documentation" href="#"><span class="material-symbols-outlined text-sm">menu_book</span> Docs</a></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md min-w-0"><div class="flex items-center gap-space-sm px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 min-w-0"><span class="material-symbols-outlined text-primary text-xl">directions_car</span><div class="flex flex-col min-w-0"><span class="font-headline-md text-headline-md text-on-surface truncate leading-tight">Volkswagen Golf VII 1.4 TSI (2016)</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant leading-tight">VIN: WVWZZZAUZGW01****</span></div></div></div><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary-container text-on-primary-container font-label-md text-label-md"><span class="w-2 h-2 rounded-full bg-emerald-300"></span><span class="">SIMULAÇÃO (Dados de demonstração)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/30 text-on-surface font-data-mono-md text-data-mono-md"><span class="text-tertiary-container font-bold">⚡</span><span class="">12.4 V</span><span class="font-label-sm text-label-sm text-primary font-semibold">(Normal)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant font-data-mono-sm text-data-mono-sm"><span class="">CAN 500k</span></div><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-md text-label-md font-bold"><span class="material-symbols-outlined text-base">error</span><span class="">MIL ATIVO (1 DTC)</span></div></div><div class="flex items-center gap-space-sm"><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Atualizar Telemetria" type="button"><span class="material-symbols-outlined text-xl">refresh</span></button><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Documentação" type="button"><span class="material-symbols-outlined text-xl">help_outline</span></button><div class="h-6 w-px bg-outline-variant/40 mx-1"></div><div class="flex items-center gap-space-sm pl-1"><div class="text-right hidden sm:flex sm:flex-col"><span class="font-headline-md text-body-md text-on-surface leading-tight">Oficina Central</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Porto · Técnico</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UNwIBFgNkdMJLkh2Kpr4HjBbMKzq0ZU-fScLsigHTm88Ck83s0hAGBq0QlIyEpeBP1VwtxKxmUn0omo0KZtJ1IyK-fJz5-Pb6A_u1ZscOXrEj-oeRFHuwqcumVKuK7gyzxd6WuuSjYtXz4MtEd3WfwxY78YRtkJllGkouLvcs9DrSe057EJ6uPFdeARFqx0d_OdrolUMjxmW4ICbila7jD67-eaqGh7J5dHuAk8jhkIi8_ETVbEoi7dA"></div></div></header><main class="relative pt-16 bg-background min-h-screen"><div class="max-w-7xl mx-auto p-6 md:p-8"><div class="flex flex-col w-full gap-space-lg">
+<!-- Top Utility Context Bar / Title Area -->
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex flex-col"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-primary text-xl">folder_managed</span><h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Histórico</h1><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-surface-container text-secondary font-medium">84 Registos</span></div></div>
+<!-- Global Actions -->
+<div class="flex flex-wrap items-center gap-space-xs">
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-base text-secondary">file_download</span>
+<span class="">Exportar Todos (JSON / CSV)</span>
+</button>
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-base text-secondary">file_upload</span>
+<span class="">Importar Sessão Externa</span>
+</button>
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">add_circle</span>
+<span class="">Criar Nova Sessão</span>
+</button>
+</div>
+</div>
+<!-- Filter & Operational Controls Strip -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-sm bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<!-- Search Bar -->
+<div class="xl:col-span-5 flex items-center bg-surface-container-low px-3 py-1.5 rounded-lg">
+<span class="material-symbols-outlined text-on-surface-variant text-lg mr-2">search</span>
+<input class="w-full bg-transparent font-body-md text-body-md text-on-surface placeholder:text-on-surface-variant focus:outline-none" id="session-search" placeholder="Pesquisar por matrícula, VIN, DTC ou data..." type="text">
+<kbd class="hidden sm:inline-block px-1.5 py-0.5 font-data-mono-sm text-data-mono-sm bg-surface-container text-on-surface-variant rounded">⌘K</kbd>
+</div>
+<!-- Filter Origin Tabs -->
+<div class="xl:col-span-3 flex items-center bg-surface-container-low p-1 rounded-lg">
+<button class="flex-1 py-1 px-2 text-center rounded-md font-label-sm text-label-sm bg-surface-container-lowest text-primary font-bold shadow-sm transition-all" type="button">Todas</button>
+<button class="flex-1 py-1 px-2 text-center rounded-md font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" type="button">Veículo Real</button>
+<button class="flex-1 py-1 px-2 text-center rounded-md font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface transition-colors" type="button">Simulador</button>
+</div>
+<!-- Status Filter Dropdown / Date Picker -->
+<div class="xl:col-span-4 flex items-center gap-space-xs">
+<div class="flex-1 flex items-center justify-between bg-surface-container-low px-3 py-1.5 rounded-lg cursor-pointer hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base text-secondary">tune</span>
+<span class="font-body-sm text-body-sm text-on-surface">Estado: <strong>Todos</strong></span>
+</div>
+<span class="material-symbols-outlined text-base text-secondary">arrow_drop_down</span>
+</div>
+<div class="flex-1 flex items-center justify-between bg-surface-container-low px-3 py-1.5 rounded-lg cursor-pointer hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base text-secondary">calendar_today</span>
+<span class="font-body-sm text-body-sm text-on-surface">Últimos 30 dias</span>
+</div>
+<span class="material-symbols-outlined text-base text-secondary">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Primary Workspace: Split Table & Quick Inspection Flyout -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md items-start">
+<!-- Main Logged Sessions List (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-space-xs bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-2 mb-1">
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-on-surface uppercase tracking-wider font-bold">Arquivo de Telemetria e Registos</span>
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+</div>
+<div class="flex items-center gap-2 font-data-mono-sm text-data-mono-sm text-on-surface-variant">
+<span class="">Ordenar: Recentes</span>
+<span class="material-symbols-outlined text-sm">swap_vert</span>
+</div>
+</div>
+<!-- Table Header -->
+<div class="hidden sm:grid grid-cols-12 px-3 py-2 bg-surface-container-low rounded-lg font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+<div class="col-span-2">Data/Hora</div>
+<div class="col-span-2">Origem</div>
+<div class="col-span-3">Veículo / ID</div>
+<div class="col-span-1">Duração</div>
+<div class="col-span-2">Avarias (DTCs)</div>
+<div class="col-span-2 text-right">Ações</div>
+</div>
+<!-- Session 1: Current / Selected Row -->
+<div class="session-card group grid grid-cols-1 sm:grid-cols-12 items-center p-3 rounded-lg bg-surface-container-high transition-all shadow-sm cursor-pointer" onclick="selectSession(1)">
+<div class="col-span-2 flex flex-col mb-1 sm:mb-0">
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-semibold">Hoje, 14:18</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-primary font-medium">#DNG-2024-0841</span>
+</div>
+<div class="col-span-2 flex items-center mb-1 sm:mb-0">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">
+<span class="material-symbols-outlined text-xs">directions_car</span>
+            VEÍCULO REAL
+          </span>
+</div>
+<div class="col-span-3 flex flex-col min-w-0 pr-2 mb-1 sm:mb-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Volkswagen Golf VII 1.4 TSI</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant truncate">WVWZZZAUZGW01****</span>
+</div>
+<div class="col-span-1 mb-1 sm:mb-0">
+<span class="font-data-mono-sm text-data-mono-sm text-secondary font-medium">24 min</span>
+</div>
+<div class="col-span-2 flex flex-col gap-0.5 mb-2 sm:mb-0">
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded font-label-sm text-label-sm bg-error-container text-on-error-container font-bold">
+<span class="material-symbols-outlined text-xs">warning</span>
+            1 DTC (P0301)
+          </span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">14 PIDs · 14.280 fr</span>
+</div>
+<div class="col-span-2 flex items-center justify-end gap-1">
+<button class="px-2.5 py-1 bg-primary text-on-primary rounded font-label-sm text-label-sm font-semibold hover:bg-primary-container transition-colors shadow-xs" type="button">
+            Abrir
+          </button>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container transition-colors" title="Exportar dados" type="button">
+<span class="material-symbols-outlined text-base">download</span>
+</button>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container transition-colors" title="Gerar PDF" type="button">
+<span class="material-symbols-outlined text-base">picture_as_pdf</span>
+</button>
+</div>
+</div>
+<!-- Session 2: Bench Simulation -->
+<div class="session-card group grid grid-cols-1 sm:grid-cols-12 items-center p-3 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer" onclick="selectSession(2)">
+<div class="col-span-2 flex flex-col mb-1 sm:mb-0">
+<span class="font-data-mono-md text-data-mono-md text-on-surface">Ontem, 16:45</span>
+<span class="font-data-mono-sm text-data-mono-sm text-secondary">#DNG-2024-0840</span>
+</div>
+<div class="col-span-2 flex items-center mb-1 sm:mb-0">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">
+<span class="material-symbols-outlined text-xs">science</span>
+            SIMULADOR
+          </span>
+</div>
+<div class="col-span-3 flex flex-col min-w-0 pr-2 mb-1 sm:mb-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Simulador Bancada</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant truncate">Cenário: Falha P0301 Ativa</span>
+</div>
+<div class="col-span-1 mb-1 sm:mb-0">
+<span class="font-data-mono-sm text-data-mono-sm text-secondary">12 min</span>
+</div>
+<div class="col-span-2 flex flex-col gap-0.5 mb-2 sm:mb-0">
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded font-label-sm text-label-sm bg-error-container text-on-error-container font-bold">
+<span class="material-symbols-outlined text-xs">warning</span>
+            1 DTC (P0301)
+          </span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">8 PIDs · 7.200 fr</span>
+</div>
+<div class="col-span-2 flex items-center justify-end gap-1">
+<button class="px-2.5 py-1 bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-variant transition-colors" type="button">
+            Abrir
+          </button>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-base">download</span>
+</button>
+</div>
+</div>
+<!-- Session 3: Real Vehicle Clean -->
+<div class="session-card group grid grid-cols-1 sm:grid-cols-12 items-center p-3 rounded-lg bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer" onclick="selectSession(3)">
+<div class="col-span-2 flex flex-col mb-1 sm:mb-0">
+<span class="font-data-mono-md text-data-mono-md text-on-surface">24 Out, 10:12</span>
+<span class="font-data-mono-sm text-data-mono-sm text-secondary">#DNG-2024-0839</span>
+</div>
+<div class="col-span-2 flex items-center mb-1 sm:mb-0">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary-container/20 text-primary font-semibold">
+<span class="material-symbols-outlined text-xs">directions_car</span>
+            VEÍCULO REAL
+          </span>
+</div>
+<div class="col-span-3 flex flex-col min-w-0 pr-2 mb-1 sm:mb-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Renault Megane 1.5 dCi</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant truncate">VF1KZ140452****</span>
+</div>
+<div class="col-span-1 mb-1 sm:mb-0">
+<span class="font-data-mono-sm text-data-mono-sm text-secondary">38 min</span>
+</div>
+<div class="col-span-2 flex flex-col gap-0.5 mb-2 sm:mb-0">
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded font-label-sm text-label-sm bg-surface-container text-primary font-bold">
+<span class="material-symbols-outlined text-xs">check_circle</span>
+            0 DTCs (Limpo)
+          </span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">12 PIDs · 22.100 fr</span>
+</div>
+<div class="col-span-2 flex items-center justify-end gap-1">
+<button class="px-2.5 py-1 bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-variant transition-colors" type="button">
+            Abrir
+          </button>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-base">download</span>
+</button>
+</div>
+</div>
+<!-- Session 4: BMW with Dual DTCs -->
+<div class="session-card group grid grid-cols-1 sm:grid-cols-12 items-center p-3 rounded-lg bg-surface-container-low hover:bg-surface-container transition-colors cursor-pointer" onclick="selectSession(4)">
+<div class="col-span-2 flex flex-col mb-1 sm:mb-0">
+<span class="font-data-mono-md text-data-mono-md text-on-surface">22 Out, 11:30</span>
+<span class="font-data-mono-sm text-data-mono-sm text-secondary">#DNG-2024-0838</span>
+</div>
+<div class="col-span-2 flex items-center mb-1 sm:mb-0">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary-container/20 text-primary font-semibold">
+<span class="material-symbols-outlined text-xs">directions_car</span>
+            VEÍCULO REAL
+          </span>
+</div>
+<div class="col-span-3 flex flex-col min-w-0 pr-2 mb-1 sm:mb-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">BMW 320d F30 (2014)</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant truncate">WBA3D31080F****</span>
+</div>
+<div class="col-span-1 mb-1 sm:mb-0">
+<span class="font-data-mono-sm text-data-mono-sm text-secondary">15 min</span>
+</div>
+<div class="col-span-2 flex flex-col gap-0.5 mb-2 sm:mb-0">
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed font-bold">
+<span class="material-symbols-outlined text-xs">report_problem</span>
+            2 DTCs (EGR/DPF)
+          </span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">16 PIDs · 9.800 fr</span>
+</div>
+<div class="col-span-2 flex items-center justify-end gap-1">
+<button class="px-2.5 py-1 bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-variant transition-colors" type="button">
+            Abrir
+          </button>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-base">download</span>
+</button>
+</div>
+</div>
+<!-- Session 5: Long Bench Baseline -->
+<div class="session-card group grid grid-cols-1 sm:grid-cols-12 items-center p-3 rounded-lg bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer" onclick="selectSession(5)">
+<div class="col-span-2 flex flex-col mb-1 sm:mb-0">
+<span class="font-data-mono-md text-data-mono-md text-on-surface">18 Out, 09:05</span>
+<span class="font-data-mono-sm text-data-mono-sm text-secondary">#DNG-2024-0837</span>
+</div>
+<div class="col-span-2 flex items-center mb-1 sm:mb-0">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded font-label-sm text-label-sm bg-secondary-container text-on-secondary-container font-semibold">
+<span class="material-symbols-outlined text-xs">science</span>
+            SIMULADOR
+          </span>
+</div>
+<div class="col-span-3 flex flex-col min-w-0 pr-2 mb-1 sm:mb-0">
+<span class="font-body-md text-body-md text-on-surface font-semibold truncate">Simulador Bancada - Normal</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant truncate">Calibração Estática Baseline</span>
+</div>
+<div class="col-span-1 mb-1 sm:mb-0">
+<span class="font-data-mono-sm text-data-mono-sm text-secondary">45 min</span>
+</div>
+<div class="col-span-2 flex flex-col gap-0.5 mb-2 sm:mb-0">
+<span class="inline-flex items-center gap-1 w-fit px-2 py-0.5 rounded font-label-sm text-label-sm bg-surface-container text-primary font-bold">
+<span class="material-symbols-outlined text-xs">check_circle</span>
+            0 DTCs (Sem falhas)
+          </span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">10 PIDs · 27.000 fr</span>
+</div>
+<div class="col-span-2 flex items-center justify-end gap-1">
+<button class="px-2.5 py-1 bg-surface-container-highest text-on-surface rounded font-label-sm text-label-sm hover:bg-surface-variant transition-colors" type="button">
+            Abrir
+          </button>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-base">download</span>
+</button>
+</div>
+</div>
+<!-- Pagination / Storage Footprint Footer -->
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm pt-space-sm mt-space-sm">
+<details class="text-xs text-slate-500 cursor-pointer"><summary class="font-medium select-none flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">database</span>Detalhes técnicos</summary><div class="pt-1 pl-4 font-data-mono-sm text-data-mono-sm text-on-surface-variant">Armazenamento local SQLite: 48.6 MB / 500 MB · Buffer: 14.280 frames</div></details>
+<div class="flex items-center gap-1 font-label-md text-label-md text-on-surface">
+<button class="p-1 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<span class="px-2 py-0.5 bg-primary-container text-on-primary rounded font-bold">1</span>
+<button class="px-2 py-0.5 hover:bg-surface-container-low rounded" type="button">2</button>
+<button class="px-2 py-0.5 hover:bg-surface-container-low rounded" type="button">3</button>
+<span class="px-1">...</span>
+<button class="px-2 py-0.5 hover:bg-surface-container-low rounded" type="button">17</button>
+<button class="p-1 rounded bg-surface-container-low text-on-surface-variant hover:text-on-surface" type="button"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+<!-- Active Session Detailed Inspector Panel (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest font-bold">Ficha de Diagnóstico</span>
+<h2 class="font-headline-md text-headline-md text-on-surface font-bold leading-tight">#DNG-2024-0841</h2>
+</div>
+<span class="px-2 py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">error</span>
+          MIL ATIVA
+        </span>
+</div>
+<!-- Quick Session Hardware Telemetry -->
+<div class="flex flex-col gap-2 p-space-sm bg-surface-container-low rounded-lg"><div class="flex items-center justify-between font-body-sm text-body-sm"><span class="text-on-surface-variant">Veículo Alvo:</span><span class="font-semibold text-on-surface">VW Golf VII 1.4 TSI</span></div><div class="flex items-center justify-between font-body-sm text-body-sm"><span class="text-on-surface-variant">Matrícula / VIN:</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface">WVWZZZAUZGW01**** (Dados de demonstração)</span></div><div class="flex items-center justify-between font-body-sm text-body-sm"><span class="text-on-surface-variant">Protocolo CAN:</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface">ISO 15765-4 (11b/500k)</span></div><div class="flex items-center justify-between font-body-sm text-body-sm"><span class="text-on-surface-variant">Interface VCI:</span><span class="font-data-mono-sm text-data-mono-sm text-primary font-medium">OBDLink EX (USB-Serial)</span></div><div class="flex items-center justify-between font-body-sm text-body-sm"><span class="text-on-surface-variant">Ralenti / Congelação:</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface">780 rpm (ralenti) · 2.140 rpm</span></div><div class="flex items-center justify-between font-body-sm text-body-sm"><span class="text-on-surface-variant">Temp. Arrefecimento:</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface">Coolant 88 °C</span></div><div class="flex items-center justify-between font-body-sm text-body-sm"><span class="text-on-surface-variant">Técnico Responsável:</span><span class="font-semibold text-on-surface">M. Silva (Oficina Central)</span></div><div class="flex items-center justify-between font-body-sm text-body-sm"><span class="text-on-surface-variant">Registo de Tempo:</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface">Hoje (14:18 - 14:42)</span></div></div>
+<!-- Live Sparkline of Active Telemetry in Session -->
+<div class="flex flex-col gap-1 p-space-sm bg-surface-container rounded-lg">
+<div class="flex items-center justify-between mb-1">
+<span class="font-label-sm text-label-sm text-on-surface font-bold uppercase tracking-wider">Perfil de Rotação (RPM) vs MAF</span>
+<span class="font-data-mono-sm text-data-mono-sm text-primary">Pico: 3.420 rpm</span>
+</div>
+<!-- Inline SVG Mini Graph (Telemetry Sparkline) -->
+<svg class="w-full h-16 text-primary overflow-visible" viewBox="0 0 300 64">
+<defs>
+<linearGradient id="sparklineGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="currentColor" stop-opacity="0.25"></stop>
+<stop offset="100%" stop-color="currentColor" stop-opacity="0.0"></stop>
+</linearGradient>
+</defs>
+<path d="M 0,55 Q 30,50 60,42 T 120,48 T 160,20 T 190,28 T 230,12 T 260,38 T 300,45" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.5"></path>
+<path d="M 0,55 Q 30,50 60,42 T 120,48 T 160,20 T 190,28 T 230,12 T 260,38 T 300,45 L 300,64 L 0,64 Z" fill="url(#sparklineGrad)"></path>
+<!-- Key DTC Trigger Marker -->
+<circle class="fill-error stroke-surface-container-lowest" cx="230" cy="12" r="4" stroke-width="2"></circle>
+</svg>
+<div class="flex items-center justify-between pt-1 font-data-mono-sm text-data-mono-sm text-on-surface-variant"><span class="">0m (780 rpm ralenti)</span><span class="text-error font-medium">Falha (2.140 rpm aos 18m)</span><span class="">24m (Fim)</span></div>
+</div>
+<!-- Detected Fault Diagnostic Box -->
+<div class="flex flex-col gap-2 p-space-sm bg-error-container/40 rounded-lg">
+<div class="flex items-center justify-between">
+<span class="px-1.5 py-0.5 rounded font-data-mono-sm text-data-mono-sm bg-error text-on-error font-bold">P0301</span>
+<span class="font-label-sm text-label-sm text-error font-semibold uppercase">Confirmado (ECU 0x7E8)</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface leading-snug"><strong>Falha de ignição no cilindro 1:</strong> Detetada a 2.140 rpm com temperatura de arrefecimento (Coolant) a 88 °C. Causas prováveis sob observação: velas, bobina, cablagem, compressão mecânica ou injetor.</p>
+</div>
+<!-- Action Panel & Download Hub -->
+<div class="flex flex-col gap-space-xs pt-1">
+<span class="font-label-sm text-label-sm text-secondary font-bold uppercase tracking-wider">Ações de Relatório e Exportação</span>
+<button class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface transition-colors font-body-md text-body-md" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">table_chart</span>
+<span class="">Descarregar Telemetria .CSV</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">2.4 MB</span>
+</button>
+<button class="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg bg-surface-container-low hover:bg-surface-container text-on-surface transition-colors font-body-md text-body-md" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">data_object</span>
+<span class="">Descarregar Snapshot .JSON</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">840 KB</span>
+</button>
+<button class="w-full flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg bg-primary-container text-on-primary hover:bg-primary transition-colors font-label-md text-label-md shadow-sm" type="button">
+<span class="material-symbols-outlined text-lg">picture_as_pdf</span>
+<span class="">Relatório Técnico PDF para Cliente</span>
+</button>
+<button class="w-full flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg bg-error-container/50 text-error hover:bg-error hover:text-on-error transition-colors font-label-sm text-label-sm mt-1" type="button">
+<span class="material-symbols-outlined text-sm">delete_outline</span>
+<span class="">Eliminar Sessão do Registo Local</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Insight / Session Analytics Bar -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">speed</span>
+</div>
+<div class="flex flex-col">
+<span class="font-data-mono-lg text-data-mono-lg text-on-surface leading-tight">142.850</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Frames OBD-II Gravados</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined text-xl">fmd_bad</span>
+</div>
+<div class="flex flex-col">
+<span class="font-data-mono-lg text-data-mono-lg text-on-surface leading-tight">6 Avarias</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">DTCs Críticos no Mês</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-xl">timelapse</span>
+</div>
+<div class="flex flex-col">
+<span class="font-data-mono-lg text-data-mono-lg text-on-surface leading-tight">18h 42m</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tempo Total de Diagnóstico</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">verified</span>
+</div>
+<div class="flex flex-col">
+<span class="font-data-mono-lg text-data-mono-lg text-on-surface leading-tight">100% CAN</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Integridade dos Pacotes</span>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function selectSession(sessionId) {
+    const cards = document.querySelectorAll('.session-card');
+    cards.forEach((card, idx) => {
+      if (idx + 1 === sessionId) {
+        card.classList.add('bg-surface-container-high', 'shadow-sm');
+        card.classList.remove('bg-surface-container-lowest', 'bg-surface-container-low');
+      } else {
+        card.classList.remove('bg-surface-container-high', 'shadow-sm');
+        card.classList.add(idx % 2 === 0 ? 'bg-surface-container-low' : 'bg-surface-container-lowest');
+      }
+    });
+  }
+</script></div></main></div>
+
+</body></html>

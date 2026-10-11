@@ -240,7 +240,7 @@ class GuiTests(unittest.TestCase):
         expected = {"Actualizar", "Iniciar actualização", "Parar", "Consultar avarias", "Limpar registos", "Analisar com Gemini", "Guardar sessão", "Abrir sessão", "Exportar JSON"}
         buttons = self.window.findChildren(QPushButton)
         self.assertTrue(expected <= {b.text() for b in buttons})
-        self.assertTrue(all(b.text() and not b.icon().isNull() for b in buttons))
+        self.assertTrue(all((b.text() or b.accessibleName()) and not b.icon().isNull() for b in buttons))
         self.assertEqual(self.window.model.text(), self.window.settings.model)
         self.assertEqual(self.window.daily.value(), self.window.settings.daily_limit)
         self.assertEqual(self.window.ai_interval.value(), self.window.settings.minimum_interval)
@@ -273,9 +273,9 @@ class GuiTests(unittest.TestCase):
         self.app.setPalette(dark)
         from scanner_outo.ui.theme import apply_theme
         apply_theme(self.app)
-        self.assertEqual(self.app.palette().color(QPalette.ColorRole.Text).name(), "#202b33")
-        self.assertEqual(self.app.palette().color(QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText).name(), "#596674")
-        self.assertEqual(self.app.palette().color(QPalette.ColorRole.HighlightedText).name(), "#ffffff")
+        self.assertEqual(self.app.palette().color(QPalette.ColorRole.Text).name(), "#0b1c30")
+        self.assertEqual(self.app.palette().color(QPalette.ColorGroup.Disabled, QPalette.ColorRole.ButtonText).name(), "#3e4947")
+        self.assertEqual(self.app.palette().color(QPalette.ColorRole.HighlightedText).name(), "#0b1c30")
         self.window.tabs.setCurrentIndex(3)
         self.window.model.setFocus()
         QTest.qWait(30)

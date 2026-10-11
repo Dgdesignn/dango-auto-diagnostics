@@ -29,6 +29,9 @@ from scanner_outo.ui.charts import ReadingChart
 from scanner_outo.ui.workers import Worker
 from scanner_outo.ui.theme import apply_theme, STYLESHEET
 from scanner_outo.ui.simulator import SimulatorPanel
+from scanner_outo.ui.shell import Shell
+from scanner_outo.ui.design import icon as design_icon, font
+from scanner_outo.ui.components import label
 from scanner_outo.models import Session
 
 
@@ -59,21 +62,13 @@ class MainWindow(QMainWindow):
         self.poll_timer.timeout.connect(self.poll)
         self.age_timer = QTimer(self)
         self.age_timer.timeout.connect(self.render_readings)
-        self.setWindowTitle("Scanner Outo | Diagnóstico automóvel")
+        self.setWindowTitle("DANGO Auto Diagnostics")
         self.resize(1120, 740)
         self.setMinimumSize(860, 600)
-        central = QWidget()
-        self.setCentralWidget(central)
-        layout = QVBoxLayout(central)
-        layout.setContentsMargins(20, 16, 20, 16)
-        heading = QLabel("Scanner Outo")
-        heading.setStyleSheet("font-size: 24px; font-weight: 600;")
-        layout.addWidget(heading)
+        self.shell = Shell(self)
+        self.setCentralWidget(self.shell)
         self.connection_status = QLabel()
         self.connection_status.setWordWrap(True)
-        layout.addWidget(self.connection_status)
-        self.tabs = QTabWidget()
-        layout.addWidget(self.tabs)
         self._connection_tab()
         self._data_tab()
         self._codes_tab()
@@ -84,22 +79,38 @@ class MainWindow(QMainWindow):
         self.simulator.before_change.connect(self.change_simulator)
         self.simulator.changed.connect(self.render_connection)
         self.simulator.stopped.connect(self.simulator_stopped)
-        self.setStyleSheet(STYLESHEET)
+        from scanner_outo.ui.screens.overview import build
+        build(self)
+        self.tabs.setCurrentIndex(6)
         self.apply_state(self.state)
         self.refresh_history()
         self.age_timer.start(1000)
 
     def page(self, title: str):
         page = QWidget()
+        page.setObjectName("page")
         layout = QVBoxLayout(page)
-        layout.setContentsMargins(16, 16, 16, 16)
-        layout.setSpacing(12)
+        layout.setContentsMargins(24, 0, 24, 24)
+        layout.setSpacing(24)
+        layout.setSizeConstraint(QVBoxLayout.SizeConstraint.SetMinimumSize)
         self.tabs.addTab(page, title)
         return layout
 
     def button(self, text: str, callback: Callable, icon=QStyle.StandardPixmap.SP_ArrowForward) -> QPushButton:
-        button = QPushButton(self.style().standardIcon(icon), text)
+        icons = QStyle.StandardPixmap
+        symbol = {icons.SP_BrowserReload: "refresh", icons.SP_MediaPlay: "play_arrow",
+                  icons.SP_MediaStop: "stop", icons.SP_TrashIcon: "delete",
+                  icons.SP_DialogApplyButton: "check_circle", icons.SP_DialogCancelButton: "power_settings_new",
+                  icons.SP_DialogSaveButton: "save", icons.SP_DialogOpenButton: "folder_open"}.get(icon, "dashboard")
+        symbol = {"Analisar com Gemini": "smart_toy", "Abrir análise": "smart_toy",
+                  "Rever dados": "info", "Exportar JSON": "download", "Consultar freeze frame": "history"}.get(text, symbol)
+        primary = text in ("Ligar", "Iniciar actualização", "Analisar com Gemini", "Guardar sessão")
+        danger = text == "Limpar registos"
+        button = QPushButton(design_icon(symbol, "#FFFFFF" if primary else "#93000A" if danger else "#005C55"), text)
+        if primary or danger:
+            button.setProperty("variant", "primary" if primary else "danger")
         button.setToolTip(text)
+        button.setAccessibleName(text)
         button.clicked.connect(callback)
         return button
 
@@ -111,98 +122,19 @@ class MainWindow(QMainWindow):
         table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         table.setAlternatingRowColors(True)
         table.verticalHeader().hide()
+        table.verticalHeader().setDefaultSectionSize(42)
+        table.setMinimumHeight(200)
         table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.ResizeToContents)
         table.horizontalHeader().setStretchLastSection(True)
         return table
 
     def _connection_tab(self) -> None:
-        layout = self.page("Ligação")
-        form = QFormLayout()
-        self.kind = QComboBox()
-        self.kind.addItems(["TCP", "Serial USB", "Bluetooth SPP"])
-        self.origin = QComboBox()
-        self.origin.addItem(origin_label(True), True)
-        self.origin.addItem(origin_label(False), False)
-        self.host = QLineEdit("127.0.0.1")
-        self.port = QSpinBox()
-        self.port.setRange(1, 65535)
-        self.port.setValue(35000)
-        self.serial_port = QComboBox()
-        self.serial_port.setEditable(True)
-        self.serial_port.addItems(available_ports())
-        serial_row = QWidget()
-        serial_layout = QHBoxLayout(serial_row)
-        serial_layout.setContentsMargins(0, 0, 0, 0)
-        serial_layout.addWidget(self.serial_port)
-        self.scan_ports = self.button("Actualizar", self.rescan_ports, QStyle.StandardPixmap.SP_BrowserReload)
-        self.scan_ports.setToolTip("Actualizar portas COM")
-        serial_layout.addWidget(self.scan_ports)
-        self.baud = QComboBox()
-        self.baud.addItems(["9600", "38400", "57600", "115200"])
-        self.baud.setCurrentText("38400")
-        self.timeout = QDoubleSpinBox()
-        self.timeout.setRange(1, 10)
-        self.timeout.setValue(4)
-        self.timeout.setSuffix(" s")
-        for label, widget in (("Tipo", self.kind), ("Origem", self.origin), ("Host TCP", self.host), ("Porta TCP", self.port), ("Porta COM / Bluetooth SPP", serial_row), ("Baud rate", self.baud), ("Timeout por pedido", self.timeout)):
-            form.addRow(label, widget)
-        layout.addLayout(form)
-        buttons = QHBoxLayout()
-        self.connect_button = self.button("Ligar", self.connect_adapter, QStyle.StandardPixmap.SP_DialogApplyButton)
-        self.disconnect_button = self.button("Desligar", self.disconnect_adapter, QStyle.StandardPixmap.SP_DialogCancelButton)
-        buttons.addWidget(self.connect_button)
-        buttons.addWidget(self.disconnect_button)
-        buttons.addStretch()
-        layout.addLayout(buttons)
-        layout.addStretch()
-        self.kind.currentTextChanged.connect(self.update_controls)
+        from scanner_outo.ui.screens.connection import build
+        build(self)
 
     def _data_tab(self) -> None:
-        layout = self.page("Dados")
-        row = QHBoxLayout()
-        self.read_button = self.button("Actualizar", self.poll, QStyle.StandardPixmap.SP_BrowserReload)
-        self.start_button = self.button("Iniciar actualização", self.start_polling, QStyle.StandardPixmap.SP_MediaPlay)
-        self.stop_button = self.button("Parar", self.stop_polling, QStyle.StandardPixmap.SP_MediaStop)
-        self.interval = QSpinBox()
-        self.interval.setRange(2, 60)
-        self.interval.setValue(3)
-        self.interval.setSuffix(" s")
-        self.interval.valueChanged.connect(lambda value: self.poll_timer.setInterval(value * 1000))
-        for widget in (self.read_button, self.start_button, self.stop_button, QLabel("Intervalo"), self.interval):
-            row.addWidget(widget)
-        row.addStretch()
-        layout.addLayout(row)
-        selection = QHBoxLayout()
-        self.pid_button = self.button("Parâmetros", lambda: None)
-        menu = QMenu(self.pid_button)
-        menu.addAction("Seleccionar todos", lambda: self.set_selected_pids(PIDS))
-        menu.addAction("Selecção inicial", lambda: self.set_selected_pids(DEFAULT_PIDS))
-        menu.addSeparator()
-        self.pid_actions = {}
-        for pid, definition in PIDS.items():
-            action = QAction(f"{pid:02X} | {definition.name} ({definition.unit})", menu)
-            action.setCheckable(True)
-            action.setChecked(pid in DEFAULT_PIDS)
-            action.toggled.connect(self.selection_changed)
-            menu.addAction(action)
-            self.pid_actions[pid] = action
-        self.pid_button.setMenu(menu)
-        selection.addWidget(self.pid_button)
-        self.selection_label = QLabel()
-        selection.addWidget(self.selection_label)
-        selection.addStretch()
-        layout.addLayout(selection)
-        self.data_table = self.table(["Parâmetro", "ECU", "Valor", "Unidade", "Leitura (local)", "Disponibilidade", "Detalhe"])
-        self.data_views = QTabWidget()
-        self.data_views.addTab(self.data_table, "Leituras")
-        self.reading_chart = ReadingChart(self.series)
-        self.data_views.addTab(self.reading_chart, "Gráfico")
-        layout.addWidget(self.data_views, 1)
-        self.support_label = QLabel()
-        self.support_label.setWordWrap(True)
-        layout.addWidget(self.support_label)
-        self.stop_button.setToolTip("Parar consultas conserva os pontos e não encerra o simulador.")
-        self.selection_changed()
+        from scanner_outo.ui.screens.live_data import build
+        build(self)
 
     def selected_pids(self) -> tuple[int, ...]:
         return tuple(pid for pid, action in self.pid_actions.items() if action.isChecked())
@@ -212,6 +144,11 @@ class MainWindow(QMainWindow):
             action.blockSignals(True)
             action.setChecked(pid in pids)
             action.blockSignals(False)
+            if pid in getattr(self, "pid_checks", {}):
+                check = self.pid_checks[pid]
+                check.blockSignals(True)
+                check.setChecked(pid in pids)
+                check.blockSignals(False)
         self.selection_changed()
 
     def selection_changed(self, *_):
@@ -222,102 +159,16 @@ class MainWindow(QMainWindow):
             self.reading_chart.select_pids(selected)
 
     def _codes_tab(self) -> None:
-        layout = self.page("Avarias")
-        row = QHBoxLayout()
-        self.codes_button = self.button("Consultar avarias", self.read_codes, QStyle.StandardPixmap.SP_BrowserReload)
-        self.freeze_button = self.button("Consultar freeze frame", self.read_freeze)
-        self.clear_button = self.button("Limpar registos", self.prepare_clear, QStyle.StandardPixmap.SP_TrashIcon)
-        for button in (self.codes_button, self.freeze_button, self.clear_button):
-            row.addWidget(button)
-        row.addStretch()
-        layout.addLayout(row)
-        self.codes_status = QLabel("Não consultado")
-        self.codes_status.setWordWrap(True)
-        layout.addWidget(self.codes_status)
-        self.codes_table = self.table(["Código", "Descrição", "Estado", "ECU"])
-        layout.addWidget(self.codes_table, 2)
-        monitor_row = QHBoxLayout()
-        self.monitor_button = self.button("Consultar MIL e monitores", self.read_monitors, QStyle.StandardPixmap.SP_BrowserReload)
-        monitor_row.addWidget(self.monitor_button)
-        self.monitor_label = QLabel("MIL e prontidão: Não consultado")
-        self.monitor_label.setWordWrap(True)
-        monitor_row.addWidget(self.monitor_label, 1)
-        layout.addLayout(monitor_row)
-        self.monitor_table = self.table(["ECU", "MIL", "DTCs anunciados", "Motor", "Monitores suportados", "Consulta (local)", "Estado / motivo"])
-        layout.addWidget(self.monitor_table, 1)
-        self.freeze_label = QLabel("Freeze frame: não consultado")
-        self.freeze_label.setWordWrap(True)
-        layout.addWidget(self.freeze_label)
-        self.freeze_table = self.table(["Parâmetro", "ECU", "Valor", "Unidade", "Disponibilidade", "Detalhe"])
-        layout.addWidget(self.freeze_table, 1)
-        self.clear_label = QLabel()
-        self.clear_label.setWordWrap(True)
-        layout.addWidget(self.clear_label)
+        from scanner_outo.ui.screens.diagnostics import build
+        build(self)
 
     def _ai_tab(self) -> None:
-        layout = self.page("Análise por IA")
-        self.symptoms = QPlainTextEdit()
-        self.symptoms.setPlaceholderText("Sintomas observados")
-        self.symptoms.setMaximumHeight(100)
-        layout.addWidget(self.symptoms)
-        row = QHBoxLayout()
-        self.model = QLineEdit(self.settings.model)
-        self.model.setMaximumWidth(230)
-        self.daily = QSpinBox()
-        self.daily.setRange(0, 2147483647)
-        self.daily.setValue(self.settings.daily_limit)
-        self.ai_interval = QSpinBox()
-        self.ai_interval.setRange(0, 2147483647)
-        self.ai_interval.setValue(self.settings.minimum_interval)
-        self.ai_interval.setSuffix(" s")
-        self.preview_button = self.button("Rever dados", self.preview_analysis)
-        self.analyze_button = self.button("Analisar com Gemini", self.analyze)
-        for widget in (QLabel("Modelo"), self.model, self.preview_button, self.analyze_button):
-            row.addWidget(widget)
-        row.addStretch()
-        layout.addLayout(row)
-        limits = QHBoxLayout()
-        for widget in (QLabel("Limite diário"), self.daily, QLabel("Intervalo mínimo"), self.ai_interval):
-            limits.addWidget(widget)
-        limits.addStretch()
-        layout.addLayout(limits)
-        self.ai_availability = QLabel()
-        self.ai_availability.setWordWrap(True)
-        layout.addWidget(self.ai_availability)
-        self.ai_status = QLabel("Sem pedido de análise")
-        self.ai_status.setWordWrap(True)
-        layout.addWidget(self.ai_status)
-        self.analysis_validity = QLabel()
-        self.analysis_validity.setWordWrap(True)
-        layout.addWidget(self.analysis_validity)
-        self.ai_views = QTabWidget()
-        self.ai_input = QPlainTextEdit()
-        self.ai_input.setReadOnly(True)
-        self.ai_output = QPlainTextEdit()
-        self.ai_output.setReadOnly(True)
-        self.ai_views.addTab(self.ai_input, "Dados enviados")
-        self.ai_views.addTab(self.ai_output, "Interpretação")
-        layout.addWidget(self.ai_views)
-        self.model.textChanged.connect(self.update_controls)
-        self.daily.valueChanged.connect(self.update_controls)
-        self.ai_interval.valueChanged.connect(self.update_controls)
-        self.symptoms.textChanged.connect(self.render_analysis_validity)
+        from scanner_outo.ui.screens.analysis import build
+        build(self)
 
     def _history_tab(self) -> None:
-        layout = self.page("Histórico")
-        row = QHBoxLayout()
-        self.save_button = self.button("Guardar sessão", self.save_session, QStyle.StandardPixmap.SP_DialogSaveButton)
-        self.refresh_button = self.button("Actualizar", self.refresh_history, QStyle.StandardPixmap.SP_BrowserReload)
-        self.open_button = self.button("Abrir sessão", self.open_history, QStyle.StandardPixmap.SP_DialogOpenButton)
-        self.export_button = self.button("Exportar JSON", self.export_history, QStyle.StandardPixmap.SP_DialogSaveButton)
-        for button in (self.save_button, self.refresh_button, self.open_button, self.export_button):
-            row.addWidget(button)
-        row.addStretch()
-        layout.addLayout(row)
-        self.history_table = self.table(["ID", "Data (local)", "Origem", "Registo", "Verificação"])
-        layout.addWidget(QLabel("Tipo de registo: fotografia da sessão; séries temporais não incluídas."))
-        self.history_table.cellDoubleClicked.connect(lambda *_: self.open_history())
-        layout.addWidget(self.history_table)
+        from scanner_outo.ui.screens.history import build
+        build(self)
 
     def launch(self, category: str, operation: Callable, done: Callable, message: str) -> bool:
         if self.busy[category] or self.closing:
@@ -366,6 +217,13 @@ class MainWindow(QMainWindow):
         self.start_button.setEnabled(connected and diag_free and not self.poll_timer.isActive())
         self.stop_button.setEnabled(self.poll_timer.isActive())
         self.clear_button.setEnabled(connected and diag_free and self.state["simulation"])
+        for button in getattr(self, "transport_choices", []):
+            button.setEnabled(diag_free and not connected)
+        for check in getattr(self, "pid_checks", {}).values():
+            check.setEnabled(diag_free)
+        if hasattr(self, "overview"):
+            for button in self.overview.shortcuts[:3]:
+                button.setEnabled(connected and diag_free)
         editable = diag_free and not connected
         tcp = self.kind.currentText() == "TCP"
         for widget in (self.kind, self.origin, self.timeout):
@@ -534,6 +392,19 @@ class MainWindow(QMainWindow):
         simulator = "Em execução" if self.simulator.ready else "A iniciar" if self.simulator.owned else "Parado (instância local)"
         polling = "Activas" if self.poll_timer.isActive() else "Paradas"
         self.connection_status.setText(f"Simulador: {simulator} | Scanner: {state['adapter_status']} | Consultas: {polling}\nSessão: {session_origin(state)} | {management} | ECU: {state['ecu_status']}")
+        self.shell.link.setText("Scanner " + state["adapter_status"])
+        self.shell.address.setText((str(connection.get("host", connection.get("serial_port", ""))) + ":" + str(connection.get("port", ""))) if connection else "Sem ligação")
+        self.shell.disconnect.setEnabled(self.disconnect_button.isEnabled())
+        badges = self.shell.badges
+        badges["origin"].update_state(session_origin(state), "success" if not state["simulation"] else "neutral")
+        badges["scanner"].update_state("Scanner: " + state["adapter_status"], "success" if state["adapter_status"] == "Ligado" else "neutral")
+        badges["simulator"].update_state("Simulador: " + simulator)
+        badges["polling"].update_state("Consultas: " + polling)
+        badges["ecu"].update_state("ECU: " + (", ".join(state["supported"]) or "Não identificada"))
+        voltages = [r for r in self.snapshot()["readings"] if r["pid"] == "42" and r["value"] is not None]
+        badges["voltage"].update_state("Módulo: " + (" / ".join(f"{r['ecu']}: {self.value_text(r['value'])} V" + (" antigo" if r.get("stale") else "") for r in voltages) if voltages else "--"))
+        monitors = state.get("monitor_status", {})
+        badges["mil"].update_state("MIL: " + (" / ".join(ecu + ": " + ("Acesa" if s["mil"] else "Apagada") for ecu, s in monitors.items() if "mil" in s) or "Não consultado"), "error" if any(s.get("mil") for s in monitors.values()) else "neutral")
 
     def change_simulator(self, action: str) -> None:
         if self.closing or self.simulator.transition:
@@ -601,6 +472,8 @@ class MainWindow(QMainWindow):
         snapshot = self.snapshot()
         self.fill_table(self.data_table, [[r["name"], r["ecu"], self.value_text(r["value"]), r["unit"], self.local_time(r["timestamp"]), self.reading_status(r), r["detail"]] for r in snapshot["readings"]])
         self.render_analysis_validity()
+        if hasattr(self, "overview"):
+            self.overview.refresh(snapshot)
 
     def render_analysis_validity(self) -> None:
         if not hasattr(self, "analysis_validity") or not hasattr(self, "symptoms"):
@@ -623,12 +496,25 @@ class MainWindow(QMainWindow):
 
     @staticmethod
     def fill_table(table: QTableWidget, rows: list[list]) -> None:
-        table.setRowCount(len(rows))
-        for i, row in enumerate(rows):
-            for j, value in enumerate(row):
-                item = QTableWidgetItem(str(value))
-                item.setToolTip(str(value))
-                table.setItem(i, j, item)
+        table.setUpdatesEnabled(False)
+        try:
+            if table.rowCount() != len(rows):
+                table.setRowCount(len(rows))
+            for i, row in enumerate(rows):
+                for j, value in enumerate(row):
+                    text = str(value)
+                    item = table.item(i, j)
+                    if item is not None and item.text() == text:
+                        continue
+                    if item is None:
+                        item = QTableWidgetItem()
+                        table.setItem(i, j, item)
+                    item.setText(text)
+                    item.setToolTip(text)
+                    numeric = text.replace(".", "", 1).replace("-", "", 1).isdigit()
+                    item.setFont(font(13, mono=numeric or text.startswith(("P0", "7E"))))
+        finally:
+            table.setUpdatesEnabled(True)
 
     def preview_analysis(self) -> dict | None:
         try:
@@ -663,6 +549,8 @@ class MainWindow(QMainWindow):
                 output.extend("- " + value for value in values)
                 output.append("")
             self.ai_output.setPlainText("\n".join(output))
+            for key, section in self.ai_sections.items():
+                section.setText("\n\n".join(result["result"].get(key, [])) or "Não informado")
             self.ai_views.setCurrentIndex(1)
             prefix = "Cache local; sem nova chamada. Tokens da resposta original: " if result["cache"] else "Análise concluída. Tokens informados pela API: "
             if previous_session:

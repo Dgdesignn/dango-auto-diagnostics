@@ -1,0 +1,545 @@
+<!DOCTYPE html><html class="h-full" lang="pt"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-surface":"#213145","on-primary-fixed":"#00201d","surface-bright":"#f8f9ff","on-error-container":"#93000a","outline":"#6e7977","on-error":"#ffffff","primary-fixed":"#9cf2e8","error-container":"#ffdad6","on-secondary":"#ffffff","on-secondary-fixed":"#141b2b","surface-variant":"#d3e4fe","surface-container":"#e5eeff","inverse-primary":"#80d5cb","on-tertiary-container":"#ffe5db","secondary":"#575e70","tertiary-container":"#9c573a","primary-container":"#0f766e","surface-container-highest":"#d3e4fe","outline-variant":"#bdc9c6","surface-dim":"#cbdbf5","primary":"#005c55","on-primary":"#ffffff","surface-tint":"#006a63","on-surface":"#0b1c30","primary-fixed-dim":"#80d5cb","tertiary":"#7f4025","secondary-container":"#d9dff5","inverse-on-surface":"#eaf1ff","surface":"#f8f9ff","secondary-fixed":"#dce2f7","surface-container-high":"#dce9ff","on-primary-container":"#a3faef","tertiary-fixed-dim":"#ffb598","on-tertiary-fixed-variant":"#72361b","on-surface-variant":"#3e4947","surface-container-lowest":"#ffffff","on-background":"#0b1c30","surface-container-low":"#eff4ff","secondary-fixed-dim":"#c0c6db","tertiary-fixed":"#ffdbce","on-primary-fixed-variant":"#00504a","on-tertiary":"#ffffff","on-tertiary-fixed":"#370e00","on-secondary-container":"#5c6274","background":"#f8f9ff","on-secondary-fixed-variant":"#404758","error":"#ba1a1a"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin":"1rem","space-sm":"0.5rem","space-xl":"2rem","gutter":"1rem","margin-panel":"1.5rem","space-md":"1rem","space-lg":"1.5rem","gutter-compact":"0.5rem","space-xs":"0.25rem"},"fontFamily":{"headline-xl":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"data-mono-sm":["JetBrains Mono"],"body-lg":["Inter"],"headline-lg":["Inter"],"label-md":["Inter"],"data-mono-lg":["JetBrains Mono"],"body-sm":["Inter"],"data-mono-md":["JetBrains Mono"]},"fontSize":{"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"data-mono-sm":["11px",{"lineHeight":"16px","fontWeight":"400"}],"body-lg":["15px",{"lineHeight":"22px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"data-mono-lg":["20px",{"lineHeight":"26px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"data-mono-md":["13px",{"lineHeight":"18px","fontWeight":"500"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[260px] bg-inverse-surface text-inverse-on-surface border-r border-outline-variant/30 z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="p-space-md border-b border-outline-variant/20"><div class="flex items-center gap-space-sm mb-space-xs"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm"><span class="material-symbols-outlined text-lg">directions_car</span></div><div class="flex flex-col"><span class="font-headline-md text-headline-md tracking-tight text-surface-container-lowest leading-none">DANGO</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Auto Diagnostics</span></div></div><div class="flex items-center justify-between mt-space-xs"><span class="font-data-mono-sm text-data-mono-sm text-primary-fixed-dim bg-primary-container/40 px-1.5 py-0.5 rounded">OBD-II</span></div><div class="mt-space-sm p-space-sm rounded-lg bg-surface-container-high/10 border border-outline-variant/20"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="font-label-sm text-label-sm text-surface-container-lowest font-bold tracking-wide">CONECTADO</span></div><div class="mt-1 font-data-mono-sm text-data-mono-sm text-outline-variant leading-tight truncate" title="OBDLink EX / USB-Serial / ISO 15765-4 CAN 11bit 500k">OBDLink EX · CAN 500k</div></div></div><nav class="flex flex-col gap-1 p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm"><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">dashboard</span><span class="font-body-md text-body-md">Visão geral</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="connection" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">cable</span><span class="font-body-md text-body-md">Conexão</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="diagnostics" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">warning</span><span class="font-body-md text-body-md">Diagnóstico</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-error text-on-error">1 Ativo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="live-data" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">query_stats</span><span class="font-body-md text-body-md">Dados ao vivo</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="ai-analysis" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">smart_toy</span><span class="font-body-md text-body-md">Análise com IA</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="history" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">history</span><span class="font-body-md text-body-md">Histórico</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="simulator" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">science</span><span class="font-body-md text-body-md">Simulador</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-secondary-container text-on-secondary-container">Demo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">settings</span><span class="font-body-md text-body-md">Definições</span></div></a></nav></div><div class="p-space-sm border-t border-outline-variant/20 flex flex-col gap-space-xs"><div class="px-space-xs py-1 flex items-center justify-between font-data-mono-sm text-data-mono-sm text-outline-variant"><span class="">Porta:</span><span class="text-primary-fixed font-semibold">COM3 @ 115200</span></div><div class="flex items-center justify-between px-space-xs py-1"><span class="font-body-sm text-body-sm text-outline-variant">Link Ativo</span><button class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-on-error-container hover:bg-error hover:text-on-error transition-colors" type="button">Desconectar</button></div><div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/10 text-outline-variant"><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="design-system" href="#"><span class="material-symbols-outlined text-sm">palette</span> Design System</a><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="documentation" href="#"><span class="material-symbols-outlined text-sm">menu_book</span> Docs</a></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md min-w-0"><div class="flex items-center gap-space-sm px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 min-w-0"><span class="material-symbols-outlined text-primary text-xl">directions_car</span><div class="flex flex-col min-w-0"><span class="font-headline-md text-headline-md text-on-surface truncate leading-tight">Volkswagen Golf VII 1.4 TSI (2016)</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant leading-tight">VIN: WVWZZZAUZGW01****</span></div></div></div><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary-container text-on-primary-container font-label-md text-label-md"><span class="material-symbols-outlined text-base">science</span><span class="">SIMULAÇÃO (Dados de demonstração)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/30 text-on-surface font-data-mono-md text-data-mono-md"><span class="text-tertiary-container font-bold">⚡</span><span class="">12.4 V</span><span class="font-label-sm text-label-sm text-primary font-semibold">(Normal)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant font-data-mono-sm text-data-mono-sm"><span class="">CAN 500k</span></div><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-md text-label-md font-bold"><span class="material-symbols-outlined text-base">error</span><span class="">MIL ATIVO (1 DTC)</span></div></div><div class="flex items-center gap-space-sm"><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Atualizar Telemetria" type="button"><span class="material-symbols-outlined text-xl">refresh</span></button><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Documentação" type="button"><span class="material-symbols-outlined text-xl">help_outline</span></button><div class="h-6 w-px bg-outline-variant/40 mx-1"></div><div class="flex items-center gap-space-sm pl-1"><div class="text-right hidden sm:flex sm:flex-col"><span class="font-headline-md text-body-md text-on-surface leading-tight">Oficina Central</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Porto · Técnico</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UNwIBFgNkdMJLkh2Kpr4HjBbMKzq0ZU-fScLsigHTm88Ck83s0hAGBq0QlIyEpeBP1VwtxKxmUn0omo0KZtJ1IyK-fJz5-Pb6A_u1ZscOXrEj-oeRFHuwqcumVKuK7gyzxd6WuuSjYtXz4MtEd3WfwxY78YRtkJllGkouLvcs9DrSe057EJ6uPFdeARFqx0d_OdrolUMjxmW4ICbila7jD67-eaqGh7J5dHuAk8jhkIi8_ETVbEoi7dA"></div></div></header><main class="relative pt-16 bg-background min-h-screen"><div class="max-w-7xl mx-auto p-6 md:p-8"><div class="flex flex-col w-full gap-space-lg pb-space-xl">
+<!-- Banner Informativo Superior -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-lowest p-space-lg shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md relative z-10">
+<div class="flex flex-col gap-1 max-w-2xl">
+<div class="flex items-center gap-space-xs text-primary font-label-sm uppercase tracking-wider">
+<span class="material-symbols-outlined text-base">architecture</span>
+<span class="">Manual de Especificação Técnica · DANGO Core v2.4</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface">Sistema de Design</h1>
+
+</div>
+<div class="flex flex-col sm:flex-row lg:flex-col items-start lg:items-end gap-space-xs">
+
+<div class="flex items-center gap-2 px-3 py-1 rounded-lg bg-surface-container-low text-on-surface-variant font-data-mono-sm text-data-mono-sm">
+<span class="">Base Tipográfica: Inter + JetBrains Mono</span>
+</div>
+</div>
+</div>
+</div>
+<!-- SEÇÃO 1: PALETA DE CORES E TOKENS SEMÂNTICOS -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-data-mono-sm text-data-mono-sm font-bold">01</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Paleta de Cores e Tokens Semânticos</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Tokens Hex + Superfícies Técnicas</span>
+</div>
+<!-- Grade Bento de Amostras de Cor -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-space-md">
+<!-- Primária: Workshop Teal -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="h-20 w-full rounded-lg bg-primary-container flex items-end p-2.5 mb-space-sm shadow-inner">
+<span class="font-data-mono-sm text-data-mono-sm text-on-primary-container bg-surface-container-lowest/20 px-1.5 py-0.5 rounded font-bold">#0F766E</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Workshop Teal</span>
+<span class="font-data-mono-sm text-data-mono-sm text-primary mb-1">primary-container</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Botões primários, seletores ativos e destaques de diagnóstico.</p>
+</div>
+<!-- Primária Escura / Hover -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="h-20 w-full rounded-lg bg-primary flex items-end p-2.5 mb-space-sm shadow-inner">
+<span class="font-data-mono-sm text-data-mono-sm text-on-primary bg-surface-container-lowest/20 px-1.5 py-0.5 rounded font-bold">#005C55</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Teal Profundo</span>
+<span class="font-data-mono-sm text-data-mono-sm text-primary mb-1">primary</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Estados hover de botões e acentos de telemetria persistente.</p>
+</div>
+<!-- Fundo de Destaque -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="h-20 w-full rounded-lg bg-surface-container-high flex items-end p-2.5 mb-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface bg-surface-container-lowest/80 px-1.5 py-0.5 rounded font-bold">#DCE9FF</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Fundo Destaque</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mb-1">surface-container-high</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Realces sutis de PIDs, células selecionadas e medidores.</p>
+</div>
+<!-- Canvas Neutro -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="h-20 w-full rounded-lg bg-surface-container-low flex items-end p-2.5 mb-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface bg-surface-container-lowest/80 px-1.5 py-0.5 rounded font-bold">#EFF4FF</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Canvas Neutro</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mb-1">surface-container-low</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Fundo geral do espaço de trabalho com antirreflexo de oficina.</p>
+</div>
+<!-- Barra Lateral Grafite -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="h-20 w-full rounded-lg bg-inverse-surface flex items-end p-2.5 mb-space-sm shadow-inner">
+<span class="font-data-mono-sm text-data-mono-sm text-inverse-on-surface bg-surface-container-lowest/10 px-1.5 py-0.5 rounded font-bold">#213145</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Grafite Industrial</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mb-1">inverse-surface</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Barra de comando persistente, cabeçalhos escuros e hardware logs.</p>
+</div>
+<!-- Verde Conectado / Sucesso -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="h-20 w-full rounded-lg bg-primary-fixed flex items-end p-2.5 mb-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm text-on-primary-fixed bg-surface-container-lowest/80 px-1.5 py-0.5 rounded font-bold">#9CF2E8</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Link Sucesso</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mb-1">primary-fixed</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Estado de VCI conectado, testes de prontidão OK e status ativo.</p>
+</div>
+<!-- Âmbar Aviso / Pendente -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="h-20 w-full rounded-lg bg-tertiary-container flex items-end p-2.5 mb-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm text-on-tertiary-container bg-surface-container-lowest/20 px-1.5 py-0.5 rounded font-bold">#9C573A</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Aviso / Pendente</span>
+<span class="font-data-mono-sm text-data-mono-sm text-tertiary mb-1">tertiary-container</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">DTCs pendentes, baterias limítrofes (&lt; 12.0V) e leituras transitórias.</p>
+</div>
+<!-- Vermelho Falha / MIL Ativo -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="h-20 w-full rounded-lg bg-error-container flex items-end p-2.5 mb-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm text-on-error-container bg-surface-container-lowest/80 px-1.5 py-0.5 rounded font-bold">#FFDAD6</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface leading-tight">Erro Confirmado</span>
+<span class="font-data-mono-sm text-data-mono-sm text-error mb-1">error-container</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Falhas DTC confirmadas, luz MIL ativa e anomalias de hardware.</p>
+</div>
+</div>
+</section>
+<!-- SEÇÃO 2: TIPOGRAFIA, ESCALA E RAIOS -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-data-mono-sm text-data-mono-sm font-bold">02</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Tipografia, Escala e Raios de Curvatura</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Padrão 10px / 8px Grid Base</span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-md">
+<!-- Coluna: Tipografia Sans-Serif (Inter) -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-lg">text_fields</span>
+<span class="font-headline-md text-headline-md text-on-surface">Inter (Sans-serif)</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-on-surface">Interface Geral</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+          Utilizada em toda a navegação, títulos de seções, ações e rotulagem humana dos códigos de falha.
+        </p>
+<div class="flex flex-col gap-space-sm">
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">headline-xl (28px / 600)</span>
+<span class="font-headline-xl text-headline-xl text-on-surface leading-tight">Painel de Diagnóstico</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">headline-lg (20px / 600)</span>
+<span class="font-headline-lg text-headline-lg text-on-surface leading-tight">Monitorização de Sensores</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">body-md (13px / 400)</span>
+<span class="font-body-md text-body-md text-on-surface leading-normal">Falha de combustão detetada no cilindro 1 em regime de carga.</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">label-sm (10px / 600)</span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider">CAN 500K · ISO 15765-4</span>
+</div>
+</div>
+</div>
+<!-- Coluna: Tipografia Monospaced (JetBrains Mono) -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-lg">terminal</span>
+<span class="font-headline-md text-headline-md text-on-surface">JetBrains Mono</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-on-surface">Telemetria &amp; DTC</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+          Dedicada a identificadores SAE/ISO, leituras numéricas, endereçamento hexadecimal e logs de barramento.
+        </p>
+<div class="flex flex-col gap-space-sm">
+<div class="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">data-mono-lg (20px / 600)</span>
+<span class="font-data-mono-lg text-data-mono-lg text-primary font-bold">P0301</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-on-error-container">DTC Principal</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">data-mono-md (13px / 500)</span>
+<span class="font-data-mono-md text-data-mono-md text-on-surface">780 rpm · 88 °C · 12.4 V</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PID 010C</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">data-mono-sm (11px / 400)</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">ECU ADDR: 0x7E8 (Motor)</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-primary font-semibold">TX/RX OK</span>
+</div>
+<div class="p-2.5 rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Frame Hex Puro</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface">41 00 BE 3F B8 13</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Modo 01 Resp</span>
+</div>
+</div>
+</div>
+<!-- Coluna: Espaçamento & Raios de Cantos -->
+<div class="flex flex-col rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-lg">straighten</span>
+<span class="font-headline-md text-headline-md text-on-surface">Régua 8px &amp; Raio 10px</span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-on-surface">Geometria</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+          Harmonização matemática de módulos para consistência em ecrãs táteis de mecânico.
+        </p>
+<div class="flex flex-col gap-space-sm">
+<!-- Amostra de Raio 10px -->
+<div class="p-3 rounded-lg bg-surface-container flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Raio Unificado: 10px</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">rounded-lg / rounded-xl</span>
+</div>
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container font-data-mono-sm text-data-mono-sm font-bold">
+              10
+            </div>
+</div>
+<!-- Escala de Espaçamento 8px -->
+<div class="flex flex-col gap-2 p-3 rounded-lg bg-surface-container-low">
+<div class="flex items-center justify-between">
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface">space-xs (4px)</span>
+<div class="w-4 h-2 bg-primary/40 rounded"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface">space-sm (8px base)</span>
+<div class="w-8 h-2 bg-primary/60 rounded"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface">space-md (16px normal)</span>
+<div class="w-16 h-2 bg-primary rounded"></div>
+</div>
+<div class="flex items-center justify-between">
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface">space-xl (32px seção)</span>
+<div class="w-24 h-2 bg-primary-container rounded"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SEÇÃO 3: CATÁLOGO DE COMPONENTES INTERATIVOS -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-data-mono-sm text-data-mono-sm font-bold">03</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Catálogo de Componentes Interativos</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Biblioteca de Controlos</span>
+</div>
+<!-- Bloco 3A: Botões de Ação -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface">Botões de Ação de Oficina</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Hierarquia clara para prevenir ações destrutivas acidentais.</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-data-mono-sm">Altura padrão: 36px</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-space-md">
+<!-- Botão Primário -->
+<div class="flex flex-col gap-2 p-3 rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Primário (Workshop Teal)</span>
+<button class="h-9 px-4 rounded-lg bg-primary-container text-on-primary-container font-body-md text-body-md font-semibold flex items-center justify-center gap-2 hover:bg-primary transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-base">play_arrow</span>
+<span class="">Iniciar Varredura</span>
+</button>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Ação afirmativa principal</span>
+</div>
+<!-- Botão Secundário -->
+<div class="flex flex-col gap-2 p-3 rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Secundário (Neutro)</span>
+<button class="h-9 px-4 rounded-lg bg-surface-container text-on-surface font-body-md text-body-md font-medium flex items-center justify-center gap-2 hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-base">refresh</span>
+<span class="">Ler Novamente</span>
+</button>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Consultas de rotina</span>
+</div>
+<!-- Botão Destrutivo -->
+<div class="flex flex-col gap-2 p-3 rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Destrutivo (Apagar DTC)</span>
+<button class="h-9 px-4 rounded-lg bg-error-container text-on-error-container font-body-md text-body-md font-semibold flex items-center justify-center gap-2 hover:bg-error hover:text-on-error transition-colors" type="button">
+<span class="material-symbols-outlined text-base">delete_forever</span>
+<span class="">Apagar Códigos</span>
+</button>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Eliminação da memória ECU</span>
+</div>
+<!-- Botão Desativado -->
+<div class="flex flex-col gap-2 p-3 rounded-lg bg-surface-container-low">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Desativado / Bloqueado</span>
+<button class="h-9 px-4 rounded-lg bg-secondary-container/40 text-on-secondary-container/50 font-body-md text-body-md font-medium flex items-center justify-center gap-2 cursor-not-allowed" disabled="" type="button">
+<span class="material-symbols-outlined text-base">lock</span>
+<span class="">Gravação Bloqueada</span>
+</button>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Motor em marcha ou sem ignição</span>
+</div>
+</div>
+</div>
+<!-- Bloco 3B: Campos de Formulário, Selects e Switches -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Inputs & Dropdowns -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">Campos de Entrada e Filtros</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Entrada de Parâmetros</span>
+</div>
+<div class="flex flex-col gap-space-sm">
+<!-- Text Input -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Filtro de Código DTC ou PID</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-2.5 text-on-surface-variant text-base">search</span>
+<input class="w-full h-9 pl-9 pr-3 rounded-lg bg-surface-container-low text-on-surface font-data-mono-md text-data-mono-md outline-none focus:bg-surface-container transition-colors" placeholder="Escreva P0301, O2, RPM..." type="text" value="P03">
+</div>
+</div>
+<!-- Select Dropdown -->
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Protocolo de Comunicação</label>
+<div class="relative flex items-center">
+<select class="w-full h-9 px-3 rounded-lg bg-surface-container-low text-on-surface font-data-mono-md text-data-mono-md outline-none appearance-none focus:bg-surface-container cursor-pointer transition-colors">
+<option>ISO 15765-4 (CAN 11-bit, 500 kbaud) · Automático</option>
+<option>ISO 14230-4 (KWP2000 Fast Init)</option>
+<option>ISO 9141-2 (5 baud init)</option>
+<option>SAE J1850 PWM (Ford Standard)</option>
+</select>
+<span class="material-symbols-outlined absolute right-2.5 text-on-surface-variant text-base pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Seletores de Rádio e Modos de Operação -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">Modo de Operação VCI</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Radio Card Component</span>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm">
+<!-- Radio Card: Veículo Real (Ativo) -->
+<div class="flex flex-col p-3 rounded-lg bg-primary-container text-on-primary-container cursor-pointer shadow-sm">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-bold">
+<span class="material-symbols-outlined text-base">directions_car</span>
+<span class="">Veículo Físico</span>
+</div>
+<span class="material-symbols-outlined text-base">radio_button_checked</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-primary-container/80">Cabo OBDLink EX ligado na porta COM3.</span>
+</div>
+<!-- Radio Card: Simulação (Inativo) -->
+<div class="flex flex-col p-3 rounded-lg bg-surface-container-low text-on-surface hover:bg-surface-container cursor-pointer transition-colors">
+<div class="flex items-center justify-between mb-1">
+<div class="flex items-center gap-1.5 font-label-md text-label-md font-medium">
+<span class="material-symbols-outlined text-base text-on-surface-variant">science</span>
+<span class="">Modo Bancada / Demo</span>
+</div>
+<span class="material-symbols-outlined text-base text-on-surface-variant">radio_button_unchecked</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Injeção sintética de pacotes CAN.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bloco 3C: Badges Semânticos e Chips de Estado -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-headline-md text-headline-md text-on-surface">Badges e Chips Semânticos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Indicadores visuais imediatos para triagem rápida em oficina.</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Conformidade SAE J1979</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm">
+<!-- Conectado -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm uppercase tracking-wide">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="">VCI Conectado</span>
+</div>
+<!-- DTC Confirmado -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-sm text-label-sm uppercase tracking-wide">
+<span class="material-symbols-outlined text-xs">report</span>
+<span class="">Falha Confirmada (MIL)</span>
+</div>
+<!-- DTC Pendente -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-tertiary-container text-on-tertiary-container font-label-sm text-label-sm uppercase tracking-wide">
+<span class="material-symbols-outlined text-xs">schedule</span>
+<span class="">Código Pendente</span>
+</div>
+<!-- Permanente / Histórico -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm uppercase tracking-wide">
+<span class="material-symbols-outlined text-xs">history</span>
+<span class="">Histórico Permanente</span>
+</div>
+<!-- Modo Real -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary-container text-on-primary-container font-label-sm text-label-sm uppercase tracking-wide">
+<span class="material-symbols-outlined text-xs">bolt</span>
+<span class="">Veículo Real (12.4V)</span>
+</div>
+<!-- Modo Simulação -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase tracking-wide">
+<span class="material-symbols-outlined text-xs">science</span>
+<span class="">Simulador Ativo</span>
+</div>
+</div>
+</div>
+<!-- Bloco 3D: Abas de Navegação e Alertas -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-space-md">
+<!-- Abas de Navegação Interna -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">Abas de Navegação Técnica</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Tab Component</span>
+</div>
+<div class="flex items-center gap-1 p-1 rounded-lg bg-surface-container-low">
+<button class="flex-1 py-1.5 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm flex items-center justify-center gap-1.5" type="button">
+<span class="material-symbols-outlined text-sm text-primary">warning</span>
+<span class="">Códigos DTC (1)</span>
+</button>
+<button class="flex-1 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">ac_unit</span>
+<span class="">Freeze Frame</span>
+</button>
+<button class="flex-1 py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5 transition-colors" type="button">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="">Prontidão I/M</span>
+</button>
+</div>
+</div>
+<!-- Alertas Padronizados -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-headline-md text-on-surface">Alertas de Notificação</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Alert Banners</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<!-- Alerta de Aviso -->
+<div class="flex items-start gap-2.5 p-2.5 rounded-lg bg-tertiary-container/20 text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-lg flex-shrink-0 mt-0.5">warning</span>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-tertiary leading-tight">Aviso de Limpeza de Códigos</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant leading-tight">Apagar códigos não repara a avaria. Pode eliminar dados congelados e reiniciar monitores de emissões. Códigos permanentes não são apagados por este comando.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SEÇÃO 4: ESTADOS DE SISTEMA PADRONIZADOS -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="px-2 py-0.5 rounded bg-primary-container text-on-primary-container font-data-mono-sm text-data-mono-sm font-bold">04</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Estados de Sistema Padronizados</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Tratamento de Exceções &amp; UX</span>
+</div>
+<!-- Grade com os 5 mini-painéis de estado -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-space-md">
+<!-- 1. A Carregar / A Sincronizar -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col items-center text-center justify-between min-h-[220px]">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estado 01</span>
+<div class="flex flex-col items-center gap-2 my-auto">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl animate-spin">sync</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">A Sincronizar</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">A negociar velocidade de baud com a ECU...</p>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-primary font-semibold">BUS 500k...</span>
+</div>
+<!-- 2. Desconectado -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col items-center text-center justify-between min-h-[220px]">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estado 02</span>
+<div class="flex flex-col items-center gap-2 my-auto">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center text-on-error-container">
+<span class="material-symbols-outlined text-2xl">cable</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">Desconectado</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Ligue o cabo OBD-II na ficha do habitáculo.</p>
+</div>
+<button class="px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm font-semibold hover:bg-surface-container-high transition-colors" type="button">
+          Tentar Reconectar
+        </button>
+</div>
+<!-- 3. Vazio / Sem Falhas -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col items-center text-center justify-between min-h-[220px]">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estado 03</span>
+<div class="flex flex-col items-center gap-2 my-auto">
+<div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed">
+<span class="material-symbols-outlined text-2xl">verified</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">Sem Falhas</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Nenhum código de avaria registado na memória.</p>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-primary font-bold">0 DTCs Gravados</span>
+</div>
+<!-- 4. Não Suportado -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col items-center text-center justify-between min-h-[220px]">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estado 04</span>
+<div class="flex flex-col items-center gap-2 my-auto">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl">not_interested</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">Não Suportado</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">PID 012F indisponível nesta centralina (ECU).</p>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">7F 01 12 (NRC)</span>
+</div>
+<!-- 5. Sem Dados Temporário -->
+<div class="rounded-xl bg-surface-container-lowest p-space-md shadow-sm flex flex-col items-center text-center justify-between min-h-[220px]">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Estado 05</span>
+<div class="flex flex-col items-center gap-2 my-auto">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined text-2xl">sensors_off</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface">Sem Dados</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Nenhum valor válido recebido na resposta OBD-II.</p>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Timeout 1500ms</span>
+</div>
+</div>
+</section>
+<!-- Rodapé Didático e de Conformidade Técnica -->
+<footer class="mt-space-md p-space-md rounded-xl bg-surface-container-lowest shadow-sm flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">verified_user</span>
+<span class="font-body-sm text-body-sm">
+        Desenvolvido especificamente para uso em oficina mecânica com alta legibilidade e conformidade SAE J1979 / ISO 15765.
+      </span>
+</div>
+<div class="flex items-center gap-space-md font-data-mono-sm text-data-mono-sm flex-shrink-0">
+<span class="">DANGO DESIGN SYSTEM</span>
+<span class="">•</span>
+<span class="text-primary font-semibold">TOKEN SPECS CERTIFIED</span>
+</div>
+</footer>
+</div>
+<script>
+  // Micro-interatividade de demonstração no guia de componentes
+  document.addEventListener('DOMContentLoaded', () => {
+    const copyButtons = document.querySelectorAll('[data-hex]');
+    copyButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const hex = btn.getAttribute('data-hex');
+        navigator.clipboard?.writeText(hex);
+      });
+    });
+  });
+</script></div></main></div>
+
+</body></html>

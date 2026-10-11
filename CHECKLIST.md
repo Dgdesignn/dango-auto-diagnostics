@@ -1,5 +1,45 @@
 # Progresso da primeira fase
 
+## Barra lateral animada
+
+- [x] Botao de menu acessivel, com tooltip e activacao por teclado.
+- [x] Expansao/recolha entre 260 e 72 pixels; animacao InOutCubic de 240 ms.
+- [x] Cliques rapidos invertem a animacao sem acumular transicoes.
+- [x] Escolha manual mantida ao redimensionar; comportamento responsivo por omissao.
+- [x] Sete ecras testados com barra expandida em janela de 860x600, sem cortar controlos.
+- [x] Comandos de diagnostico, dados e simulador adaptados a linhas adicionais.
+- [x] Tres testes especificos aprovados; teste adicional na aplicacao real aprovado.
+- [x] Regressao final: 120 testes aprovados, sem falhas/ignorados, em 366,287 s.
+- [x] compileall e pip check aprovados; diff --check do codigo e documentacao aprovados.
+- [x] Espacos finais preexistentes em tres linhas da referencia HTML e numa linha da licenca Inter preservados.
+- [x] Capturas expandida/recolhida em artifacts/stitch; credenciais, logs e bases excluidos do Git.
+- [x] Nenhuma chamada Gemini real; emulador externo e dados do utilizador preservados.
+
+## Visual DANGO baseado no Stitch
+
+- [x] Inspeccionados HTML/PNG dos sete ecras e Sistema de Design, fornecidos em design/stitch; nenhuma referencia obrigatoria em falta.
+- [x] Qt Widgets mantido; sem dependencia nova, sem QWebEngine, React ou Electron.
+- [x] Tokens centralizados, fontes Inter/JetBrains Mono e Material Outlined locais com licencas; package-data configurado.
+- [x] Navegacao lateral, cabecalho de estados reais, sete ecras, modo compacto e rolagem.
+- [x] Visao geral usa leituras/series existentes sem consultas automaticas; 12 PIDs e estados preservados.
+- [x] IA em cinco seccoes, Historico em arquivo/ficha e areas tecnicas recolhiveis; sem copiar dados ficticios.
+- [x] Corrigida sincronizacao de seleccao dos PIDs e sobreposicao do formulario IA no modo compacto.
+- [x] 12 testes de interface existentes aprovados em 112,406 s; verificacoes funcionais mantidas, expectativas visuais adaptadas.
+- [x] Tres testes novos de navegacao/recursos/fluxo/perda aprovados na primeira execucao dedicada em 69,039 s.
+- [x] Suite final: 116 testes aprovados (113 existentes e 3 novos), sem falhas/ignorados, em 355,902 s.
+- [x] Primeira regressao completa: 115 aprovaram e um timeout ao iniciar polling; corrigida recriacao de celulas inalteradas e repetida toda a suite.
+- [x] Seleccao exclusiva na navegacao e nos transportes, inclusive ao clicar novamente no destino activo.
+- [x] compileall, pip check e diff --check aprovados; segredos, bases locais, logs e capturas continuam ignorados.
+- [x] Matriz final offscreen: sete ecras em 1440x900, 1120x740 e 860x600 logicos, escalas 100/125/150%; capturas em artifacts/stitch.
+- [x] Verificador final por escala: 100% aprovado em 40,917 s; 125% em 39,062 s; 150% em 43,797 s, sem falhas/ignorados.
+- [x] Capturas inspeccionadas em dimensoes normais/compactas e escalas diferentes; formulario IA sem sobreposicao e graficos com amostras OBD reais do cenario.
+- [ ] Escalas fisicas Windows 100/125/150 em monitores distintos: nao executadas; matriz Qt offscreen em verificacao.
+- [x] Nenhuma chamada real Gemini, commit, push ou alteracao de autoria nesta tarefa.
+
+Sistema visual, fontes, licencas, adaptacoes e comandos em
+[docs/SISTEMA_VISUAL.md](docs/SISTEMA_VISUAL.md). Resultados anteriores abaixo
+sao historicos.
+
 ## Correccoes da revisao de 57c800e
 
 - [x] Suporte desconhecido distinto de nao suportado, por ECU e modo 01/02; motivo e mapa em falta apresentados.

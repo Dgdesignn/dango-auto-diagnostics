@@ -1,0 +1,80 @@
+from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QFormLayout, QComboBox,
+    QLineEdit, QSpinBox, QDoubleSpinBox, QLabel, QTabWidget, QPlainTextEdit, QMenu, QStyle)
+from PySide6.QtGui import QAction
+from scanner_outo.models import origin_label
+from scanner_outo.communication.serial_transport import available_ports
+from scanner_outo.diagnostics.obd import PIDS, DEFAULT_PIDS
+from scanner_outo.ui.charts import ReadingChart
+from scanner_outo.ui.components import Panel, Columns, label
+from scanner_outo.gemini import ANALYSIS_LABELS
+from PySide6.QtCore import Qt
+
+
+def build(self):
+    layout = self.page("Análise por IA")
+    configuration = Panel("Sintomas e configuração")
+    configuration.body.addWidget(label("Sintomas observados", "secondary"))
+    self.symptoms = QPlainTextEdit()
+    self.symptoms.setProperty("role", "body")
+    self.symptoms.setPlaceholderText("Sintomas observados")
+    self.symptoms.setMaximumHeight(100)
+    self.symptoms.setMinimumHeight(120)
+    self.symptoms.setMaximumHeight(180)
+    configuration.body.addWidget(self.symptoms)
+    row = QHBoxLayout()
+    self.model = QLineEdit(self.settings.model)
+    self.model.setMaximumWidth(230)
+    self.daily = QSpinBox()
+    self.daily.setRange(0, 2147483647)
+    self.daily.setValue(self.settings.daily_limit)
+    self.ai_interval = QSpinBox()
+    self.ai_interval.setRange(0, 2147483647)
+    self.ai_interval.setValue(self.settings.minimum_interval)
+    self.ai_interval.setSuffix(" s")
+    self.preview_button = self.button("Rever dados", self.preview_analysis)
+    self.analyze_button = self.button("Analisar com Gemini", self.analyze)
+    form = QFormLayout()
+    form.addRow("Modelo", self.model)
+    form.addRow("Limite diário", self.daily)
+    form.addRow("Intervalo mínimo", self.ai_interval)
+    configuration.body.addLayout(form)
+    configuration.body.addWidget(self.preview_button)
+    configuration.body.addWidget(self.analyze_button)
+    self.ai_availability = QLabel()
+    self.ai_availability.setWordWrap(True)
+    configuration.body.addWidget(self.ai_availability)
+    self.ai_status = QLabel("Sem pedido de análise")
+    self.ai_status.setWordWrap(True)
+    configuration.body.addWidget(self.ai_status)
+    self.analysis_validity = QLabel()
+    self.analysis_validity.setWordWrap(True)
+    configuration.body.addWidget(self.analysis_validity)
+    configuration.body.addStretch()
+    self.ai_views = QTabWidget()
+    self.ai_input = QPlainTextEdit()
+    self.ai_input.setReadOnly(True)
+    self.ai_output = QPlainTextEdit()
+    self.ai_output.setReadOnly(True)
+    self.ai_views.addTab(self.ai_input, "Dados enviados")
+    report = QWidget()
+    report_layout = QVBoxLayout(report)
+    report_layout.setContentsMargins(0, 0, 0, 0)
+    report_layout.setSpacing(16)
+    self.ai_sections = {}
+    for key, title in ANALYSIS_LABELS.items():
+        section = Panel(title)
+        content = label("Sem análise disponível")
+        content.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        section.body.addWidget(content)
+        report_layout.addWidget(section)
+        self.ai_sections[key] = content
+    self.ai_output.setParent(report)
+    self.ai_output.hide()
+    self.ai_views.addTab(report, "Interpretação")
+    self.ai_views.setMinimumHeight(540)
+    self.ai_views.setCurrentIndex(1)
+    layout.addWidget(Columns([configuration, self.ai_views]))
+    self.model.textChanged.connect(self.update_controls)
+    self.daily.valueChanged.connect(self.update_controls)
+    self.ai_interval.valueChanged.connect(self.update_controls)
+    self.symptoms.textChanged.connect(self.render_analysis_validity)

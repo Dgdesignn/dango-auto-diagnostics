@@ -6,6 +6,7 @@ from PySide6.QtGui import QColor, QPainter, QPen, QFont
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QComboBox
 
 from scanner_outo.diagnostics.obd import PIDS
+from scanner_outo.ui.design import font
 
 
 class ReadingChart(QWidget):
@@ -15,12 +16,12 @@ class ReadingChart(QWidget):
         self.selector = QComboBox()
         self.chart = QChart()
         self.chart.setBackgroundBrush(QColor("#ffffff"))
-        self.chart.setPlotAreaBackgroundBrush(QColor("#f5f7fa"))
+        self.chart.setPlotAreaBackgroundBrush(QColor("#EFF4FF"))
         self.chart.setPlotAreaBackgroundVisible(True)
         self.chart.setBackgroundRoundness(0)
         self.chart.setMargins(QMargins(8, 4, 8, 4))
         self.chart.legend().setAlignment(Qt.AlignmentFlag.AlignTop)
-        self.chart.legend().setFont(QFont(self.font().family(), 9))
+        self.chart.legend().setFont(font(11))
         self.time_axis = QDateTimeAxis()
         self.time_axis.setFormat("HH:mm:ss")
         self.time_axis.setTitleText("Hora local")
@@ -29,8 +30,8 @@ class ReadingChart(QWidget):
         self.time_axis.setRange(current.addSecs(-10), current)
         self.value_axis = QValueAxis()
         for axis in (self.time_axis, self.value_axis):
-            axis.setLabelsFont(QFont(self.font().family(), 9))
-            axis.setTitleFont(QFont(self.font().family(), 9))
+            axis.setLabelsFont(font(11, mono=True))
+            axis.setTitleFont(font(11))
         self.chart.addAxis(self.time_axis, Qt.AlignmentFlag.AlignBottom)
         self.chart.addAxis(self.value_axis, Qt.AlignmentFlag.AlignLeft)
         self.lines = {}
@@ -70,7 +71,7 @@ class ReadingChart(QWidget):
         value_axis.setTitleText(definition.unit)
         points = []
         active = set()
-        colors = ("#00796b", "#bd3655", "#3265ad", "#8a6510")
+        colors = ("#0F766E", "#9C573A", "#3265ad", "#BA1A1A")
         for index, (ecu, segments) in enumerate(self.samples.segments(f"{pid:02X}").items()):
             for segment_index, segment in enumerate(segments):
                 key = (pid, ecu, segment_index)

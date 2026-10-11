@@ -15,6 +15,8 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QFormLayout, QHBoxLayout, QC
 
 from scanner_outo.config import PROJECT_ROOT
 from scanner_outo.ui.workers import Worker
+from scanner_outo.ui.components import Panel, Columns, TechnicalSection
+from scanner_outo.ui.design import icon as design_icon
 
 SCENARIOS = ("healthy", "rough_idle_p0301", "multiple_dtcs", "no_data", "connection_loss", "car")
 SCENARIO_NAMES = ("Motor saudável", "Ralenti irregular | P0301", "Múltiplas avarias", "ECU sem dados", "Perda de ligação", "Veículo original (car)")
@@ -58,6 +60,11 @@ class SimulatorPanel(QWidget):
         self.deadline.setSingleShot(True)
         self.deadline.timeout.connect(self.expired)
         layout = QVBoxLayout(self)
+        self.setObjectName("page")
+        layout.setContentsMargins(24, 0, 24, 24)
+        layout.setSpacing(24)
+        scenario_panel = Panel("Cenários de teste disponíveis")
+        state_panel = Panel("Estado interno do simulador")
         form = QFormLayout()
         self.scenario = QComboBox()
         for name, identifier in zip(SCENARIO_NAMES, SCENARIOS):
@@ -73,19 +80,18 @@ class SimulatorPanel(QWidget):
         form.addRow("Endereço", QLabel("127.0.0.1"))
         form.addRow("Porta OBD", self.port)
         form.addRow("Pedidos OBD antes da perda", self.loss_count)
-        layout.addLayout(form)
-        row = QHBoxLayout()
+        scenario_panel.body.addLayout(form)
         def button(text, callback, icon):
-            item = QPushButton(self.style().standardIcon(icon), text)
+            symbol = {QStyle.StandardPixmap.SP_MediaPlay: "play_arrow", QStyle.StandardPixmap.SP_MediaStop: "stop",
+                      QStyle.StandardPixmap.SP_BrowserReload: "refresh", QStyle.StandardPixmap.SP_DialogApplyButton: "check_circle"}.get(icon, "science")
+            item = QPushButton(design_icon(symbol), text)
             item.setToolTip(text)
             item.clicked.connect(callback)
-            row.addWidget(item)
             return item
         icons = QStyle.StandardPixmap
         self.start_button = button("Iniciar simulador", self.start, icons.SP_MediaPlay)
         self.stop_button = button("Parar simulador", lambda: self.before_change.emit("stop"), icons.SP_MediaStop)
-        layout.addLayout(row)
-        row = QHBoxLayout()
+        scenario_panel.body.addWidget(Columns([self.start_button, self.stop_button], breakpoint=440))
         self.cycle_button = button("Novo ciclo", lambda: self.request("cycle"), icons.SP_ArrowForward)
         self.resolve_button = button("Resolver causa", lambda: self.request("resolve"), icons.SP_DialogApplyButton)
         self.reset_button = button("Repor cenário", lambda: self.before_change.emit("reset"), icons.SP_BrowserReload)
@@ -93,13 +99,19 @@ class SimulatorPanel(QWidget):
         self.start_button.setToolTip("Iniciar simulador não liga automaticamente o scanner.")
         self.cycle_button.setToolTip("Novo ciclo exige nova consulta OBD para actualizar a tabela de avarias.")
         self.resolve_button.setToolTip("Resolver causa não elimina os códigos já guardados.")
-        layout.addLayout(row)
+        scenario_panel.body.addWidget(Columns([self.cycle_button, self.resolve_button, self.reset_button, self.status_button], breakpoint=440, maximum=4))
+        self.start_button.setProperty("variant", "primary")
+        self.start_button.setIcon(design_icon("play_arrow", "#FFFFFF"))
+        self.stop_button.setProperty("variant", "danger")
         self.process_status = QLabel("Parado; nenhum processo gerido")
         self.process_status.setWordWrap(True)
         self.vehicle_status = QLabel("Estado do veículo não consultado")
         self.vehicle_status.setWordWrap(True)
-        layout.addWidget(self.process_status)
-        layout.addWidget(self.vehicle_status)
+        state_panel.body.addWidget(self.vehicle_status)
+        self.process_status.setProperty("role", "technical")
+        state_panel.body.addWidget(TechnicalSection("Processo e portas locais", self.process_status))
+        state_panel.body.addStretch()
+        layout.addWidget(Columns([scenario_panel, state_panel], breakpoint=1100))
         layout.addStretch()
         self.update_controls()
 

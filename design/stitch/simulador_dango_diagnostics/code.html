@@ -1,0 +1,343 @@
+<!DOCTYPE html><html class="h-full" lang="pt"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-surface":"#213145","on-primary-fixed":"#00201d","surface-bright":"#f8f9ff","on-error-container":"#93000a","outline":"#6e7977","on-error":"#ffffff","primary-fixed":"#9cf2e8","error-container":"#ffdad6","on-secondary":"#ffffff","on-secondary-fixed":"#141b2b","surface-variant":"#d3e4fe","surface-container":"#e5eeff","inverse-primary":"#80d5cb","on-tertiary-container":"#ffe5db","secondary":"#575e70","tertiary-container":"#9c573a","primary-container":"#0f766e","surface-container-highest":"#d3e4fe","outline-variant":"#bdc9c6","surface-dim":"#cbdbf5","primary":"#005c55","on-primary":"#ffffff","surface-tint":"#006a63","on-surface":"#0b1c30","primary-fixed-dim":"#80d5cb","tertiary":"#7f4025","secondary-container":"#d9dff5","inverse-on-surface":"#eaf1ff","surface":"#f8f9ff","secondary-fixed":"#dce2f7","surface-container-high":"#dce9ff","on-primary-container":"#a3faef","tertiary-fixed-dim":"#ffb598","on-tertiary-fixed-variant":"#72361b","on-surface-variant":"#3e4947","surface-container-lowest":"#ffffff","on-background":"#0b1c30","surface-container-low":"#eff4ff","secondary-fixed-dim":"#c0c6db","tertiary-fixed":"#ffdbce","on-primary-fixed-variant":"#00504a","on-tertiary":"#ffffff","on-tertiary-fixed":"#370e00","on-secondary-container":"#5c6274","background":"#f8f9ff","on-secondary-fixed-variant":"#404758","error":"#ba1a1a"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin":"1rem","space-sm":"0.5rem","space-xl":"2rem","gutter":"1rem","margin-panel":"1.5rem","space-md":"1rem","space-lg":"1.5rem","gutter-compact":"0.5rem","space-xs":"0.25rem"},"fontFamily":{"headline-xl":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"data-mono-sm":["JetBrains Mono"],"body-lg":["Inter"],"headline-lg":["Inter"],"label-md":["Inter"],"data-mono-lg":["JetBrains Mono"],"body-sm":["Inter"],"data-mono-md":["JetBrains Mono"]},"fontSize":{"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"data-mono-sm":["11px",{"lineHeight":"16px","fontWeight":"400"}],"body-lg":["15px",{"lineHeight":"22px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"data-mono-lg":["20px",{"lineHeight":"26px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"data-mono-md":["13px",{"lineHeight":"18px","fontWeight":"500"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[260px] bg-inverse-surface text-inverse-on-surface border-r border-outline-variant/30 z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="p-space-md border-b border-outline-variant/20"><div class="flex items-center gap-space-sm mb-space-xs"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm"><span class="material-symbols-outlined text-lg">directions_car</span></div><div class="flex flex-col"><span class="font-headline-md text-headline-md tracking-tight text-surface-container-lowest leading-none">DANGO</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Auto Diagnostics</span></div></div><div class="flex items-center justify-between mt-space-xs"><span class="font-data-mono-sm text-data-mono-sm text-outline-variant">Simulador Integrado</span><span class="font-data-mono-sm text-data-mono-sm text-primary-fixed-dim bg-primary-container/40 px-1.5 py-0.5 rounded">OBD-II</span></div><div class="mt-space-sm p-space-sm rounded-lg bg-surface-container-high/10 border border-outline-variant/20"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="font-label-sm text-label-sm text-surface-container-lowest font-bold tracking-wide">CONECTADO</span></div><div class="mt-1 font-data-mono-sm text-data-mono-sm text-outline-variant leading-tight truncate" title="OBDLink EX / USB-Serial / ISO 15765-4 CAN 11bit 500k">OBDLink EX · CAN 500k</div></div></div><nav class="flex flex-col gap-1 p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm"><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">dashboard</span><span class="font-body-md text-body-md">Visão geral</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="connection" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">cable</span><span class="font-body-md text-body-md">Conexão</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="diagnostics" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">warning</span><span class="font-body-md text-body-md">Diagnóstico</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-error text-on-error">1 Ativo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="live-data" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">query_stats</span><span class="font-body-md text-body-md">Dados ao vivo</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="ai-analysis" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">smart_toy</span><span class="font-body-md text-body-md">Análise com IA</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="history" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">history</span><span class="font-body-md text-body-md">Histórico</span></div></a><a aria-current="page" class="flex items-center justify-between px-space-sm py-2 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm" data-path="simulator" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">science</span><span class="font-body-md text-body-md">Simulador</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-secondary-container text-on-secondary-container">Demo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">settings</span><span class="font-body-md text-body-md">Definições</span></div></a></nav></div><div class="p-space-sm border-t border-outline-variant/20 flex flex-col gap-space-xs"><div class="px-space-xs py-1 flex items-center justify-between font-data-mono-sm text-data-mono-sm text-outline-variant"><span class="">Porta:</span><span class="text-primary-fixed font-semibold">COM3 @ 115200</span></div><div class="flex items-center justify-between px-space-xs py-1"><span class="font-body-sm text-body-sm text-outline-variant">Link Ativo</span><button class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-on-error-container hover:bg-error hover:text-on-error transition-colors" type="button">Desconectar</button></div><div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/10 text-outline-variant"><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="design-system" href="#"><span class="material-symbols-outlined text-sm">palette</span> Design System</a><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="documentation" href="#"><span class="material-symbols-outlined text-sm">menu_book</span> Docs</a></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md min-w-0"><div class="flex items-center gap-space-sm px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 min-w-0"><span class="material-symbols-outlined text-primary text-xl">directions_car</span><div class="flex flex-col min-w-0"><span class="font-headline-md text-headline-md text-on-surface truncate leading-tight">Volkswagen Golf VII 1.4 TSI (2016)</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant leading-tight">VIN: WVWZZZAUZGW01****</span></div></div></div><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary-container text-on-primary-container font-label-md text-label-md"><span class="w-2 h-2 rounded-full bg-primary-fixed-dim animate-pulse"></span><span class="">SIMULAÇÃO (Dados de demonstração)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/30 text-on-surface font-data-mono-md text-data-mono-md"><span class="text-tertiary-container font-bold">⚡</span><span class="">12.4 V</span><span class="font-label-sm text-label-sm text-primary font-semibold">(Normal)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant font-data-mono-sm text-data-mono-sm"><span class="">CAN 500k</span></div><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-md text-label-md font-bold"><span class="material-symbols-outlined text-base">error</span><span class="">MIL ATIVO (1 DTC)</span></div></div><div class="flex items-center gap-space-sm"><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Atualizar Telemetria" type="button"><span class="material-symbols-outlined text-xl">refresh</span></button><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Documentação" type="button"><span class="material-symbols-outlined text-xl">help_outline</span></button><div class="h-6 w-px bg-outline-variant/40 mx-1"></div><div class="flex items-center gap-space-sm pl-1"><div class="text-right hidden sm:flex sm:flex-col"><span class="font-headline-md text-body-md text-on-surface leading-tight">Oficina Central</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Porto · Técnico</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UNwIBFgNkdMJLkh2Kpr4HjBbMKzq0ZU-fScLsigHTm88Ck83s0hAGBq0QlIyEpeBP1VwtxKxmUn0omo0KZtJ1IyK-fJz5-Pb6A_u1ZscOXrEj-oeRFHuwqcumVKuK7gyzxd6WuuSjYtXz4MtEd3WfwxY78YRtkJllGkouLvcs9DrSe057EJ6uPFdeARFqx0d_OdrolUMjxmW4ICbila7jD67-eaqGh7J5dHuAk8jhkIi8_ETVbEoi7dA"></div></div></header><main class="relative pt-16 bg-background min-h-screen"><div class="max-w-7xl mx-auto p-6 md:p-8"><div class="flex flex-col w-full">
+<!-- Banner Proeminente de Modo de Simulação -->
+<div class="relative overflow-hidden rounded-xl bg-surface-container-high p-space-md shadow-sm mb-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md relative z-10">
+<div class="flex items-start gap-space-md">
+<div class="w-11 h-11 rounded-lg bg-inverse-surface text-inverse-on-surface flex items-center justify-center shrink-0 shadow-sm">
+<span class="material-symbols-outlined text-2xl text-primary-fixed">science</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="px-2 py-0.5 rounded-lg bg-surface-container-highest text-on-surface font-label-sm text-label-sm uppercase tracking-wider">
+              Ambiente Isolado
+            </span>
+<span class="flex items-center gap-1 px-2 py-0.5 rounded-lg bg-primary-container text-on-primary-container font-label-sm text-label-sm font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-fixed-dim animate-ping"></span>
+              EM EXECUÇÃO · 100 HZ
+            </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface mt-1 leading-tight">Simulador local</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5 max-w-2xl">Bancada ECU virtual com injeção de tráfego CAN sintético e telemetria OBD-II.</p>
+</div>
+</div>
+<!-- Controlos Globais do Simulador -->
+<div class="flex items-center gap-space-sm shrink-0 self-end lg:self-center">
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-lowest text-on-surface font-label-md text-label-md shadow-sm hover:bg-surface-container-low transition-colors" id="btn-reset-ecu" type="button">
+<span class="material-symbols-outlined text-lg text-on-surface-variant">restart_alt</span>
+<span class="">Reiniciar ECU Virtual</span>
+</button>
+<button class="flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-error-container text-on-error-container font-label-md text-label-md shadow-sm hover:bg-error hover:text-on-error transition-colors" id="btn-toggle-engine" type="button">
+<span class="material-symbols-outlined text-lg">stop_circle</span>
+<span id="btn-toggle-label" class="">Parar Simulador</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Estrutura Principal em Duas Colunas -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- COLUNA ESQUERDA: Cenários e Controlo de Parâmetros (7 Colunas) -->
+<div class="lg:col-span-7 flex flex-col gap-space-lg">
+<!-- Seletor de Cenários -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">tune</span>
+<span class="font-headline-md text-headline-md text-on-surface">Cenários de Teste Disponíveis</span>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded-lg">
+            3 Cenários Predefinidos
+          </span>
+</div>
+<div class="flex flex-col gap-space-sm" id="scenario-group">
+<!-- Cenário 1 -->
+<label class="cursor-pointer group block">
+<div class="scenario-card p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex items-start gap-space-md">
+<input class="mt-1 text-primary focus:ring-0 w-4 h-4 accent-primary" name="scenario" type="radio" value="normal">
+<div class="flex flex-col flex-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-body-lg text-on-surface group-hover:text-primary transition-colors">
+                    1. Funcionamento Normal (Motor Saudável)
+                  </span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">
+                    MIL: OFF
+                  </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed">
+                  Motor em regime térmico nominal. Nenhum DTC ativo em memória, sensores com oscilações normais e monitores de prontidão I/M concluídos.
+                </p>
+</div>
+</div>
+</label>
+<!-- Cenário 2 (Ativo por Padrão) -->
+<label class="cursor-pointer group block">
+<div class="scenario-card p-space-md rounded-xl bg-surface-container text-on-surface transition-all flex items-start gap-space-md shadow-sm">
+<input checked="" class="mt-1 text-primary focus:ring-0 w-4 h-4 accent-primary" name="scenario" type="radio" value="p0301">
+<div class="flex flex-col flex-1">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-body-lg text-on-surface font-semibold">
+                      2. Falha de Combustão P0301 (Cilindro 1)
+                    </span>
+<span class="font-label-sm text-label-sm px-1.5 py-0.5 rounded bg-primary-container text-on-primary-container font-semibold">
+                      ATIVO
+                    </span>
+</div>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error text-on-error font-semibold">
+                    MIL: ON
+                  </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed">Observação de falha de combustão no cilindro 1 com Freeze Frame registado (2.140 rpm, 48.2% carga, +14.8% STFT, 54 km/h) e luz de avaria (MIL) ativada.</p>
+</div>
+</div>
+</label>
+<!-- Cenário 3 -->
+<label class="cursor-pointer group block">
+<div class="scenario-card p-space-md rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex items-start gap-space-md">
+<input class="mt-1 text-primary focus:ring-0 w-4 h-4 accent-primary" name="scenario" type="radio" value="loss_comm">
+<div class="flex flex-col flex-1">
+<div class="flex items-center justify-between">
+<span class="font-headline-md text-body-lg text-on-surface group-hover:text-primary transition-colors">
+                    3. Sensor Indisponível / Resposta Intermitente
+                  </span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container text-on-surface-variant">
+                    TIMED OUT
+                  </span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 leading-relaxed">
+                  Simula timeout em PIDs de caudal de ar (MAF) e ruído elétrico na linha CAN com perda de frames nos modos 01 e 02.
+                </p>
+</div>
+</div>
+</label>
+</div>
+<!-- Descrição Técnica Direta do Cenário Ativo -->
+<div class="mt-space-xs p-space-md rounded-xl bg-surface-container-high text-on-surface flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-xl shrink-0 mt-0.5">terminal</span>
+<div class="flex flex-col gap-1 text-on-surface">
+<span class="font-label-md text-label-md text-primary font-semibold uppercase tracking-wider">Comportamento Ativo da ECU</span>
+<p class="font-data-mono-sm text-data-mono-sm text-on-surface-variant leading-relaxed">
+              O simulador responde a pedidos Mode 01, 02, 03, 04, 07 e 09. A falha P0301 é reportada no Modo 03 com o bit MIL ativo (0x81). O Modo 02 fornece freeze frame completo gravado em ciclo. Comandos Mode 04 limpam o código temporariamente até novo disparo de carga.
+            </p>
+</div>
+</div>
+</div>
+<!-- Ajuste em Tempo Real de Parâmetros Virtuais -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">sliders</span>
+<span class="font-headline-md text-headline-md text-on-surface">Ajuste de Parâmetros Virtuais em Tempo Real</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-primary font-semibold bg-primary-container/20 px-2 py-0.5 rounded">
+            Loopback CAN ativo
+          </span>
+</div>
+<!-- Sliders e Toggles -->
+<div class="flex flex-col gap-space-md">
+<!-- Slider 1: RPM -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between"><span class="">Ralenti (780)</span><span class="">2.500</span><span class="">Limite (5.000)</span></div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" id="slider-rpm" max="5000" min="750" step="10" type="range" value="780">
+<div class="flex justify-between font-data-mono-sm text-data-mono-sm text-on-surface-variant"><span class="">Ralenti (780)</span><span class="">2.500</span><span class="">Limite (5.000)</span></div>
+</div>
+<!-- Slider 2: Temperatura do Líquido de Refrigeração -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col gap-space-xs">
+<div class="flex items-center justify-between">
+<label class="font-body-md text-body-md text-on-surface font-medium flex items-center gap-1.5" for="slider-temp">
+<span class="material-symbols-outlined text-secondary text-base">device_thermostat</span>
+                Temperatura do Líquido de Refrigeração (ECT)
+              </label>
+<div class="flex items-baseline gap-1">
+<span class="font-data-mono-lg text-data-mono-lg text-on-surface font-bold" id="temp-val">88</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">°C</span>
+</div>
+</div>
+<input class="w-full h-1.5 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary" id="slider-temp" max="115" min="20" step="1" type="range" value="88">
+<div class="flex justify-between font-data-mono-sm text-data-mono-sm text-on-surface-variant">
+<span class="">Arranque Frio (20°C)</span>
+<span class="">Nominal (85-92°C)</span>
+<span class="">Sobreaquecimento (115°C)</span>
+</div>
+</div>
+<!-- Toggle: Queda de Tensão -->
+<div class="p-space-sm rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-surface-container flex items-center justify-center text-tertiary-container">
+<span class="material-symbols-outlined text-lg">bolt</span>
+</div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-medium">Forçar Queda de Tensão de Bateria</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Injeta 11.8 V (abaixo do limiar normal de 12.4 V) para teste de alerta da interface</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" id="toggle-voltage" type="checkbox">
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-surface-container-lowest after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:border-surface-container-highest after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+<!-- COLUNA DIREITA: Monitor de Estado, Telemetria Sintética e Guia de Teste (5 Colunas) -->
+<div class="lg:col-span-5 flex flex-col gap-space-lg">
+<!-- Painel de Estado da ECU Sintética -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">memory</span>
+<span class="font-headline-md text-headline-md text-on-surface">Estado da ECU Virtual</span>
+</div>
+<span class="flex items-center gap-1 font-data-mono-sm text-data-mono-sm text-primary font-semibold">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+            SYNC OK
+          </span>
+</div>
+<div class="grid grid-cols-2 gap-space-sm">
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Daemon de Processamento</span>
+<span class="font-data-mono-md text-data-mono-md text-on-surface mt-1 truncate" title="Python 3.11 ECU Loop">Thread Local Python</span>
+<span class="font-data-mono-sm text-data-mono-sm text-primary-container mt-0.5">CPU Load: 0.8%</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Interface de Rede</span>
+<span class="font-data-mono-md text-data-mono-md text-on-surface mt-1">vcan0 / Loopback</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mt-0.5">ISO 15765-4 (CAN)</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Frames Transmitidos</span>
+<span class="font-data-mono-md text-data-mono-md text-on-surface mt-1" id="counter-frames">49&nbsp;800</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mt-0.5">0 frames perdidos</span>
+</div>
+<div class="p-space-sm rounded-lg bg-surface-container-low flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Latência Sintética</span>
+<span class="font-data-mono-md text-data-mono-md text-on-surface mt-1">12 ms</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant mt-0.5">Injetada para realismo</span>
+</div>
+</div>
+</div>
+<!-- Janela Concisa de Inspeção de Tráfego CAN Recente -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">data_object</span>
+<span class="font-headline-md text-headline-md text-on-surface">Inspeção de Tráfego CAN</span>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">
+            Buffer: 6 frames
+          </span>
+</div>
+<!-- Tabela Compacta Monospace de 6 a 8 Linhas -->
+<details class="text-xs text-on-surface-variant cursor-pointer group" open=""><summary class="font-label-md text-label-md text-primary font-semibold py-1 select-none hover:text-primary-container flex items-center justify-between"><span class="">Detalhes técnicos (Tráfego CAN bruto)</span><span class="material-symbols-outlined text-sm transition-transform group-open:rotate-180">expand_more</span></summary><div class="bg-inverse-surface rounded-xl p-3 font-data-mono-sm text-data-mono-sm flex flex-col gap-1.5 overflow-hidden text-surface-container-lowest shadow-inner mt-2"><div class="flex items-center justify-between text-outline-variant pb-1 font-label-sm text-label-sm border-b border-surface-container-high/15"><span class="">DIRECÇÃO / ID</span><span class="">CARGA ÚTIL (HEX)</span><span class="">DECODIFICAÇÃO</span></div><div class="flex items-center justify-between hover:bg-surface-container-high/10 px-1 py-0.5 rounded transition-colors"><span class="text-primary-fixed-dim font-semibold">TX [0x7DF]</span><span class="text-inverse-on-surface">02 01 0C 00 00 00 00 00</span><span class="text-outline-variant">PID 0C (RPM)</span></div><div class="flex items-center justify-between hover:bg-surface-container-high/10 px-1 py-0.5 rounded transition-colors"><span class="text-primary-fixed font-semibold">RX [0x7E8]</span><span class="text-inverse-on-surface">04 41 0C 0C 30 00 00 00</span><span class="text-primary-fixed">780 rpm</span></div><div class="flex items-center justify-between hover:bg-surface-container-high/10 px-1 py-0.5 rounded transition-colors"><span class="text-primary-fixed-dim font-semibold">TX [0x7DF]</span><span class="text-inverse-on-surface">02 01 05 00 00 00 00 00</span><span class="text-outline-variant">PID 05 (ECT)</span></div><div class="flex items-center justify-between hover:bg-surface-container-high/10 px-1 py-0.5 rounded transition-colors"><span class="text-primary-fixed font-semibold">RX [0x7E8]</span><span class="text-inverse-on-surface">03 41 05 80 00 00 00 00</span><span class="text-inverse-on-surface">88 °C</span></div><div class="flex items-center justify-between hover:bg-surface-container-high/10 px-1 py-0.5 rounded transition-colors"><span class="text-primary-fixed-dim font-semibold">TX [0x7DF]</span><span class="text-inverse-on-surface">01 03 00 00 00 00 00 00</span><span class="text-outline-variant">Modo 03 (DTCs)</span></div><div class="flex items-center justify-between hover:bg-surface-container-high/10 px-1 py-0.5 rounded transition-colors"><span class="text-tertiary-fixed font-semibold">RX [0x7E8]</span><span class="text-tertiary-fixed">04 43 01 03 01 00 00 00</span><span class="text-error-container font-semibold">P0301 (MIL)</span></div></div></details>
+</div>
+<!-- Secção Didática 'Como Testar a Aplicação' -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">help_center</span>
+<span class="font-headline-md text-headline-md text-on-surface">Como Testar a Aplicação</span>
+</div>
+<div class="flex flex-col gap-space-sm mt-1">
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-md text-label-md text-primary font-bold shrink-0 mt-0.5">
+              1
+            </div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Validar em Dados ao Vivo</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Aceda à página 'Dados ao vivo'. Arraste o slider de RPM acima e comprove a sincronização imediata dos gráficos e mostradores de telemetria.</span>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-md text-label-md text-primary font-bold shrink-0 mt-0.5">
+              2
+            </div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Testar Limpeza de Avarias</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Abra a aba 'Diagnóstico' para inspecionar o código P0301 ativo. Use a opção 'Apagar Códigos' para emitir o pacote Mode 04 e observar o estado limpo.</span>
+</div>
+</div>
+<div class="flex items-start gap-space-sm p-space-sm rounded-lg bg-surface-container-low">
+<div class="w-6 h-6 rounded-full bg-surface-container flex items-center justify-center font-label-md text-label-md text-primary font-bold shrink-0 mt-0.5">
+              3
+            </div>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md text-on-surface font-semibold">Avaliar Hipótese com IA</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Experimente a funcionalidade 'Análise com IA'. O modelo correlaciona o freeze frame sintetizado (2.840 RPM) com vela de ignição ou bobina avariada.</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  (function() {
+    // Slider de RPM
+    const rpmSlider = document.getElementById('slider-rpm');
+    const rpmVal = document.getElementById('rpm-val');
+    if (rpmSlider && rpmVal) {
+      rpmSlider.addEventListener('input', function(e) {
+        rpmVal.textContent = e.target.value;
+      });
+    }
+
+    // Slider de Temperatura
+    const tempSlider = document.getElementById('slider-temp');
+    const tempVal = document.getElementById('temp-val');
+    if (tempSlider && tempVal) {
+      tempSlider.addEventListener('input', function(e) {
+        tempVal.textContent = e.target.value;
+      });
+    }
+
+    // Botão Alternar Estado de Execução
+    const toggleBtn = document.getElementById('btn-toggle-engine');
+    const toggleLabel = document.getElementById('btn-toggle-label');
+    let isRunning = true;
+
+    if (toggleBtn && toggleLabel) {
+      toggleBtn.addEventListener('click', function() {
+        isRunning = !isRunning;
+        if (!isRunning) {
+          toggleLabel.textContent = 'Retomar Simulador';
+          toggleBtn.className = 'flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-sm hover:bg-primary-container transition-colors';
+        } else {
+          toggleLabel.textContent = 'Parar Simulador';
+          toggleBtn.className = 'flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-error-container text-on-error-container font-label-md text-label-md shadow-sm hover:bg-error hover:text-on-error transition-colors';
+        }
+      });
+    }
+
+    // Botão Reiniciar Estado
+    const resetBtn = document.getElementById('btn-reset-ecu');
+    if (resetBtn) {
+      resetBtn.addEventListener('click', function() {
+        if (rpmSlider && rpmVal) {
+          rpmSlider.value = 850;
+          rpmVal.textContent = '850';
+        }
+        if (tempSlider && tempVal) {
+          tempSlider.value = 89;
+          tempVal.textContent = '89';
+        }
+        const voltageToggle = document.getElementById('toggle-voltage');
+        if (voltageToggle) {
+          voltageToggle.checked = false;
+        }
+      });
+    }
+
+    // Incremento suave de contador de frames CAN
+    const frameCounter = document.getElementById('counter-frames');
+    if (frameCounter) {
+      let count = 48920;
+      setInterval(function() {
+        if (isRunning) {
+          count += Math.floor(Math.random() * 4) + 1;
+          frameCounter.textContent = count.toLocaleString('pt-PT');
+        }
+      }, 1200);
+    }
+  })();
+</script></div></main></div>
+
+</body></html>

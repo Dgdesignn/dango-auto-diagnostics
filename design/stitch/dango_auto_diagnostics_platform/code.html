@@ -1,0 +1,244 @@
+<!DOCTYPE html><html class="h-full" lang="pt"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-surface":"#213145","on-primary-fixed":"#00201d","surface-bright":"#f8f9ff","on-error-container":"#93000a","outline":"#6e7977","on-error":"#ffffff","primary-fixed":"#9cf2e8","error-container":"#ffdad6","on-secondary":"#ffffff","on-secondary-fixed":"#141b2b","surface-variant":"#d3e4fe","surface-container":"#e5eeff","inverse-primary":"#80d5cb","on-tertiary-container":"#ffe5db","secondary":"#575e70","tertiary-container":"#9c573a","primary-container":"#0f766e","surface-container-highest":"#d3e4fe","outline-variant":"#bdc9c6","surface-dim":"#cbdbf5","primary":"#005c55","on-primary":"#ffffff","surface-tint":"#006a63","on-surface":"#0b1c30","primary-fixed-dim":"#80d5cb","tertiary":"#7f4025","secondary-container":"#d9dff5","inverse-on-surface":"#eaf1ff","surface":"#f8f9ff","secondary-fixed":"#dce2f7","surface-container-high":"#dce9ff","on-primary-container":"#a3faef","tertiary-fixed-dim":"#ffb598","on-tertiary-fixed-variant":"#72361b","on-surface-variant":"#3e4947","surface-container-lowest":"#ffffff","on-background":"#0b1c30","surface-container-low":"#eff4ff","secondary-fixed-dim":"#c0c6db","tertiary-fixed":"#ffdbce","on-primary-fixed-variant":"#00504a","on-tertiary":"#ffffff","on-tertiary-fixed":"#370e00","on-secondary-container":"#5c6274","background":"#f8f9ff","on-secondary-fixed-variant":"#404758","error":"#ba1a1a"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin":"1rem","space-sm":"0.5rem","space-xl":"2rem","gutter":"1rem","margin-panel":"1.5rem","space-md":"1rem","space-lg":"1.5rem","gutter-compact":"0.5rem","space-xs":"0.25rem"},"fontFamily":{"headline-xl":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"data-mono-sm":["JetBrains Mono"],"body-lg":["Inter"],"headline-lg":["Inter"],"label-md":["Inter"],"data-mono-lg":["JetBrains Mono"],"body-sm":["Inter"],"data-mono-md":["JetBrains Mono"]},"fontSize":{"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"data-mono-sm":["11px",{"lineHeight":"16px","fontWeight":"400"}],"body-lg":["15px",{"lineHeight":"22px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"data-mono-lg":["20px",{"lineHeight":"26px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"data-mono-md":["13px",{"lineHeight":"18px","fontWeight":"500"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[260px] bg-inverse-surface text-inverse-on-surface border-r border-outline-variant/30 z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="p-space-md border-b border-outline-variant/20"><div class="flex items-center gap-space-sm mb-space-xs"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm"><span class="material-symbols-outlined text-lg">directions_car</span></div><div class="flex flex-col"><span class="font-headline-md text-headline-md tracking-tight text-surface-container-lowest leading-none">DANGO</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Auto Diagnostics</span></div></div><div class="flex items-center justify-between mt-space-xs"><span class="font-data-mono-sm text-data-mono-sm text-outline-variant">Diagnóstico Automóvel</span><span class="font-data-mono-sm text-data-mono-sm text-primary-fixed-dim bg-primary-container/40 px-1.5 py-0.5 rounded">OBD-II</span></div><div class="mt-space-sm p-space-sm rounded-lg bg-surface-container-high/10 border border-outline-variant/20"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="font-label-sm text-label-sm text-surface-container-lowest font-bold tracking-wide">CONECTADO</span></div><div class="mt-1 font-data-mono-sm text-data-mono-sm text-outline-variant leading-tight truncate" title="OBDLink EX / USB-Serial / ISO 15765-4 CAN 11bit 500k">OBDLink EX · CAN 500k</div></div></div><nav class="flex flex-col gap-1 p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm"><a aria-current="page" class="flex items-center justify-between px-space-sm py-2 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">dashboard</span><span class="font-body-md text-body-md">Visão geral</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="connection" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">cable</span><span class="font-body-md text-body-md">Conexão</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="diagnostics" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">warning</span><span class="font-body-md text-body-md">Diagnóstico</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-error text-on-error">1 Ativo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="live-data" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">query_stats</span><span class="font-body-md text-body-md">Dados ao vivo</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="ai-analysis" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">smart_toy</span><span class="font-body-md text-body-md">Análise com IA</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="history" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">history</span><span class="font-body-md text-body-md">Histórico</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="simulator" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">science</span><span class="font-body-md text-body-md">Simulador</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-secondary-container text-on-secondary-container">Demo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">settings</span><span class="font-body-md text-body-md">Definições</span></div></a></nav></div><div class="p-space-sm border-t border-outline-variant/20 flex flex-col gap-space-xs"><div class="px-space-xs py-1 flex items-center justify-between font-data-mono-sm text-data-mono-sm text-outline-variant"><span class="">Porta:</span><span class="text-primary-fixed font-semibold">COM3 @ 115200</span></div><div class="flex items-center justify-between px-space-xs py-1"><span class="font-body-sm text-body-sm text-outline-variant">Link Ativo</span><button class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-on-error-container hover:bg-error hover:text-on-error transition-colors" type="button">Desconectar</button></div><div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/10 text-outline-variant"><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="design-system" href="#"><span class="material-symbols-outlined text-sm">palette</span> Design System</a><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="documentation" href="#"><span class="material-symbols-outlined text-sm">menu_book</span> Docs</a></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md min-w-0"><div class="flex items-center gap-space-sm px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 min-w-0"><span class="material-symbols-outlined text-primary text-xl">directions_car</span><div class="flex flex-col min-w-0"><span class="font-headline-md text-headline-md text-on-surface truncate leading-tight">Volkswagen Golf VII 1.4 TSI (2016)</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant leading-tight">VIN: WVWZZZAUZGW01****</span></div></div></div><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary-container text-on-primary-container font-label-md text-label-md"><span class="w-2 h-2 rounded-full bg-emerald-300"></span><span class="">SIMULAÇÃO</span><span class="font-label-sm text-label-sm text-primary-fixed ml-1">(Dados de demonstração)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/30 text-on-surface font-data-mono-md text-data-mono-md"><span class="text-tertiary-container font-bold">⚡</span><span class="">12.4 V</span><span class="font-label-sm text-label-sm text-primary font-semibold">(Normal)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant font-data-mono-sm text-data-mono-sm"><span class="">CAN 500k</span></div><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-md text-label-md font-bold"><span class="material-symbols-outlined text-base">error</span><span class="">MIL ATIVO (1 DTC)</span></div></div><div class="flex items-center gap-space-sm"><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Atualizar Telemetria" type="button"><span class="material-symbols-outlined text-xl">refresh</span></button><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Documentação" type="button"><span class="material-symbols-outlined text-xl">help_outline</span></button><div class="h-6 w-px bg-outline-variant/40 mx-1"></div><div class="flex items-center gap-space-sm pl-1"><div class="text-right hidden sm:flex sm:flex-col"><span class="font-headline-md text-body-md text-on-surface leading-tight">Oficina Central</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Porto · Técnico</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UNwIBFgNkdMJLkh2Kpr4HjBbMKzq0ZU-fScLsigHTm88Ck83s0hAGBq0QlIyEpeBP1VwtxKxmUn0omo0KZtJ1IyK-fJz5-Pb6A_u1ZscOXrEj-oeRFHuwqcumVKuK7gyzxd6WuuSjYtXz4MtEd3WfwxY78YRtkJllGkouLvcs9DrSe057EJ6uPFdeARFqx0d_OdrolUMjxmW4ICbila7jD67-eaqGh7J5dHuAk8jhkIi8_ETVbEoi7dA"></div></div></header><main class="relative pt-16 bg-background min-h-screen"><div class="max-w-7xl mx-auto p-6 md:p-8"><div class="flex flex-col w-full gap-space-lg">
+<!-- Operational Header Area -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs mb-1"><span class="font-label-sm text-label-sm text-primary uppercase tracking-wider font-semibold">Oficina Central · Box 03</span><span class="w-1 h-1 rounded-full bg-outline-variant"></span><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Sessão #PT-2024-8841</span></div><h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Visão Geral</h1></div>
+<!-- Quick Action Controls -->
+<div class="flex items-center gap-space-sm flex-wrap sm:flex-nowrap">
+<button class="p-2 h-9 rounded-lg bg-surface-container text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors flex items-center justify-center shadow-sm" id="telemetryToggleBtn" onclick="toggleTelemetryState()" title="Pausar Telemetria em Tempo Real" type="button">
+<span class="material-symbols-outlined text-lg" id="telemetryIcon">pause</span>
+</button>
+<button class="h-9 px-space-md rounded-lg bg-surface-container-low text-on-surface font-label-md text-label-md hover:bg-surface-container transition-colors flex items-center gap-1.5 shadow-sm" onclick="exportPdfSummary()" type="button">
+<span class="material-symbols-outlined text-base text-secondary">picture_as_pdf</span>
+<span class="">Exportar Resumo PDF</span>
+</button>
+<button class="h-9 px-space-md rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md hover:bg-primary transition-all flex items-center gap-2 shadow-sm font-semibold active:scale-[0.98]" onclick="triggerDeepScan()" type="button">
+<span class="material-symbols-outlined text-base">radar</span>
+<span class="">Iniciar Leitura Completa</span>
+</button>
+</div>
+</div>
+<!-- Real-Time Bay Banner Info -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-sm">
+<div class="p-3 bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">speed</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Ciclo de Condução</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface font-semibold">Parado / Bancada (0 km/h)</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary-container/20 text-primary-container font-semibold">CAN OK</span>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-xl">thermostat</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Temperatura do Óleo</span>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface font-semibold">92.4 °C (Estável)</span>
+</div>
+</div>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PID 0x5C</span>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-error text-xl">warning</span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Luz de Gestão do Motor</span>
+<span class="font-data-mono-sm text-data-mono-sm text-error font-semibold">MIL LIGADA (1 Alerta)</span>
+</div>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-error animate-ping"></span>
+</div>
+</div>
+<!-- Four Key Telemetry KPI Metric Cards -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- KPI 1: RPM -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between relative overflow-hidden"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-base">rotate_right</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase font-semibold">Regime do Motor</span></div><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PID 0x0C</span></div><div class="my-space-sm flex items-baseline justify-between"><div><span class="font-data-mono-lg text-data-mono-lg text-on-surface font-bold tracking-tight">780</span><span class="font-label-md text-label-md text-on-surface-variant ml-1">rpm</span></div><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary/10 text-primary font-semibold">Ralenti estável</span></div><div class="space-y-1"><div class="h-9 w-full"><svg class="w-full h-full text-primary" preserveAspectRatio="none" viewBox="0 0 160 36"><path d="M0,22 Q15,19 30,22 T60,21 T90,23 T120,20 T140,22 T160,21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path><circle cx="160" cy="21" fill="currentColor" r="3"></circle></svg></div><div class="flex justify-between items-center font-data-mono-sm text-data-mono-sm text-on-surface-variant"><span class="">Min: 760</span><span class="">Méd: 780</span><span class="">Máx: 810</span></div></div></div>
+<!-- KPI 2: ECT -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-base">device_thermostat</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase font-semibold">Refrigeração (ECT)</span></div><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PID 0x05</span></div><div class="my-space-sm flex items-baseline justify-between"><div><span class="font-data-mono-lg text-data-mono-lg text-on-surface font-bold tracking-tight">88</span><span class="font-label-md text-label-md text-on-surface-variant ml-1">°C</span></div><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary-container/20 text-primary-container font-semibold">Nominal (80-105°)</span></div><div class="space-y-1.5"><div class="h-2 w-full bg-surface-container rounded-full overflow-hidden flex"><div class="h-full bg-surface-container-highest" style="width: 20%"></div><div class="h-full bg-primary-container" style="width: 55%"></div><div class="h-full bg-error-container" style="width: 25%"></div></div><div class="flex justify-between font-data-mono-sm text-data-mono-sm text-on-surface-variant"><span class="">Frio (40°)</span><span class="text-on-surface font-semibold">88°C Atual</span><span class="">Alarme (110°)</span></div></div></div>
+<!-- KPI 3: Tensão Bateria / Alternador -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-base">bolt</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase font-semibold">Tensão do Sistema</span></div><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Pin 16 OBD</span></div><div class="my-space-sm flex items-baseline justify-between"><div><span class="font-data-mono-lg text-data-mono-lg text-on-surface font-bold tracking-tight">12.4</span><span class="font-label-md text-label-md text-on-surface-variant ml-1">V</span></div><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-emerald-100 text-emerald-800 font-semibold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Normal</span></div><div class="p-2 rounded bg-surface-container-low flex items-center justify-between font-data-mono-sm text-data-mono-sm text-on-surface-variant"><span class="">Bateria / Terminal OBD</span><span class="text-primary font-semibold">12.4 V Estável</span></div></div>
+<!-- KPI 4: MIL Status -->
+<div class="bg-surface-container-lowest p-space-md rounded-xl shadow-sm flex flex-col justify-between"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-error text-base">error</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase font-semibold">Lâmpada MIL</span></div><span class="font-data-mono-sm text-data-mono-sm text-error font-semibold">Mode 01 PID 01</span></div><div class="my-space-sm flex items-baseline justify-between"><div><span class="font-data-mono-lg text-data-mono-lg text-error font-bold tracking-tight">ACESO</span><span class="font-label-sm text-label-sm text-error font-bold ml-1 uppercase">(1 DTC)</span></div><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-error text-on-error font-bold">Alerta</span></div><div class="p-2 rounded bg-error-container text-on-error-container flex items-center justify-between font-data-mono-sm text-data-mono-sm"><span class="font-bold">DTC P0301 Ativo</span><span class="text-on-error-container underline cursor-pointer hover:opacity-80">Ver Freeze Frame</span></div></div>
+</section>
+<!-- Two Main Columns Layout: Operational Feed (2/3) + Diagnostics Context (1/3) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- LEFT COLUMN (8 Cols): DTC Highlight + Live 60s Telemetry Waveform -->
+<div class="lg:col-span-8 flex flex-col gap-space-lg">
+<!-- Active Fault Notification Card -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm">
+<div class="flex items-center justify-between mb-space-sm"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-base">rotate_right</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase font-semibold">Regime do Motor</span></div><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PID 0x0C</span></div><div class="my-space-sm flex items-baseline justify-between"><div><span class="font-data-mono-lg text-data-mono-lg text-on-surface font-bold tracking-tight">780</span><span class="font-label-md text-label-md text-on-surface-variant ml-1">rpm</span></div><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary/10 text-primary font-semibold">Ralenti estável</span></div><div class="space-y-1"><div class="h-9 w-full"><svg class="w-full h-full text-primary" preserveAspectRatio="none" viewBox="0 0 160 36"><path d="M0,22 Q15,19 30,22 T60,21 T90,23 T120,20 T140,22 T160,21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path><circle cx="160" cy="21" fill="currentColor" r="3"></circle></svg></div><div class="flex justify-between items-center font-data-mono-sm text-data-mono-sm text-on-surface-variant"><span class="">Min: 760</span><span class="">Méd: 780</span><span class="">Máx: 810</span></div></div></div>
+<!-- DTC Primary Focus Card -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col gap-space-sm"><div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2"><div class="flex items-center gap-space-sm"><span class="font-data-mono-lg text-data-mono-lg font-bold px-3 py-1 rounded bg-error text-on-error tracking-wider">P0301</span><div><span class="font-headline-md text-headline-md text-on-surface block">Falha de combustão no cilindro 1</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Cylinder 1 Misfire Detected · Powertrain (P-Code)</span></div></div><span class="self-start sm:self-center font-label-sm text-label-sm px-2 py-1 rounded bg-surface-container text-on-surface-variant font-bold">ESTADO: CONFIRMADO NA ECU</span></div><p class="font-body-md text-body-md text-on-surface-variant mt-1 leading-relaxed">Deteção de falha de combustão registada no cilindro 1. Possíveis causas comuns: velas de ignição, bobina, cablagem, perda pontual de compressão ou descalibração do injetor.</p><div class="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-space-xs font-data-mono-sm text-data-mono-sm text-on-surface"><div class="p-2 bg-surface-container-lowest rounded"><span class="text-on-surface-variant block font-label-sm text-label-sm">RPM Congeladas:</span><span class="font-bold">2.140 rpm</span></div><div class="p-2 bg-surface-container-lowest rounded"><span class="text-on-surface-variant block font-label-sm text-label-sm">Carga Motor:</span><span class="font-bold">48.2 %</span></div><div class="p-2 bg-surface-container-lowest rounded"><span class="text-on-surface-variant block font-label-sm text-label-sm">STFT Banco 1:</span><span class="font-bold text-error">+14.8 %</span></div><div class="p-2 bg-surface-container-lowest rounded"><span class="text-on-surface-variant block font-label-sm text-label-sm">Velocidade:</span><span class="font-bold">54 km/h</span></div></div><div class="flex items-center justify-end gap-space-sm pt-space-xs"><button class="h-9 px-space-md rounded-lg bg-surface-container-highest text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors flex items-center gap-1.5 font-medium" type="button"><span class="material-symbols-outlined text-base">troubleshoot</span><span class="">Rever Dados Freeze Frame</span></button><button class="h-9 px-space-md rounded-lg bg-primary-container text-on-primary-container font-label-md text-label-md hover:bg-primary transition-all flex items-center gap-1.5 font-semibold shadow-sm" type="button"><span class="material-symbols-outlined text-base">smart_toy</span><span class="">Executar Análise com IA</span></button></div></div>
+</section>
+<!-- Live 60-Second Telemetry Chart Waveform -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Telemetria Contínua (Janela de 60s)</h2>
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Taxa de Atualização CAN: 10 Hz · Amostragem PID Dinâmica</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<div class="flex items-center bg-surface-container rounded-lg p-0.5">
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded bg-surface-container-lowest text-on-surface font-semibold shadow-xs" type="button">60s</button>
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded text-on-surface-variant hover:text-on-surface" type="button">5m</button>
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded text-on-surface-variant hover:text-on-surface" type="button">15m</button>
+</div>
+<button class="p-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface" title="Estatísticas do Gráfico" type="button">
+<span class="material-symbols-outlined text-base">tune</span>
+</button>
+</div>
+</div>
+<!-- Legend and Live Indicators -->
+<div class="flex flex-wrap items-center gap-space-md font-label-sm text-label-sm"><div class="flex items-center gap-1.5"><span class="w-3 h-1 bg-primary rounded-full"></span><span class="text-on-surface font-medium">Regime RPM: <strong class="font-data-mono-sm text-data-mono-sm ml-1 text-primary">780 rpm</strong></span></div><div class="flex items-center gap-1.5"><span class="w-3 h-1 bg-tertiary-container rounded-full"></span><span class="text-on-surface font-medium">Carga Calculada: <strong class="font-data-mono-sm text-data-mono-sm ml-1 text-tertiary-container">18.4 %</strong></span></div><div class="flex items-center gap-1.5"><span class="w-3 h-1 bg-secondary rounded-full"></span><span class="text-on-surface font-medium">Velocidade VSS: <strong class="font-data-mono-sm text-data-mono-sm ml-1 text-secondary">0 km/h</strong></span></div></div>
+<!-- Inline Telemetry SVG Graph -->
+<div class="w-full bg-surface-container-low rounded-xl p-space-sm relative">
+<svg class="w-full h-44" preserveAspectRatio="none" viewBox="0 0 600 176">
+<defs>
+<linearGradient id="rpmGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#005c55" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#005c55" stop-opacity="0.0"></stop>
+</linearGradient>
+</defs>
+<!-- Horizontal Grid lines -->
+<line stroke="#d3e4fe" stroke-dasharray="2,3" stroke-width="0.8" x1="0" x2="600" y1="20" y2="20"></line>
+<line stroke="#d3e4fe" stroke-dasharray="2,3" stroke-width="0.8" x1="0" x2="600" y1="60" y2="60"></line>
+<line stroke="#d3e4fe" stroke-dasharray="2,3" stroke-width="0.8" x1="0" x2="600" y1="100" y2="100"></line>
+<line stroke="#d3e4fe" stroke-dasharray="2,3" stroke-width="0.8" x1="0" x2="600" y1="140" y2="140"></line>
+<!-- Area fill for RPM -->
+<polygon fill="url(#rpmGradient)" points="0,120 40,118 80,121 120,119 160,115 200,122 240,118 280,116 320,121 360,117 400,120 440,119 480,117 520,122 560,119 600,120 600,170 0,170"></polygon>
+<!-- Primary Waveform (RPM - Ralenti around 820) -->
+<polyline fill="none" points="0,120 40,118 80,121 120,119 160,115 200,122 240,118 280,116 320,121 360,117 400,120 440,119 480,117 520,122 560,119 600,120" stroke="#005c55" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2"></polyline>
+<!-- Secondary Waveform (Carga do Motor - ~18%) -->
+<polyline fill="none" points="0,146 40,147 80,145 120,148 160,146 200,147 240,145 280,146 320,147 360,145 400,146 440,147 480,145 520,146 560,147 600,146" stroke="#9c573a" stroke-dasharray="4,2" stroke-width="1.8"></polyline>
+<!-- Tertiary Waveform (Velocidade do Veículo - Linha horizontal no chão 0 km/h) -->
+<line stroke="#575e70" stroke-width="1.5" x1="0" x2="600" y1="168" y2="168"></line>
+<!-- Real-time playhead pin -->
+<line stroke="#005c55" stroke-dasharray="1,2" stroke-width="1" x1="560" x2="560" y1="10" y2="170"></line>
+<circle cx="560" cy="119" fill="#005c55" r="4" stroke="#ffffff" stroke-width="1.5"></circle>
+</svg>
+<div class="flex justify-between items-center px-1 pt-1 font-data-mono-sm text-data-mono-sm text-on-surface-variant">
+<span class="">-60 seg</span>
+<span class="">-45 seg</span>
+<span class="">-30 seg</span>
+<span class="">-15 seg</span>
+<span class="text-primary font-semibold">Tempo Real (0s)</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-data-mono-sm text-data-mono-sm"><div class="flex items-center justify-between text-on-surface-variant font-data-mono-sm text-data-mono-sm w-full"><span class="">Amostragem: 10 Hz (Tempo real)</span><details class="text-xs text-slate-500 cursor-pointer"><summary>Detalhes técnicos</summary><div class="mt-1 p-2 bg-surface-container rounded text-left font-data-mono-sm text-data-mono-sm space-y-0.5"><div class="">Filtro PID: 0x0C, 0x04, 0x0D (CAN ID: 0x7DF / Resp: 0x7E8)</div><div class="">Baudrate de enlace: 500 kbps · Latência média: 18ms</div></div></details></div></div>
+</section>
+<!-- Workshop Operational Note Component -->
+<div class="p-space-md rounded-xl bg-surface-container-high/40 flex items-start gap-space-sm">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">info</span>
+<div class="flex flex-col gap-1">
+<span class="font-headline-md text-headline-md text-on-surface">Diretiva de Ensaio Mecânico</span>
+<p class="font-body-md text-body-md text-on-surface-variant leading-normal">
+            Antes de limpar a memória de falhas com o comando Mode 04, certifique-se de recolher o oscilograma de corrente do primário da bobina do cilindro 1 para confirmação física do tempo de dwell.
+          </p>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (4 Cols): OBD-II Link Status + Recommended Actions + I/M Monitors -->
+<div class="lg:col-span-4 flex flex-col gap-space-lg">
+<!-- Hardware Link Status Card -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-base">rotate_right</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase font-semibold">Regime do Motor</span></div><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PID 0x0C</span></div><div class="my-space-sm flex items-baseline justify-between"><div><span class="font-data-mono-lg text-data-mono-lg text-on-surface font-bold tracking-tight">780</span><span class="font-label-md text-label-md text-on-surface-variant ml-1">rpm</span></div><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary/10 text-primary font-semibold">Ralenti estável</span></div><div class="space-y-1"><div class="h-9 w-full"><svg class="w-full h-full text-primary" preserveAspectRatio="none" viewBox="0 0 160 36"><path d="M0,22 Q15,19 30,22 T60,21 T90,23 T120,20 T140,22 T160,21" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path><circle cx="160" cy="21" fill="currentColor" r="3"></circle></svg></div><div class="flex justify-between items-center font-data-mono-sm text-data-mono-sm text-on-surface-variant"><span class="">Min: 760</span><span class="">Méd: 780</span><span class="">Máx: 810</span></div></div></div>
+<div class="divide-y divide-outline-variant/10 text-on-surface"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-base">device_thermostat</span><span class="font-label-sm text-label-sm text-on-surface-variant tracking-wider uppercase font-semibold">Refrigeração (ECT)</span></div><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">PID 0x05</span></div><div class="my-space-sm flex items-baseline justify-between"><div><span class="font-data-mono-lg text-data-mono-lg text-on-surface font-bold tracking-tight">88</span><span class="font-label-md text-label-md text-on-surface-variant ml-1">°C</span></div><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary-container/20 text-primary-container font-semibold">Nominal (80-105°)</span></div><div class="space-y-1.5"><div class="h-2 w-full bg-surface-container rounded-full overflow-hidden flex"><div class="h-full bg-surface-container-highest" style="width: 20%"></div><div class="h-full bg-primary-container" style="width: 55%"></div><div class="h-full bg-error-container" style="width: 25%"></div></div><div class="flex justify-between font-data-mono-sm text-data-mono-sm text-on-surface-variant"><span class="">Frio (40°)</span><span class="text-on-surface font-semibold">88°C Atual</span><span class="">Alarme (110°)</span></div></div></div>
+<button class="w-full mt-1 h-8 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-colors flex items-center justify-center gap-1.5 font-medium" type="button">
+<span class="material-symbols-outlined text-base">settings_ethernet</span>
+<span class="">Reconfigurar Parâmetros VCI</span>
+</button>
+</section>
+<!-- Action Directives Card -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-xl">assignment_turned_in</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Ações Recomendadas</h2>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Passo a Passo</span>
+</div>
+<ol class="space-y-2 mt-1">
+<li class="p-2.5 rounded-lg bg-surface-container-low flex items-start gap-2.5">
+<span class="w-5 h-5 rounded-full bg-primary-container text-on-primary-container font-data-mono-sm text-data-mono-sm flex items-center justify-center font-bold flex-shrink-0 mt-0.5">1</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Inspecionar Bobina e Vela (Cil. 1)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Inverter bobina com Cilindro 2 para validar migração do DTC.</span>
+</div>
+</li>
+<li class="p-2.5 rounded-lg bg-surface-container-low flex items-start gap-2.5">
+<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface font-data-mono-sm text-data-mono-sm flex items-center justify-center font-bold flex-shrink-0 mt-0.5">2</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Examinar Parâmetros Freeze-Frame</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Validar pressão do coletor e débito de combustível no momento exato do corte.</span>
+</div>
+</li>
+<li class="p-2.5 rounded-lg bg-surface-container-low flex items-start gap-2.5">
+<span class="w-5 h-5 rounded-full bg-surface-container-highest text-on-surface font-data-mono-sm text-data-mono-sm flex items-center justify-center font-bold flex-shrink-0 mt-0.5">3</span>
+<div class="flex flex-col">
+<span class="font-body-md text-body-md font-semibold text-on-surface">Teste de Compressão Relativa</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Descartar vedação de válvulas ou descalibração do injetor de injeção direta.</span>
+</div>
+</li>
+</ol>
+<button class="w-full mt-2 h-9 rounded-lg bg-surface-container-low hover:bg-surface-container text-primary font-label-md text-label-md transition-colors flex items-center justify-center gap-1 font-semibold" type="button">
+<span class="">Ver Freeze Frame Completo</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</section>
+<!-- I/M Readiness (Monitores de Emissões) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-sm"><div class="flex items-center justify-between"><div class="flex items-center gap-1.5"><span class="material-symbols-outlined text-primary text-xl">fact_check</span><h2 class="font-headline-md text-headline-md text-on-surface">Monitores de Emissões (I/M)</h2></div><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">Prontidão IPO</span></div><p class="font-body-sm text-body-sm text-on-surface-variant">Estado dos autodiagnósticos contínuos e não-contínuos para homologação ambiental:</p><div class="grid grid-cols-2 gap-2 mt-1"><div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col justify-between gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Misfire Monitor</span><div class="flex items-center justify-between"><span class="font-data-mono-sm text-data-mono-sm font-bold text-emerald-800">Concluído</span><span class="material-symbols-outlined text-base text-emerald-600">check_circle</span></div></div><div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col justify-between gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Fuel System</span><div class="flex items-center justify-between"><span class="font-data-mono-sm text-data-mono-sm font-bold text-emerald-800">Concluído</span><span class="material-symbols-outlined text-base text-emerald-600">check_circle</span></div></div><div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col justify-between gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Catalisador</span><div class="flex items-center justify-between"><span class="font-data-mono-sm text-data-mono-sm font-bold text-tertiary-container">Por concluir</span><span class="material-symbols-outlined text-base text-tertiary-container">hourglass_empty</span></div></div><div class="p-2.5 rounded-lg bg-surface-container-low flex flex-col justify-between gap-1"><span class="font-label-sm text-label-sm text-on-surface-variant uppercase">Sistema EVAP</span><div class="flex items-center justify-between"><span class="font-data-mono-sm text-data-mono-sm font-bold text-tertiary-container">Por concluir</span><span class="material-symbols-outlined text-base text-tertiary-container">hourglass_empty</span></div></div></div><div class="p-2 rounded bg-surface-container text-on-surface-variant font-data-mono-sm text-data-mono-sm flex items-center justify-between mt-1"><span class="">Resumo Prontidão:</span><span class="font-semibold text-on-surface">5 / 7 Concluídos</span></div></section>
+</div>
+</div>
+<!-- Operational Footer Bar -->
+<div class="p-space-md rounded-xl bg-surface-container-low flex flex-col sm:flex-row items-center justify-between gap-space-sm text-on-surface-variant"><div class="flex items-center gap-space-sm"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="font-data-mono-sm text-data-mono-sm">DANGO Auto Diagnostics • Dados de demonstração</span></div><div class="flex items-center gap-space-md font-label-sm text-label-sm text-on-surface-variant"><span class="">Sessão emulado OBD-II</span><span class="">Norma ISO 15765-4</span></div></div>
+</div>
+<script>
+  let isTelemetryRunning = true;
+
+  function toggleTelemetryState() {
+    isTelemetryRunning = !isTelemetryRunning;
+    const btn = document.getElementById('telemetryToggleBtn');
+    const icon = document.getElementById('telemetryIcon');
+
+    if (isTelemetryRunning) {
+      icon.textContent = 'pause';
+      btn.title = 'Pausar Telemetria em Tempo Real';
+      btn.classList.remove('bg-error-container', 'text-on-error-container');
+      btn.classList.add('bg-surface-container', 'text-on-surface-variant');
+    } else {
+      icon.textContent = 'play_arrow';
+      btn.title = 'Retomar Telemetria';
+      btn.classList.remove('bg-surface-container', 'text-on-surface-variant');
+      btn.classList.add('bg-error-container', 'text-on-error-container');
+    }
+  }
+
+  function exportPdfSummary() {
+    const originalText = event.currentTarget.innerText;
+    const button = event.currentTarget;
+    button.innerText = 'A Gerar PDF...';
+    setTimeout(() => {
+      button.innerHTML = '<span class="material-symbols-outlined text-base text-secondary">check</span><span>PDF Descarregado</span>';
+      setTimeout(() => {
+        button.innerHTML = '<span class="material-symbols-outlined text-base text-secondary">picture_as_pdf</span><span>Exportar Resumo PDF</span>';
+      }, 2500);
+    }, 900);
+  }
+
+  function triggerDeepScan() {
+    const button = event.currentTarget;
+    button.classList.add('opacity-75');
+    button.innerHTML = '<span class="material-symbols-outlined text-base animate-spin">refresh</span><span>A Efetuar Varrimento...</span>';
+    setTimeout(() => {
+      button.classList.remove('opacity-75');
+      button.innerHTML = '<span class="material-symbols-outlined text-base">radar</span><span>Leitura Atualizada!</span>';
+      setTimeout(() => {
+        button.innerHTML = '<span class="material-symbols-outlined text-base">radar</span><span>Iniciar Leitura Completa</span>';
+      }, 2000);
+    }, 1200);
+  }
+</script></div></main></div>
+
+</body></html>

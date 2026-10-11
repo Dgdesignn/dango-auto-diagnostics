@@ -1,5 +1,17 @@
 # Scanner Outo
 
+## Visual DANGO Auto Diagnostics
+
+A interface nativa Qt segue as exportações locais do Stitch em `design/stitch`:
+barra lateral, cabeçalho persistente e sete ecrãs funcionais, incluindo Visão
+geral. Fontes Inter/JetBrains Mono e ícones Material Outlined são locais,
+com licenças, sem dependência de CDNs. O modo compacto preserva controlos
+por rolagem e mantém foco visível.
+
+Sistema visual, adaptações funcionais e comandos das capturas:
+[docs/SISTEMA_VISUAL.md](docs/SISTEMA_VISUAL.md). Os serviços e os dois
+ambientes Python permanecem separados; navegar não inicia consultas.
+
 Aplicacao desktop de diagnostico automovel de Daniel Geraldo, em Python/PySide6. Esta fase implementa OBD-II generico com ELM327 e analise opcional por Gemini. Nao necessita de chave Gemini para ligar, consultar dados ou guardar sessoes.
 
 ## Abrir no ambiente actual

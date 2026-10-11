@@ -1,0 +1,641 @@
+<!DOCTYPE html><html class="h-full" lang="pt"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_dashboard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{"colors":{"inverse-surface":"#213145","on-primary-fixed":"#00201d","surface-bright":"#f8f9ff","on-error-container":"#93000a","outline":"#6e7977","on-error":"#ffffff","primary-fixed":"#9cf2e8","error-container":"#ffdad6","on-secondary":"#ffffff","on-secondary-fixed":"#141b2b","surface-variant":"#d3e4fe","surface-container":"#e5eeff","inverse-primary":"#80d5cb","on-tertiary-container":"#ffe5db","secondary":"#575e70","tertiary-container":"#9c573a","primary-container":"#0f766e","surface-container-highest":"#d3e4fe","outline-variant":"#bdc9c6","surface-dim":"#cbdbf5","primary":"#005c55","on-primary":"#ffffff","surface-tint":"#006a63","on-surface":"#0b1c30","primary-fixed-dim":"#80d5cb","tertiary":"#7f4025","secondary-container":"#d9dff5","inverse-on-surface":"#eaf1ff","surface":"#f8f9ff","secondary-fixed":"#dce2f7","surface-container-high":"#dce9ff","on-primary-container":"#a3faef","tertiary-fixed-dim":"#ffb598","on-tertiary-fixed-variant":"#72361b","on-surface-variant":"#3e4947","surface-container-lowest":"#ffffff","on-background":"#0b1c30","surface-container-low":"#eff4ff","secondary-fixed-dim":"#c0c6db","tertiary-fixed":"#ffdbce","on-primary-fixed-variant":"#00504a","on-tertiary":"#ffffff","on-tertiary-fixed":"#370e00","on-secondary-container":"#5c6274","background":"#f8f9ff","on-secondary-fixed-variant":"#404758","error":"#ba1a1a"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"margin":"1rem","space-sm":"0.5rem","space-xl":"2rem","gutter":"1rem","margin-panel":"1.5rem","space-md":"1rem","space-lg":"1.5rem","gutter-compact":"0.5rem","space-xs":"0.25rem"},"fontFamily":{"headline-xl":["Inter"],"label-sm":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"data-mono-sm":["JetBrains Mono"],"body-lg":["Inter"],"headline-lg":["Inter"],"label-md":["Inter"],"data-mono-lg":["JetBrains Mono"],"body-sm":["Inter"],"data-mono-md":["JetBrains Mono"]},"fontSize":{"headline-xl":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"600"}],"label-sm":["10px",{"lineHeight":"14px","letterSpacing":"0.04em","fontWeight":"600"}],"body-md":["13px",{"lineHeight":"18px","fontWeight":"400"}],"headline-md":["16px",{"lineHeight":"24px","fontWeight":"600"}],"data-mono-sm":["11px",{"lineHeight":"16px","fontWeight":"400"}],"body-lg":["15px",{"lineHeight":"22px","fontWeight":"400"}],"headline-lg":["20px",{"lineHeight":"28px","letterSpacing":"-0.01em","fontWeight":"600"}],"label-md":["12px",{"lineHeight":"16px","letterSpacing":"0.02em","fontWeight":"600"}],"data-mono-lg":["20px",{"lineHeight":"26px","fontWeight":"600"}],"body-sm":["12px",{"lineHeight":"16px","fontWeight":"400"}],"data-mono-md":["13px",{"lineHeight":"18px","fontWeight":"500"}]}}}};</script></head><body class="bg-background font-body-md text-on-surface antialiased"><aside class="fixed left-0 top-0 h-full w-[260px] bg-inverse-surface text-inverse-on-surface border-r border-outline-variant/30 z-50 flex flex-col justify-between select-none shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col"><div class="p-space-md border-b border-outline-variant/20"><div class="flex items-center gap-space-sm mb-space-xs"><div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container shadow-sm"><span class="material-symbols-outlined text-lg">directions_car</span></div><div class="flex flex-col"><span class="font-headline-md text-headline-md tracking-tight text-surface-container-lowest leading-none">DANGO</span><span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-wider">Auto Diagnostics</span></div></div><div class="flex items-center justify-between mt-space-xs"><span class="font-data-mono-sm text-data-mono-sm text-primary-fixed-dim bg-primary-container/40 px-1.5 py-0.5 rounded">OBD-II</span></div><div class="mt-space-sm p-space-sm rounded-lg bg-surface-container-high/10 border border-outline-variant/20"><div class="flex items-center gap-space-xs"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span class="font-label-sm text-label-sm text-surface-container-lowest font-bold tracking-wide">CONECTADO</span></div><div class="mt-1 font-data-mono-sm text-data-mono-sm text-outline-variant leading-tight truncate" title="OBDLink EX / USB-Serial / ISO 15765-4 CAN 11bit 500k">OBDLink EX · CAN 500k</div></div></div><nav class="flex flex-col gap-1 p-space-sm" data-active-classes="bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm"><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="overview" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">dashboard</span><span class="font-body-md text-body-md">Visão geral</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="connection" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">cable</span><span class="font-body-md text-body-md">Conexão</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="diagnostics" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">warning</span><span class="font-body-md text-body-md">Diagnóstico</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-error text-on-error">1 Ativo</span></a><a aria-current="page" class="flex items-center justify-between px-space-sm py-2 transition-colors bg-primary-container text-on-primary-container font-semibold rounded-lg shadow-sm" data-path="live-data" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">query_stats</span><span class="font-body-md text-body-md">Dados ao vivo</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="ai-analysis" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">smart_toy</span><span class="font-body-md text-body-md">Análise com IA</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="history" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">history</span><span class="font-body-md text-body-md">Histórico</span></div></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="simulator" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">science</span><span class="font-body-md text-body-md">Simulador</span></div><span class="px-1.5 py-0.5 font-label-sm text-label-sm rounded bg-secondary-container text-on-secondary-container">Demo</span></a><a class="flex items-center justify-between px-space-sm py-2 rounded-lg text-inverse-on-surface/80 hover:bg-surface-container-high/15 hover:text-surface-container-lowest transition-colors" data-path="settings" href="#"><div class="flex items-center gap-space-sm"><span class="material-symbols-outlined text-lg">settings</span><span class="font-body-md text-body-md">Definições</span></div></a></nav></div><div class="p-space-sm border-t border-outline-variant/20 flex flex-col gap-space-xs"><div class="px-space-xs py-1 flex items-center justify-between font-data-mono-sm text-data-mono-sm text-outline-variant"><span class="">Porta:</span><span class="text-primary-fixed font-semibold">COM3 @ 115200</span></div><div class="flex items-center justify-between px-space-xs py-1"><span class="font-body-sm text-body-sm text-outline-variant">Link Ativo</span><button class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-error-container text-on-error-container hover:bg-error hover:text-on-error transition-colors" type="button">Desconectar</button></div><div class="flex items-center justify-between pt-space-xs border-t border-outline-variant/10 text-outline-variant"><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="design-system" href="#"><span class="material-symbols-outlined text-sm">palette</span> Design System</a><a class="font-label-sm text-label-sm hover:text-surface-container-lowest transition-colors flex items-center gap-1" data-path="documentation" href="#"><span class="material-symbols-outlined text-sm">menu_book</span> Docs</a></div></div></aside><div class="pl-[260px]"><header class="fixed top-0 left-[260px] right-0 h-16 bg-surface-container-lowest border-b border-outline-variant/40 z-40 flex items-center justify-between px-space-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md min-w-0"><div class="flex items-center gap-space-sm px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 min-w-0"><span class="material-symbols-outlined text-primary text-xl">directions_car</span><div class="flex flex-col min-w-0"><span class="font-headline-md text-headline-md text-on-surface truncate leading-tight">Volkswagen Golf VII 1.4 TSI (2016)</span><span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant leading-tight">VIN: WVWZZZAUZGW01****</span></div></div></div><div class="hidden xl:flex items-center gap-space-xs"><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-primary-container text-on-primary-container font-label-md text-label-md"><span class="w-2 h-2 rounded-full bg-secondary-container"></span><span class="">SIMULAÇÃO (Dados de demonstração)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-high border border-outline-variant/30 text-on-surface font-data-mono-md text-data-mono-md"><span class="text-tertiary-container font-bold">⚡</span><span class="">12.4 V</span><span class="font-label-sm text-label-sm text-primary font-semibold">(Normal)</span></div><div class="flex items-center gap-1 px-2.5 py-1 rounded bg-surface-container-low border border-outline-variant/20 text-on-surface-variant font-data-mono-sm text-data-mono-sm"><span class="">CAN 500k</span></div><div class="flex items-center gap-1.5 px-2.5 py-1 rounded bg-error-container text-on-error-container font-label-md text-label-md font-bold"><span class="material-symbols-outlined text-base">error</span><span class="">MIL ATIVO (1 DTC)</span></div></div><div class="flex items-center gap-space-sm"><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Atualizar Telemetria" type="button"><span class="material-symbols-outlined text-xl">refresh</span></button><button class="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors" title="Documentação" type="button"><span class="material-symbols-outlined text-xl">help_outline</span></button><div class="h-6 w-px bg-outline-variant/40 mx-1"></div><div class="flex items-center gap-space-sm pl-1"><div class="text-right hidden sm:flex sm:flex-col"><span class="font-headline-md text-body-md text-on-surface leading-tight">Oficina Central</span><span class="font-label-sm text-label-sm text-on-surface-variant leading-tight">Porto · Técnico</span></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1UNwIBFgNkdMJLkh2Kpr4HjBbMKzq0ZU-fScLsigHTm88Ck83s0hAGBq0QlIyEpeBP1VwtxKxmUn0omo0KZtJ1IyK-fJz5-Pb6A_u1ZscOXrEj-oeRFHuwqcumVKuK7gyzxd6WuuSjYtXz4MtEd3WfwxY78YRtkJllGkouLvcs9DrSe057EJ6uPFdeARFqx0d_OdrolUMjxmW4ICbila7jD67-eaqGh7J5dHuAk8jhkIi8_ETVbEoi7dA"></div></div></header><main class="relative pt-16 bg-background min-h-screen"><div class="max-w-7xl mx-auto p-6 md:p-8"><div class="flex flex-col w-full gap-space-lg">
+<!-- Top Bar / Control Hub -->
+<div class="flex flex-col gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<div class="flex items-center gap-space-sm">
+<span class="w-2.5 h-2.5 rounded-full bg-primary animate-pulse"></span>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Dados ao vivo</h1>
+<span class="px-2 py-0.5 rounded bg-surface-container text-on-surface-variant font-data-mono-sm text-data-mono-sm">CAN ID 0x7E8</span>
+</div>
+
+</div>
+<!-- Action Buttons -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-surface-container-high hover:bg-surface-variant text-on-surface font-label-md text-label-md transition-colors shadow-sm" id="btnPauseStream" type="button">
+<span class="material-symbols-outlined text-base text-primary">pause_circle</span>
+<span id="pauseLabel" class="">Pausar Telemetria</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md transition-colors shadow-sm" id="btnRecordSession" type="button">
+<span class="w-2 h-2 rounded-full bg-error animate-ping"></span>
+<span class="">Gravar Sessão (CSV)</span>
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-on-primary-fixed/20 text-on-primary-container">00:04:12</span>
+</button>
+<button class="flex items-center gap-1 px-3 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-base">file_download</span>
+<span class="">Exportar Snapshot</span>
+</button>
+</div>
+</div>
+<!-- Parameter Filter & Streaming Metrics Bar -->
+<div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-sm pt-space-sm bg-surface-container-low p-space-sm rounded-lg">
+<div class="flex flex-wrap items-center gap-space-sm flex-1">
+<!-- Search Input -->
+<div class="relative min-w-[240px] max-w-sm flex-1">
+<span class="material-symbols-outlined absolute left-2.5 top-2 text-on-surface-variant text-lg">search</span>
+<input class="w-full pl-9 pr-3 py-1.5 bg-surface-container-lowest text-on-surface font-body-sm text-body-sm rounded-lg outline-none placeholder:text-outline focus:bg-surface-container-lowest" id="pidSearchInput" placeholder="Filtrar parâmetros (ex: RPM, STFT, 010C)..." type="text">
+</div>
+<!-- Sampling Rate Selector -->
+<div class="flex items-center gap-1.5 bg-surface-container-lowest px-2.5 py-1.5 rounded-lg text-on-surface">
+<span class="material-symbols-outlined text-base text-secondary">speed</span>
+<label class="font-label-sm text-label-sm text-on-surface-variant" for="sampleRateSelect">Taxa:</label>
+<select class="bg-transparent font-label-md text-label-md text-on-surface font-semibold outline-none cursor-pointer" id="sampleRateSelect">
+<option selected="" value="10hz">10 Hz (Alta frequência)</option>
+<option value="5hz">5 Hz (Equilibrado)</option>
+<option value="1hz">1 Hz (Baixa latência)</option>
+</select>
+</div>
+<!-- Filter toggles -->
+<div class="flex items-center gap-1">
+<button class="px-2.5 py-1 rounded bg-surface-container text-on-surface font-label-sm text-label-sm hover:bg-surface-container-high transition-colors" id="btnSelectAll" type="button">
+            Todos (14)
+          </button>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-primary font-label-sm text-label-sm shadow-sm hover:bg-surface-container transition-colors" id="btnActiveOnly" type="button">
+            Apenas Ativos (12)
+          </button>
+</div>
+</div>
+<!-- Live Stream Diagnostics -->
+<details class="text-xs text-slate-500 cursor-pointer font-data-mono-sm"><summary class="hover:text-primary font-semibold select-none">Detalhes técnicos</summary><div class="flex items-center gap-space-md pt-1"><div class="flex items-center gap-1"><span class="text-outline">Buffer:</span><span class="text-on-surface font-semibold">1.420 pacotes</span></div><div class="flex items-center gap-1"><span class="text-outline">Latência:</span><span class="text-primary font-semibold">14 ms</span></div><div class="flex items-center gap-1"><span class="text-outline">Perda:</span><span class="text-on-surface font-semibold">0.0%</span></div></div></details>
+</div>
+</div>
+<!-- Synchronized Time Trend Graphs (Last 60 Seconds) -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-space-md">
+<!-- Graph 1: Engine RPM & Vehicle Speed -->
+<div class="flex flex-col bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">show_chart</span>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Regime do Motor (RPM) e Velocidade</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Últimos 60 segundos com escala dupla calibrada</p>
+</div>
+</div>
+<div class="flex items-center gap-3 font-label-sm text-label-sm">
+<span class="flex items-center gap-1.5 text-primary">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span> RPM (0 - 5.000)
+          </span>
+<span class="flex items-center gap-1.5 text-secondary">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span> Velocidade (0 - 160 km/h)
+          </span>
+</div>
+</div>
+<!-- Chart Viewport -->
+<div class="relative w-full h-56 bg-surface-container-low rounded-lg p-2.5 overflow-hidden flex flex-col justify-between">
+<!-- Dual Y-Axis Markers -->
+<div class="absolute inset-0 flex justify-between pointer-events-none p-2 font-data-mono-sm text-data-mono-sm">
+<div class="flex flex-col justify-between text-primary font-semibold h-full opacity-80">
+<span class="">5000</span>
+<span class="">3750</span>
+<span class="">2500</span>
+<span class="">1250</span>
+<span class="">0</span>
+</div>
+<div class="flex flex-col justify-between text-secondary font-semibold h-full opacity-80 text-right">
+<span class="">160</span>
+<span class="">120</span>
+<span class="">80</span>
+<span class="">40</span>
+<span class="">0</span>
+</div>
+</div>
+<!-- Horizontal Guides -->
+<div class="absolute inset-x-12 inset-y-3 flex flex-col justify-between pointer-events-none opacity-20">
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+<div class="w-full h-px bg-outline"></div>
+</div>
+<!-- SVG Line Telemetry -->
+<svg class="w-full h-full relative z-10 px-8 py-2" preserveAspectRatio="none" viewBox="0 0 600 180">
+<defs>
+<linearGradient id="rpmGrad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#005c55" stop-opacity="0.28"></stop>
+<stop offset="100%" stop-color="#005c55" stop-opacity="0.0"></stop>
+</linearGradient>
+</defs>
+<!-- RPM Filled Area -->
+<polygon fill="url(#rpmGrad)" points="0,150 40,148 80,146 120,150 160,110 200,60 240,45 280,70 320,85 360,142 400,146 440,147 480,145 520,146 560,148 600,150 600,180 0,180"></polygon>
+<!-- RPM Polyline -->
+<polyline fill="none" points="0,150 40,148 80,146 120,150 160,110 200,60 240,45 280,70 320,85 360,142 400,146 440,147 480,145 520,146 560,148 600,150" stroke="#005c55" stroke-linejoin="round" stroke-width="2.5"></polyline>
+<!-- Speed Polyline (secondary) -->
+<polyline fill="none" points="0,180 40,180 80,180 120,178 160,160 200,140 240,115 280,95 320,105 360,140 400,175 440,180 480,180 520,180 560,180 600,180" stroke="#575e70" stroke-dasharray="4,2" stroke-width="2"></polyline>
+<!-- Active Reading Pulse Marker -->
+<circle cx="600" cy="150" fill="#005c55" r="4"></circle>
+<circle cx="600" cy="180" fill="#575e70" r="3.5"></circle>
+</svg>
+<!-- Time Stamps -->
+<div class="flex justify-between items-center px-10 pt-1 font-data-mono-sm text-data-mono-sm text-outline">
+<span class="">-60s</span>
+<span class="">-45s</span>
+<span class="">-30s</span>
+<span class="">-15s</span>
+<span class="text-primary font-bold">Agora (0s)</span>
+</div>
+</div>
+<!-- Quick Stats Footer -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-sm mt-space-xs text-on-surface">
+<div class="flex items-baseline justify-between px-3 py-1.5 rounded bg-surface-container">
+<span class="font-body-sm text-body-sm text-on-surface-variant">RPM Atual:</span>
+<span class="font-data-mono-lg text-data-mono-lg text-primary font-bold">780 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">rpm</span></span>
+</div>
+<div class="flex items-baseline justify-between px-3 py-1.5 rounded bg-surface-container">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Velocidade Atual:</span>
+<span class="font-data-mono-lg text-data-mono-lg text-secondary font-bold">0 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">km/h</span></span>
+</div>
+</div>
+</div>
+<!-- Graph 2: Fuel Trims (STFT vs LTFT) -->
+<div class="flex flex-col bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center justify-between pb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary-container text-xl">tune</span>
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface leading-tight">Ajustes de Combustível (STFT vs LTFT)</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant">+ %: Adição de combustível (Compensação) | - %: Remoção de combustível (Compensação)</p>
+</div>
+</div>
+<div class="flex items-center gap-3 font-label-sm text-label-sm">
+<span class="flex items-center gap-1.5 text-primary">
+<span class="w-2.5 h-2.5 rounded-full bg-primary"></span> Curto Prazo (STFT)
+          </span>
+<span class="flex items-center gap-1.5 text-tertiary-container">
+<span class="w-2.5 h-2.5 rounded-full bg-tertiary-container"></span> Longo Prazo (LTFT)
+          </span>
+</div>
+</div>
+<!-- Chart Viewport -->
+<div class="relative w-full h-56 bg-surface-container-low rounded-lg p-2.5 overflow-hidden flex flex-col justify-between">
+<!-- Center-Zero Y-Axis Markers -->
+<div class="absolute inset-0 flex justify-between pointer-events-none p-2 font-data-mono-sm text-data-mono-sm">
+<div class="flex flex-col justify-between text-on-surface-variant font-semibold h-full opacity-80">
+<span class="">+25%</span>
+<span class="">+12.5%</span>
+<span class="text-primary font-bold">0% Neutro</span>
+<span class="">-12.5%</span>
+<span class="">-25%</span>
+</div>
+<div class="flex flex-col justify-between text-outline text-right h-full"><span class="">+ % Adição</span><span></span><span class="text-on-surface font-semibold">0% Neutro</span><span></span><span class="">- % Remoção</span></div>
+</div>
+<!-- Center Neutral Reference Line (0%) -->
+<div class="absolute inset-x-8 top-1/2 -translate-y-1/2 h-0.5 bg-primary/40 pointer-events-none z-0"></div>
+<!-- SVG Line Telemetry -->
+<svg class="w-full h-full relative z-10 px-8 py-2" preserveAspectRatio="none" viewBox="0 0 600 180">
+<!-- Neutral Zero Horizon -->
+<line opacity="0.4" stroke="#005c55" stroke-dasharray="3,3" stroke-width="1" x1="0" x2="600" y1="90" y2="90"></line>
+<!-- STFT Fluctuating Line (+2% to +8% approx, scale 90 is 0%) -->
+<polyline fill="none" points="0,82 40,78 80,85 120,74 160,68 200,62 240,76 280,80 320,72 360,70 400,75 440,79 480,81 520,75 560,77 600,79" stroke="#005c55" stroke-width="2"></polyline>
+<!-- LTFT Smoother Line (+1.8% average) -->
+<polyline fill="none" points="0,84 40,84 80,84 120,83 160,82 200,81 240,81 280,82 320,82 360,83 400,83 440,83 480,83 520,83 560,83 600,83" stroke="#9c573a" stroke-linejoin="round" stroke-width="2.5"></polyline>
+<!-- Dynamic Pointers -->
+<circle cx="600" cy="79" fill="#005c55" r="4"></circle>
+<circle cx="600" cy="83" fill="#9c573a" r="4"></circle>
+</svg>
+<!-- Time Stamps -->
+<div class="flex justify-between items-center px-10 pt-1 font-data-mono-sm text-data-mono-sm text-outline">
+<span class="">-60s</span>
+<span class="">-45s</span>
+<span class="">-30s</span>
+<span class="">-15s</span>
+<span class="text-primary font-bold">Tempo Real</span>
+</div>
+</div>
+<!-- Quick Trims Indicators -->
+<div class="grid grid-cols-2 gap-space-sm pt-space-sm mt-space-xs text-on-surface">
+<div class="flex items-baseline justify-between px-3 py-1.5 rounded bg-surface-container">
+<span class="font-body-sm text-body-sm text-on-surface-variant">STFT Instantâneo:</span>
+<span class="font-data-mono-lg text-data-mono-lg text-primary font-bold">+3.1 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">%</span></span>
+</div>
+<div class="flex items-baseline justify-between px-3 py-1.5 rounded bg-surface-container">
+<span class="font-body-sm text-body-sm text-on-surface-variant">LTFT Médio:</span>
+<span class="font-data-mono-lg text-data-mono-lg text-tertiary-container font-bold">+1.8 <span class="font-body-sm text-body-sm font-normal text-on-surface-variant">%</span></span>
+</div>
+</div>
+</div>
+</div>
+<!-- State Clarification Banner -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm bg-surface-container-high/40 p-space-sm rounded-lg">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-lg">info</span>
+<span class="font-label-md text-label-md text-on-surface">Convenção de Status de Telemetria:</span>
+</div>
+<div class="flex flex-wrap items-center gap-space-md font-body-sm text-body-sm"><div class="flex items-center gap-1.5"><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary">Normal</span><span class="text-on-surface-variant">Fluxo operacional nominal</span></div><div class="flex items-center gap-1.5"><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-secondary-container text-on-secondary-container">Não suportado</span><span class="text-on-surface-variant">Máscara de bits da ECU indica PID não suportado</span></div><div class="flex items-center gap-1.5"><span class="px-2 py-0.5 rounded font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed">Sem dados</span><span class="text-on-surface-variant">Nenhum valor válido recebido na resposta OBD-II</span></div></div>
+</div>
+<!-- Live Data Table (High Density Workshop View) -->
+<div class="flex flex-col bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm bg-surface-container-lowest">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">table_rows</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">Sensores e Parâmetros OBD-II Ativos</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-data-mono-sm text-data-mono-sm text-on-surface-variant">14 PIDs Monitorizados</span>
+<button class="px-2.5 py-1 text-primary hover:bg-surface-container font-label-sm text-label-sm rounded transition-colors" id="btnResetLimits" type="button">
+          Redefinir Mín/Máx
+        </button>
+</div>
+</div>
+<!-- Table Container -->
+<div class="overflow-x-auto w-full">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-on-surface-variant font-label-sm text-label-sm uppercase tracking-wider">
+<th class="py-2.5 px-space-md">Parâmetro / Nome Técnico</th>
+<th class="py-2.5 px-space-sm">PID</th>
+<th class="py-2.5 px-space-md text-right">Valor Atual</th>
+<th class="py-2.5 px-space-sm text-center">Unidade</th>
+<th class="py-2.5 px-space-md text-right">Mínimo</th>
+<th class="py-2.5 px-space-md text-right">Máximo</th>
+<th class="py-2.5 px-space-md text-center">Estado Diagnóstico</th>
+<th class="py-2.5 px-space-sm text-center">Gráfico</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container/60 font-body-sm text-body-sm text-on-surface" id="telemetryTableBody">
+<!-- 1. Engine RPM -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="regime motor rpm 010c">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Regime do Motor <span class="font-normal text-on-surface-variant text-body-sm">(Engine RPM)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">010C</span>
+</td>
+<td class="py-2.5 px-space-md text-right"><span class="font-data-mono-md text-data-mono-md text-primary font-bold">780</span></td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">rpm</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">790</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">3.200</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-primary text-base cursor-pointer hover:opacity-80">ssid_chart</span>
+</td>
+</tr>
+<!-- 2. Vehicle Speed -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="velocidade veiculo speed 010d">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Velocidade do Veículo <span class="font-normal text-on-surface-variant text-body-sm">(Vehicle Speed)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">010D</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">0</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">km/h</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">0</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">85</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-primary text-base cursor-pointer hover:opacity-80">ssid_chart</span>
+</td>
+</tr>
+<!-- 3. Engine Coolant Temperature -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="temperatura liquido refrigeracao ect 0105 motor">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Temperatura do Líquido de Refrigeração <span class="font-normal text-on-surface-variant text-body-sm">(ECT)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">0105</span>
+</td>
+<td class="py-2.5 px-space-md text-right"><span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">88</span></td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">°C</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">21</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">92</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-secondary text-base cursor-pointer hover:text-primary">show_chart</span>
+</td>
+</tr>
+<!-- 4. Intake Air Temperature -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="temperatura ar admissao iat 010f">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Temperatura do Ar de Admissão <span class="font-normal text-on-surface-variant text-body-sm">(IAT)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">010F</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">28</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">°C</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">22</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">34</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-secondary text-base cursor-pointer hover:text-primary">show_chart</span>
+</td>
+</tr>
+<!-- 5. Calculated Engine Load -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="carga calculada motor engine load 0104">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Carga Calculada do Motor <span class="font-normal text-on-surface-variant text-body-sm">(Engine Load)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">0104</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">19.4</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">%</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">14.0</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">78.0</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-secondary text-base cursor-pointer hover:text-primary">show_chart</span>
+</td>
+</tr>
+<!-- 6. Throttle Position -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="posicao borboleta throttle position tps 0111">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Posição da Borboleta <span class="font-normal text-on-surface-variant text-body-sm">(Throttle Position)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">0111</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">14.2</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">%</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">12.0</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">82.0</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-secondary text-base cursor-pointer hover:text-primary">show_chart</span>
+</td>
+</tr>
+<!-- 7. Manifold Absolute Pressure -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="pressao absoluta coletor map 010b">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Pressão Absoluta do Coletor <span class="font-normal text-on-surface-variant text-body-sm">(MAP)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">010B</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">36</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">kPa</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">32</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">145</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-secondary text-base cursor-pointer hover:text-primary">show_chart</span>
+</td>
+</tr>
+<!-- 8. Mass Air Flow -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="fluxo massa ar maf 0110">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Fluxo de Massa de Ar <span class="font-normal text-on-surface-variant text-body-sm">(MAF)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">0110</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">2.84</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">g/s</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">2.10</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">48.00</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-secondary text-base cursor-pointer hover:text-primary">show_chart</span>
+</td>
+</tr>
+<!-- 9. Short Term Fuel Trim -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="ajuste combustivel curto prazo stft 0106">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Ajuste de Combustível a Curto Prazo <span class="font-normal text-on-surface-variant text-body-sm">(STFT Banco 1)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">0106</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-primary font-bold">+3.1</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">%</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">-4.2</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">+11.7</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-primary text-base cursor-pointer hover:opacity-80">ssid_chart</span>
+</td>
+</tr>
+<!-- 10. Long Term Fuel Trim -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="ajuste combustivel longo prazo ltft 0107">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Ajuste de Combustível a Longo Prazo <span class="font-normal text-on-surface-variant text-body-sm">(LTFT Banco 1)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">0107</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-tertiary-container font-bold">+1.8</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">%</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">-1.0</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">+4.2</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-primary text-base cursor-pointer hover:opacity-80">ssid_chart</span>
+</td>
+</tr>
+<!-- 11. Timing Advance -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="avanco ignicao timing advance 010e">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Avanço de Ignição <span class="font-normal text-on-surface-variant text-body-sm">(Timing Advance)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">010E</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">8.5</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">°</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">-2.0</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">34.0</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-secondary text-base cursor-pointer hover:text-primary">show_chart</span>
+</td>
+</tr>
+<!-- 12. Fuel Rail Pressure -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row" data-search="pressao rail combustivel common rail 0123">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface">
+              Pressão do Rail de Combustível <span class="font-normal text-on-surface-variant text-body-sm">(Direct Injection Rail)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-primary font-semibold">0123</span>
+</td>
+<td class="py-2.5 px-space-md text-right">
+<span class="font-data-mono-md text-data-mono-md text-on-surface font-bold">5.200</span>
+</td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-on-surface-variant">kPa</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">4.800</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-secondary">18.500</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-primary-container text-on-primary font-semibold">Normal</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-secondary text-base cursor-pointer hover:text-primary">show_chart</span>
+</td>
+</tr>
+<!-- 13. Exhaust Gas Temperature (Unsupported PID) -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row opacity-65" data-search="temperatura gases escape egt 013c nao suportado">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface-variant">
+              Temperatura dos Gases de Escape <span class="font-normal text-outline text-body-sm">(EGT Banco 1, Sensor 1)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-outline">013C</span>
+</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-outline">
+              --
+            </td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-outline">°C</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-outline">--</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-outline">--</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-secondary-container text-on-secondary-container" title="Não suportado pela máscara de bits da ECU standard">
+                Não suportado pela ECU
+              </span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-outline text-base opacity-40 cursor-not-allowed">block</span>
+</td>
+</tr>
+<!-- 14. AdBlue / DEF Tank Level (Supported bitmask, but No Sensor/Data Present) -->
+<tr class="hover:bg-surface-container-low transition-colors pid-row opacity-75" data-search="nivel adblue def ureia sem dados sensor">
+<td class="py-2.5 px-space-md font-headline-md text-body-md text-on-surface-variant">
+              Nível do Depósito de AdBlue / DEF <span class="font-normal text-outline text-body-sm">(Catalisador SCR)</span>
+</td>
+<td class="py-2.5 px-space-sm">
+<span class="font-data-mono-sm text-data-mono-sm px-1.5 py-0.5 rounded bg-surface-container text-outline">0185</span>
+</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-outline">
+              N/D
+            </td>
+<td class="py-2.5 px-space-sm text-center font-data-mono-sm text-data-mono-sm text-outline">%</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-outline">--</td>
+<td class="py-2.5 px-space-md text-right font-data-mono-sm text-data-mono-sm text-outline">--</td>
+<td class="py-2.5 px-space-md text-center">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm bg-tertiary-fixed text-on-tertiary-fixed font-semibold" title="Nenhum valor válido recebido na resposta OBD-II">Sem dados</span>
+</td>
+<td class="py-2.5 px-space-sm text-center">
+<span class="material-symbols-outlined text-outline text-base opacity-40 cursor-not-allowed">sensors_off</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer with Protocol Monospace Info -->
+<div class="px-space-md py-space-sm bg-surface-container-low flex flex-col md:flex-row items-center justify-between text-on-surface-variant font-data-mono-sm text-data-mono-sm gap-2"><details class="w-full text-xs text-slate-500 cursor-pointer font-data-mono-sm"><summary class="flex items-center justify-between hover:text-primary font-semibold select-none"><span class="">Amostragem Ativa: 10 leituras/seg por PID | Taxa de Baud: 500.000 bps</span><span class="text-primary">Detalhes técnicos ▼</span></summary><div class="flex flex-col md:flex-row items-center justify-between pt-2 border-t border-outline-variant/20 mt-1.5 text-on-surface-variant font-data-mono-sm"><span class="">Transmissão: ISO-TP (15765-2)</span><span class="">Checksum: OK</span><span class="">CAN ID: 0x7E8 (Standard Response)</span></div></details></div>
+</div>
+</div>
+<script>
+  (function() {
+    // Search / Filter parameter rows
+    const searchInput = document.getElementById('pidSearchInput');
+    const rows = document.querySelectorAll('.pid-row');
+    const btnActiveOnly = document.getElementById('btnActiveOnly');
+    const btnSelectAll = document.getElementById('btnSelectAll');
+    let activeOnlyState = false;
+
+    if (searchInput) {
+      searchInput.addEventListener('input', function(e) {
+        const query = e.target.value.toLowerCase().trim();
+        rows.forEach(row => {
+          const searchData = row.getAttribute('data-search') || '';
+          const matches = searchData.includes(query);
+          if (activeOnlyState) {
+            const isUnsupported = row.classList.contains('opacity-65') || row.classList.contains('opacity-75');
+            row.style.display = matches && !isUnsupported ? '' : 'none';
+          } else {
+            row.style.display = matches ? '' : 'none';
+          }
+        });
+      });
+    }
+
+    if (btnActiveOnly) {
+      btnActiveOnly.addEventListener('click', function() {
+        activeOnlyState = true;
+        btnActiveOnly.classList.replace('bg-surface-container-lowest', 'bg-primary-container');
+        btnActiveOnly.classList.replace('text-primary', 'text-on-primary');
+        btnSelectAll.classList.replace('bg-surface-container', 'bg-surface-container-lowest');
+
+        rows.forEach(row => {
+          const isUnsupported = row.classList.contains('opacity-65') || row.classList.contains('opacity-75');
+          row.style.display = isUnsupported ? 'none' : '';
+        });
+      });
+    }
+
+    if (btnSelectAll) {
+      btnSelectAll.addEventListener('click', function() {
+        activeOnlyState = false;
+        btnActiveOnly.classList.replace('bg-primary-container', 'bg-surface-container-lowest');
+        btnActiveOnly.classList.replace('text-on-primary', 'text-primary');
+        btnSelectAll.classList.replace('bg-surface-container-lowest', 'bg-surface-container');
+
+        if (searchInput) searchInput.value = '';
+        rows.forEach(row => {
+          row.style.display = '';
+        });
+      });
+    }
+
+    // Pause Stream Toggle button
+    const btnPause = document.getElementById('btnPauseStream');
+    const pauseLabel = document.getElementById('pauseLabel');
+    let isPaused = false;
+
+    if (btnPause && pauseLabel) {
+      btnPause.addEventListener('click', function() {
+        isPaused = !isPaused;
+        if (isPaused) {
+          pauseLabel.textContent = 'Retomar Telemetria';
+          btnPause.classList.replace('bg-surface-container-high', 'bg-tertiary-fixed');
+          btnPause.classList.add('text-on-tertiary-fixed');
+        } else {
+          pauseLabel.textContent = 'Pausar Telemetria';
+          btnPause.classList.replace('bg-tertiary-fixed', 'bg-surface-container-high');
+          btnPause.classList.remove('text-on-tertiary-fixed');
+        }
+      });
+    }
+
+    // Reset Min / Max flash interaction
+    const btnReset = document.getElementById('btnResetLimits');
+    if (btnReset) {
+      btnReset.addEventListener('click', function() {
+        btnReset.textContent = 'Valores redefinidos!';
+        setTimeout(() => {
+          btnReset.textContent = 'Redefinir Mín/Máx';
+        }, 1500);
+      });
+    }
+  })();
+</script></div></main></div>
+
+</body></html>
