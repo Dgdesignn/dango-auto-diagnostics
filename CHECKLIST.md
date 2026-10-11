@@ -107,3 +107,30 @@ Dados de sessoes dos testes ficam apenas em pastas temporarias; capturas em arti
 - [x] 64 testes aprovados, sem skips, incluindo 8 testes de descoberta/logging e 4 testes integrados do emulador.
 - [x] compileall, pip check e diff --check aprovados; sem chamadas Gemini reais nesta alteracao.
 - [ ] Instalacao de raiz noutro computador: instrucoes disponibilizadas, nao executada nesta validacao.
+
+## Simulador com estados
+
+- [x] API instalada 4.0.0 e documentacao oficial inspeccionadas; callbacks externos, sem editar site-packages.
+- [x] Estado isolado por instancia: causa, confirmados, pendentes, MIL, freeze, leituras e monitor misfire.
+- [x] healthy, rough_idle_p0301, multiple_dtcs, no_data, connection_loss e car original disponiveis.
+- [x] 04/44 por TCP real, com ATH/ATS; limpa registos sem reparar causa; modo 02 deixa de devolver freeze.
+- [x] Ciclos explicitos: pendente, confirmado/MIL/freeze; leitura nao avanca ciclos; resolver+limpar evita regressao.
+- [x] Reposicao, isolamento entre dois servidores reais e readiness incompleto apos limpeza validados.
+- [x] Painel Qt: selector, processo/portas, iniciar/parar, ciclo, resolver, repor e consultar estado.
+- [x] Ligacao ao processo gerido sempre classificada como simulacao; confirmacao externa e registos antigos preservados.
+- [x] Canal HTTP loopback autenticado, esquema estrito, tamanho/timeout limitados e sem comandos ECU inventados.
+- [x] Reset/mudanca desligam e invalidam dados geridos anteriores; perda torna leituras antigas desactualizadas.
+- [x] Porta ocupada e servidores externos preservados, inclusive ao fechar a janela.
+- [x] Encerramento normal, durante arranque e forçado por timeout testados; handle do filho proprio no Windows.
+- [x] Suite completa: 81 testes aprovados (64 existentes e 17 novos), sem ignorados na execucao local.
+- [x] Execucao final em 2026-10-11: 163,925 segundos; verificacao posterior sem emuladores de teste activos.
+- [x] Gemini exclusivamente simulado, incluindo origem, sintomas e leituras recentes; nenhuma chamada remota nova.
+- [x] Janela efectivamente aberta; responsividade e captura `artifacts/stateful-simulator.png` verificadas.
+- [x] compileall, pip check e diff --check aprovados; .env, bases locais, logs e capturas continuam ignorados.
+- [x] Nenhum commit, push, alteracao de autoria ou publicacao nesta tarefa.
+- [ ] USB/Bluetooth/Android/ECU fisica e Gemini remoto: nao validados nesta fase.
+- [ ] Linux/macOS e instalacao apenas por wheel: nao validados; painel local requer launchers do checkout.
+- [ ] Criterios de ECU real, monitores adicionais e captura fisica de freeze frame: fora deste modelo pedagogico.
+
+Comandos, roteiro e limites em `docs/SIMULADOR_ESTADOS.md`. Os resultados de
+seccoes anteriores sao historicos e nao substituem esta validacao.

@@ -25,6 +25,8 @@ from scanner_outo.persistence import SessionStore
 from scanner_outo.gemini import GeminiService, analysis_payload, AnalysisError, ANALYSIS_LABELS
 from scanner_outo.ui.workers import Worker
 from scanner_outo.ui.theme import apply_theme, STYLESHEET
+from scanner_outo.ui.simulator import SimulatorPanel
+from scanner_outo.models import Session
 
 
 class MainWindow(QMainWindow):
@@ -70,6 +72,11 @@ class MainWindow(QMainWindow):
         self._codes_tab()
         self._ai_tab()
         self._history_tab()
+        self.simulator = SimulatorPanel(self)
+        self.tabs.addTab(self.simulator, "Simulador local")
+        self.simulator.before_change.connect(self.change_simulator)
+        self.simulator.changed.connect(self.render_connection)
+        self.simulator.stopped.connect(self.simulator_stopped)
         self.setStyleSheet(STYLESHEET)
         self.apply_state(self.state)
         self.refresh_history()
@@ -321,6 +328,11 @@ class MainWindow(QMainWindow):
             self.statusBar().showMessage("Indique o host TCP.")
             return
         simulation = self.origin.currentData()
+        if (self.simulator.ready and self.simulator.owned and self.kind.currentText() == "TCP"
+                and self.host.text().strip().lower() in ("127.0.0.1", "localhost")
+                and self.port.value() == self.simulator.port.value()):
+            simulation = True
+            self.origin.setCurrentIndex(self.origin.findData(True))
         if simulation is False and self.kind.currentText() == "TCP" and self.host.text().strip().lower() in ("127.0.0.1", "localhost", "::1"):
             answer = QMessageBox.question(self, "Confirmar origem", "A ligação TCP é local, mas a origem seleccionada é Veículo real.\nConfirma que esta ligação representa um veículo real?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
             if answer != QMessageBox.StandardButton.Yes:
@@ -411,8 +423,7 @@ class MainWindow(QMainWindow):
             for key in ("analysis", "analysis_input"):
                 state[key] = self.state.get(key)
         self.state = state
-        origin = session_origin(state)
-        self.connection_status.setText(f"Sessão: {origin}   |   Adaptador: {state['adapter_status']}   |   ECU: {state['ecu_status']}")
+        self.render_connection()
         self.render_readings()
         support = "; ".join(f"{ecu}: {', '.join(f'{pid:02X}' for pid in pids)}" for ecu, pids in state["supported"].items())
         self.support_label.setText("PIDs anunciados (01 00): " + (support or "Suporte ainda não confirmado"))
@@ -422,7 +433,62 @@ class MainWindow(QMainWindow):
         self.freeze_label.setText("Freeze frame: " + state["freeze_status"] + (" | " + state["freeze_detail"] if state.get("freeze_detail") else "") + (" | " + json.dumps(state["freeze_codes"], ensure_ascii=False) if state["freeze_codes"] else ""))
         self.fill_table(self.freeze_table, [[r["name"], r["ecu"], self.value_text(r["value"]), r["unit"], r["status"]] for r in state["freeze_frame"]])
         self.clear_label.setText(state["clear_status"])
+        if self.owns_connection() and self.simulator.ready and not self.closing:
+            self.simulator.request("status")
         self.update_controls()
+
+    def owns_connection(self) -> bool:
+        connection = self.state.get("connection", {})
+        return (self.simulator.ready and self.simulator.owned and connection.get("kind") == "TCP"
+                and connection.get("host", "").lower() in ("localhost", "127.0.0.1")
+                and connection.get("port") == self.simulator.port.value())
+
+    def render_connection(self) -> None:
+        state = self.state
+        connection = state.get("connection", {})
+        management = "Simulador gerido" if self.owns_connection() else ("Servidor externo" if connection.get("kind") == "TCP" else "Ligação serial" if connection.get("kind") else "Sem ligação")
+        self.connection_status.setText(f"Sessão: {session_origin(state)}   |   {management}   |   Adaptador: {state['adapter_status']}   |   ECU: {state['ecu_status']}")
+
+    def change_simulator(self, action: str) -> None:
+        if self.closing or self.simulator.transition:
+            return
+        if action == "reset":
+            answer = QMessageBox.question(self, "Repor cenário", "Desligar a sessão gerida e invalidar os dados anteriores antes de repor o cenário?",
+                                          QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No, QMessageBox.StandardButton.No)
+            if answer != QMessageBox.StandardButton.Yes:
+                return
+        was_owned = self.owns_connection()
+        self.simulator.transition = True
+        self.simulator.update_controls()
+        if was_owned:
+            self.disconnect_adapter()
+        def proceed():
+            if self.closing:
+                return
+            if self.simulator.busy or (was_owned and (self.busy["diag"] or self.disconnect_pending)):
+                QTimer.singleShot(30, proceed)
+                return
+            if was_owned:
+                self.service.session = Session()
+                self.apply_state(self.service.session.to_dict())
+                self.symptoms.clear()
+                self.ai_input.clear()
+                self.ai_output.clear()
+            if action == "stop":
+                self.simulator.stop()
+            else:
+                self.simulator.request("reset")
+            self.simulator.transition = False
+            self.simulator.update_controls()
+        proceed()
+
+    def simulator_stopped(self, was_ready=False):
+        if self.closing:
+            QTimer.singleShot(0, self.close)
+        elif was_ready:
+            connection = self.state.get("connection", {})
+            if connection.get("kind") == "TCP" and connection.get("host", "").lower() in ("localhost", "127.0.0.1") and connection.get("port") == self.simulator.port.value():
+                self.disconnect_adapter()
 
     @staticmethod
     def local_time(timestamp: str | None) -> str:
@@ -587,9 +653,18 @@ class MainWindow(QMainWindow):
 
     def closeEvent(self, event: QCloseEvent) -> None:
         self.closing = True
+        self.simulator.setEnabled(False)
         self.poll_timer.stop()
         self.age_timer.stop()
         self.service.cancel.set()
+        if self.simulator.owned:
+            self.simulator.stop()
+            event.ignore()
+            return
+        if self.simulator.busy:
+            event.ignore()
+            QTimer.singleShot(50, self.close)
+            return
         if any(self.busy.values()):
             event.ignore()
             self.statusBar().showMessage("A encerrar operações; a chamada Gemini termina no seu timeout...")

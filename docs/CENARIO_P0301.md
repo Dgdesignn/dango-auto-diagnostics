@@ -11,8 +11,8 @@ descreve o dicionario `ObdMessage`, o carregamento externo por `merge` e a class
 ELM inventado para configurar avarias.
 
 - `scenarios/rough_idle.py`: dicionario externo com as respostas OBD e sintomas sugeridos.
-- `scripts/run_fault_emulator.py`: instancia `Elm`, conserva os comandos AT do pacote,
-  selecciona `rough_idle_p0301` e aplica o dicionario apenas a essa instancia.
+- `scripts/run_fault_emulator.py`: instancia `Elm`, conserva os comandos AT do pacote
+  e aplica callbacks de `scenarios/vehicle.py` apenas a essa instancia.
 - `tests/test_fault_scenario.py`: inicia o pacote real num processo separado e usa os
   transportes, descodificador, servicos e janela existentes, sem injectar DTCs na tabela.
 - `scripts/verify_fault_scenario.py`: executa os quatro testes integrados e termina apenas
@@ -29,7 +29,7 @@ Uma ECU responde como `7E8`, a pedidos fisicos `7E0` ou funcionais `7DF`.
 | Pedido | Resposta com cabecalho | Significado |
 | --- | --- | --- |
 | `0100` | `7E8 06 41 00 48 18 00 00` | Suporte dos PIDs 01, 05, 0C e 0D |
-| `0101` | `7E8 06 41 01 81 00 00 00` | MIL ligada e um DTC confirmado |
+| `0101` | `7E8 06 41 01 81 01 00 00` | MIL ligada, um DTC confirmado, monitor misfire modelado |
 | `010C` | `7E8 04 41 0C ...` | Ciclo 740, 680, 820, 710, 790 rpm |
 | `0105` | `7E8 03 41 05 80` | Temperatura de 88 graus Celsius |
 | `010D` | `7E8 03 41 0D 00` | Velocidade de 0 km/h |
@@ -137,7 +137,7 @@ A pasta irma `simulador_scanner/.venv` e descoberta automaticamente, sem caminho
 fixo para `C:\Py`. O quarto teste verifica o launcher `car` a partir de outra
 pasta e a localizacao centralizada dos logs.
 
-## Resultado da validacao
+## Resultado historico da primeira validacao
 
 - ELM327-emulator 4.0.0 inspeccionado e iniciado pelo launcher externo.
 - Tres testes dedicados aprovados em `127.0.0.1:35001`; porta 35000 ocupada
@@ -158,9 +158,15 @@ pasta e a localizacao centralizada dos logs.
 - Dados sinteticos de uma unica ECU, nao um modelo de combustao ou de um veiculo especifico.
 - RPM oscilante e P0301 sao coerentes para testar o fluxo, mas nao provam a causa mecanica.
 - Nao simula fuel trims, sensores de oxigenio, contadores de falhas, modo 06 ou codigos permanentes.
-- O PID 0101 so modela MIL e contagem; nao valida monitores de readiness reais.
+- O PID 0101 modela agora MIL, contagem e um monitor misfire simplificado; nao valida readiness fisico.
 - Freeze frame e fixo, nao captura automaticamente o instante de uma falha.
-- Limpeza 04 nao suportada: devolve `NO DATA`, sem falsa confirmacao de limpeza.
+- Limpeza 04 implementada: devolve `44`, limpa registos sem resolver a causa.
 - Nao testa USB, Bluetooth, Android, ECU real ou reparacao fisica.
 - Gemini simulado valida o fluxo e o pedido, nao o comportamento de um modelo real;
   a resposta real depende do modelo e deve ser revista por uma pessoa.
+
+## Evolucao com estados
+
+Os cenarios adicionais, controlo separado, interface, limpeza e reaparecimento
+estao documentados em [SIMULADOR_ESTADOS.md](SIMULADOR_ESTADOS.md).
+A validacao historica acima nao deve ser confundida com os resultados da suite actual.

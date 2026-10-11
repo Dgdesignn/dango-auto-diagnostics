@@ -150,6 +150,30 @@ A revisão da interface, origem das sessões e estados de consulta está documen
 
 A explicacao de cada camada esta em [docs/IMPLEMENTACAO.md](docs/IMPLEMENTACAO.md): UI, workers, servicos, transportes, ELM, OBD, Gemini, modelos, configuracao e persistencia.
 
-Ainda exigem validacao real: USB serial, Bluetooth SPP e simulador Android. Gemini foi validado com dados ficticios; nao foi feito um diagnostico mecanico de veiculo real. A limpeza esta implementada, mas o seu efeito no cenario real nao foi testado. Freeze frame funcional foi validado com respostas controladas e com o cenario personalizado P0301 no pacote instalado; o cenario original car nao o disponibilizou.
+Ainda exigem validacao real: USB serial, Bluetooth SPP e simulador Android. Gemini foi validado com dados ficticios; nao foi feito um diagnostico mecanico de veiculo real. A limpeza no simulador com estados e validada por TCP real; nao foi testada em ECU fisica. Freeze frame funcional foi validado com respostas controladas e com o cenario personalizado P0301 no pacote instalado; o cenario original car nao o disponibilizou.
 
-Esta fase nao inclui BLE, suporte universal a marcas, UDS completo, ISO-TP bruto, firmware, programacao de ECU, testes de actuadores, aplicacao movel ou previsao fiavel de avarias futuras. Formatos de resposta desconhecidos produzem erro explicito. Existem commits locais; o projecto nao foi publicado no GitHub nesta entrega.
+Esta fase nao inclui BLE, suporte universal a marcas, UDS completo, ISO-TP bruto, firmware, programacao de ECU, testes de actuadores, aplicacao movel ou previsao fiavel de avarias futuras. Formatos de resposta desconhecidos produzem erro explicito. Esta alteracao nao cria commits nem faz push.
+
+## Simulador com estados
+
+A nova área **Simulador local** permite iniciar/parar uma instância própria e
+seleccionar `healthy`, `rough_idle_p0301`, `multiple_dtcs`, `no_data`,
+`connection_loss` ou o `car` original. Mostra processo, portas e estado modelado;
+inclui **Novo ciclo**, **Resolver causa** e **Repor cenário**. Os controlos só
+gerem a instância iniciada pela janela; um servidor externo nunca é terminado.
+
+`04` limpa códigos, MIL, freeze frame e o monitor modelado, mas mantém a causa.
+Após limpar P0301, um ciclo cria um pendente e outro confirma-o. Resolver a causa
+e limpar evita o reaparecimento. Consultas normais não avançam ciclos.
+
+```powershell
+cd C:\Py\scanner_outo
+.\.venv\Scripts\python.exe scripts\run_app.py
+# Alternativa: emulador manual, numa porta livre
+.\.venv\Scripts\python.exe scripts\run_emulator.py --scenario rough_idle_p0301 --port 35000
+```
+
+Para mudar cenário na janela, pára o simulador, selecciona e inicia novamente.
+A reposição pede confirmação, desliga e invalida a sessão gerida anterior.
+Comandos de controlo manual, sequência completa, limites e testes:
+[docs/SIMULADOR_ESTADOS.md](docs/SIMULADOR_ESTADOS.md).
