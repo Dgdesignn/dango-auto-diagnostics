@@ -15,6 +15,7 @@ from scanner_outo.diagnostics.obd import (
 from scanner_outo.models import (
     ConnectionConfig, Session, Reading, TroubleCode, now_iso, NOT_QUERIED,
     QUERYING, EMPTY_CODES, UNAVAILABLE, QUERY_FAILED, COMPLETE, AVAILABLE, STALE,
+    PARTIAL, NO_USABLE_DATA, SUPPORT_UNKNOWN, UNSUPPORTED,
 )
 
 
@@ -69,11 +70,27 @@ class DiagnosticService:
         self.session.readings = []
         for ecu, supported in self.session.supported.items():
             for pid, definition in PIDS.items():
+                status, detail = self.support_state(ecu, pid)
                 self.session.readings.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu,
-                    status=NOT_QUERIED if pid in supported else "Não suportado",
-                    detail="" if pid in supported else "PID não anunciado nos mapas recebidos desta ECU."))
+                    status=status, detail=detail))
         if not self.session.readings:
-            self.session.readings = [Reading(f"{pid:02X}", d.name, d.unit, "Não identificada", status="Suporte não confirmado") for pid, d in PIDS.items()]
+            self.session.readings = [Reading(f"{pid:02X}", d.name, d.unit, "Não identificada", status=SUPPORT_UNKNOWN,
+                                            detail="Mapa 0100 não recebido; ECU não identificada.") for pid, d in PIDS.items()]
+
+    def support_state(self, ecu: str, pid: int, service: int = 1) -> tuple[str, str]:
+        required = ((pid - 1) // 32) * 32
+        suffix = "00" if service == 2 else ""
+        for base in range(0, required + 1, 32):
+            command = f"{service:02X}{base:02X}{suffix}"
+            query = self.session.support_queries.get(f"{service:02X}/{ecu}/{base:02X}", {})
+            if query.get("status") != COMPLETE:
+                return SUPPORT_UNKNOWN, f"Mapa {command} não confirmado: " + query.get("detail", "não recebido.")
+            pids = query["pids"]
+            if base == required:
+                return (NOT_QUERIED, "") if pid in pids else (UNSUPPORTED, f"PID não anunciado no mapa {command} desta ECU.")
+            if base + 32 not in pids:
+                return UNSUPPORTED, f"Mapa {command} recebido sem continuação; PID posterior não suportado."
+        return SUPPORT_UNKNOWN, "Mapa necessário não recebido."
 
     def query(self, command: str):
         self.check_cancel()
@@ -114,8 +131,18 @@ class DiagnosticService:
 
     def discover_support(self, service: int = 1) -> dict[str, list[int]]:
         suffix = "00" if service == 2 else ""
-        supported = {f.ecu: decode_supported(f, service=service)
-                     for f in self.query(f"{service:02X}00{suffix}")}
+        prefix = f"{service:02X}/"
+        self.session.support_queries = {key: value for key, value in self.session.support_queries.items() if not key.startswith(prefix)}
+        supported = {}
+        for frame in self.query(f"{service:02X}00{suffix}"):
+            supported[frame.ecu] = set()
+            key = f"{service:02X}/{frame.ecu}/00"
+            try:
+                pids = decode_supported(frame, service=service)
+                supported[frame.ecu].update(pids)
+                self.session.support_queries[key] = {"status": COMPLETE, "pids": sorted(pids)}
+            except ObdDecodeError as exc:
+                self.session.support_queries[key] = {"status": QUERY_FAILED, "detail": str(exc)}
         for base in (0x20, 0x40):
             targets = [ecu for ecu, pids in supported.items() if base in pids]
             groups = [targets] if targets and set(targets) == set(supported) else [[ecu] for ecu in targets]
@@ -124,17 +151,18 @@ class DiagnosticService:
                     frames = self.targeted_query(f"{service:02X}{base:02X}{suffix}", group, supported)
                 except ObdDecodeError as exc:
                     for ecu in group:
-                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": QUERY_FAILED, "detail": str(exc)}
+                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, "detail": str(exc)}
                     continue
                 for ecu in group:
                     try:
                         frame = next((f for f in frames if f.ecu == ecu), None)
                         if frame is None:
                             raise NoDataError("Esta ECU não respondeu ao mapa de suporte.")
-                        supported[ecu].update(decode_supported(frame, base, service))
-                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": COMPLETE}
+                        pids = decode_supported(frame, base, service)
+                        supported[ecu].update(pids)
+                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": COMPLETE, "pids": sorted(pids)}
                     except ObdDecodeError as exc:
-                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": QUERY_FAILED, "detail": str(exc)}
+                        self.session.support_queries[f"{service:02X}/{ecu}/{base:02X}"] = {"status": UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, "detail": str(exc)}
         return {ecu: sorted(pids) for ecu, pids in supported.items()}
 
     def poll(self, selected_pids=None) -> dict:
@@ -150,7 +178,8 @@ class DiagnosticService:
         for pid in PIDS:
             if pid not in (DEFAULT_PIDS if selected_pids is None else selected_pids):
                 continue
-            targets = [r for r in self.session.readings if r.pid == f"{pid:02X}" and r.status != "Não suportado"]
+            targets = [r for r in self.session.readings if r.pid == f"{pid:02X}"
+                       and pid in self.session.supported.get(r.ecu, [])]
             if not targets:
                 continue
             for reading in targets:
@@ -239,19 +268,19 @@ class DiagnosticService:
     def read_freeze_frame(self) -> dict:
         self.session.freeze_frame = []
         self.session.freeze_codes = {}
+        self.session.freeze_ecus = {}
         self.session.freeze_status = QUERYING
         self.session.freeze_detail = ""
         try:
             support = self.discover_support(service=2)
-            code_detail = ""
-            try:
-                for frame in self.query("020200"):
-                    payload = matching_payload(frame, 2, 2, freeze=True)
-                    if len(payload) != 2:
-                        raise ObdDecodeError("Codigo de freeze frame incompleto.")
-                    self.session.freeze_codes[frame.ecu] = decode_dtcs(type(frame)(frame.ecu, b"\x43" + payload), 3)
-            except ObdDecodeError as exc:
-                code_detail = f"; código associado indisponível: {exc}"
+            for ecu in support:
+                self.session.freeze_ecus[ecu] = {"code_query": {"status": NOT_QUERIED}}
+                for pid, definition in PIDS.items():
+                    status, detail = self.support_state(ecu, pid, service=2)
+                    if status == SUPPORT_UNKNOWN:
+                        self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu,
+                                                                  status=status, detail=detail))
+            self._read_freeze_codes(support)
             for pid, definition in PIDS.items():
                 targets = [ecu for ecu, pids in support.items() if pid in pids]
                 if not targets:
@@ -260,6 +289,11 @@ class DiagnosticService:
                 for group in groups:
                     try:
                         frames = self.targeted_query(f"02{pid:02X}00", group, support)
+                    except TransportError:
+                        for ecu in group:
+                            self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu,
+                                                                      status=QUERY_FAILED, detail="Ligação interrompida"))
+                        raise
                     except ObdDecodeError as exc:
                         for ecu in group:
                             self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status=UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, detail=str(exc)))
@@ -273,16 +307,79 @@ class DiagnosticService:
                             self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, value, AVAILABLE, now_iso()))
                         except ObdDecodeError as exc:
                             self.session.freeze_frame.append(Reading(f"{pid:02X}", definition.name, definition.unit, ecu, status=UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, detail=str(exc)))
-            self.session.freeze_status = COMPLETE if all(r.status == AVAILABLE for r in self.session.freeze_frame) else QUERY_FAILED
-            self.session.freeze_detail = "Frame 0" + code_detail
+            self._finish_freeze()
         except ObdDecodeError as exc:
             self.session.freeze_status = UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED
             self.session.freeze_detail = str(exc)
         except TransportError:
-            self.session.freeze_status = QUERY_FAILED
-            self.session.freeze_detail = "Ligação interrompida"
+            self._finish_freeze("Ligação interrompida; consultas restantes não concluídas.")
             raise
         return self.session.to_dict()
+
+    def _read_freeze_codes(self, support: dict) -> None:
+        for ecu, metadata in self.session.freeze_ecus.items():
+            status, detail = self.support_state(ecu, 2, service=2)
+            metadata["code_query"] = {"status": status, "detail": detail}
+        targets = [ecu for ecu, pids in support.items() if 2 in pids]
+        groups = [targets] if targets and set(targets) == set(support) else [[ecu] for ecu in targets]
+        for group in groups:
+            try:
+                frames = self.targeted_query("020200", group, support)
+            except ObdDecodeError as exc:
+                for ecu in group:
+                    self.session.freeze_ecus[ecu]["code_query"] = {"status": UNAVAILABLE if isinstance(exc, NoDataError) else QUERY_FAILED, "detail": str(exc)}
+                continue
+            for ecu in group:
+                try:
+                    frame = next((f for f in frames if f.ecu == ecu), None)
+                    if frame is None:
+                        raise NoDataError("Esta ECU não respondeu ao código associado.")
+                    payload = matching_payload(frame, 2, 2, freeze=True)
+                    if len(payload) != 2:
+                        raise ObdDecodeError("Código de freeze frame incompleto.")
+                    self.session.freeze_codes[ecu] = decode_dtcs(type(frame)(ecu, b"\x43" + payload), 3)
+                    self.session.freeze_ecus[ecu]["code_query"] = {"status": COMPLETE}
+                except ObdDecodeError as exc:
+                    self.session.freeze_ecus[ecu]["code_query"] = {"status": QUERY_FAILED if not isinstance(exc, NoDataError) else UNAVAILABLE, "detail": str(exc)}
+
+    def _finish_freeze(self, interruption: str = "") -> None:
+        for ecu, metadata in self.session.freeze_ecus.items():
+            readings = [r for r in self.session.freeze_frame if r.ecu == ecu]
+            valid = [r for r in readings if r.status == AVAILABLE and r.value is not None]
+            codes = self.session.freeze_codes.get(ecu, [])
+            maps = {key: q for key, q in self.session.support_queries.items() if key.startswith(f"02/{ecu}/")}
+            failures = [q for q in maps.values() if q["status"] != COMPLETE]
+            failures += [{"status": r.status, "detail": r.detail} for r in readings if r.status != AVAILABLE]
+            if metadata["code_query"]["status"] not in (COMPLETE, UNSUPPORTED):
+                failures.append(metadata["code_query"])
+            usable = bool(valid or codes)
+            if usable:
+                status = COMPLETE if valid and not failures and not interruption else PARTIAL
+            elif interruption or any(q["status"] == QUERY_FAILED for q in failures):
+                status = QUERY_FAILED
+            elif any(q["status"] == COMPLETE for q in maps.values()) or metadata["code_query"]["status"] == COMPLETE:
+                status = NO_USABLE_DATA
+            else:
+                status = UNAVAILABLE
+            detail = [f"Frame 0: {len(valid)} leituras válidas; " + ("código " + ", ".join(codes) if codes else "sem código associado utilizável")]
+            if not valid:
+                detail.append("Não foram obtidas leituras dos parâmetros reconhecidos pela aplicação; isto não confirma ausência de freeze frame no veículo.")
+            detail.extend(f"Mapa {key.split('/')[-1]}: {q.get('detail', q['status'])}" for key, q in maps.items() if q["status"] != COMPLETE)
+            if metadata["code_query"].get("detail"):
+                detail.append("Código associado: " + metadata["code_query"]["detail"])
+            detail.extend(f"PID {r.pid}: {r.detail or r.status}" for r in readings if r.status != AVAILABLE)
+            if interruption:
+                detail.append(interruption)
+            metadata.update(status=status, detail="; ".join(detail), timestamp=now_iso())
+        states = [m["status"] for m in self.session.freeze_ecus.values()]
+        usable = any(r.status == AVAILABLE and r.value is not None for r in self.session.freeze_frame) or any(self.session.freeze_codes.values())
+        if usable:
+            self.session.freeze_status = COMPLETE if states and all(s == COMPLETE for s in states) and not interruption else PARTIAL
+        elif interruption or QUERY_FAILED in states:
+            self.session.freeze_status = QUERY_FAILED
+        else:
+            self.session.freeze_status = NO_USABLE_DATA if NO_USABLE_DATA in states else UNAVAILABLE
+        self.session.freeze_detail = " | ".join(ecu + ": " + m["detail"] for ecu, m in self.session.freeze_ecus.items()) or interruption or "Nenhum dado de freeze frame recebido."
 
     def clear_codes(self) -> dict:
         if not self.session.simulation:
@@ -300,6 +397,7 @@ class DiagnosticService:
         self.session.clear_status = "Resposta 44 recebida; a verificar por releitura."
         self.session.freeze_frame = []
         self.session.freeze_codes = {}
+        self.session.freeze_ecus = {}
         self.session.freeze_status = "Dados anteriores a limpeza invalidados; voltar a consultar"
         self.read_codes()
         queries = self.session.code_queries

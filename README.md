@@ -75,6 +75,14 @@ O meio de transporte nao determina a origem: seleccione explicitamente `Veiculo 
 
 ## Dados e avarias
 
+A descoberta distingue **Suporte não confirmado** (mapa necessário falhou) de
+**Não suportado** (mapa válido ou continuação explicitamente ausente). Os PIDs
+desconhecidos não são consultados; os confirmados antes da falha continuam disponíveis.
+Freeze frame distingue consulta concluída, parcial, sem dados utilizáveis,
+indisponível e falha. Código isolado não é fotografia completa; dados válidos
+de outra ECU são preservados. Motivos seguem na janela, Histórico, JSON e Gemini.
+Critérios e testes: [docs/CORRECOES_REVISAO.md](docs/CORRECOES_REVISAO.md).
+
 A aplicação descobre suporte por ECU em `0100`, `0120` e `0140`, seguindo apenas os indicadores de continuação recebidos. Estão registados 12 parâmetros: carga, temperatura do líquido, correcções curta/longa do banco 1, MAP, RPM, velocidade, avanço, temperatura de admissão, MAF, borboleta e tensão do módulo. Num veículo real, consulta apenas o suporte anunciado. Cada leitura mostra unidade, instante, estado e motivo; `--` não é zero.
 
 Em **Dados > Parâmetros**, marque os PIDs a consultar; os três anteriores continuam seleccionados por defeito. **Leituras** mostra a tabela e **Gráfico** permite escolher um dos parâmetros seleccionados, com um eixo de unidade própria e linhas separadas por ECU. São conservadas no máximo 300 amostras por PID/ECU; falhas são lacunas. Parar conserva as amostras, e nova ligação/reposição começa novas séries. **Guardar sessão** continua a guardar uma fotografia, sem séries. Os gráficos usam `PySide6.QtCharts`, incluído na dependência PySide6 existente, sem instalação adicional.
@@ -131,6 +139,12 @@ aplicacao para carregar alteracoes ao `.env`. Uma chave partilhada deve ser
 substituida no `.env` por uma nova credencial, sem a incluir no codigo ou no Git.
 
 ## Historico e ficheiros locais
+
+Ao abrir uma sessão, o Histórico indica se a análise corresponde à fotografia,
+diverge, não pode ser verificada ou não existe. Novas fotografias incluem
+`captured_at`; a comparação usa esse instante, não a hora de abertura.
+Registos antigos não são reescritos. Respostas Gemini que terminam após mudar
+de ligação ficam identificadas como da sessão anterior, sem associação à nova.
 
 `Guardar sessao` guarda data, origem, estados, parametros, codigos, freeze frame, sintomas e analise com a fotografia enviada. O historico permite abrir um retrato separado e exportar JSON. Sessoes, cache e contagens locais ficam em `data/sessions.sqlite3`; pedidos/respostas ELM ficam em `data/scanner.log`, com rotacao. Estas pastas estao ignoradas no Git. `SCANNER_DATA_DIR` permite mudar a pasta de dados.
 

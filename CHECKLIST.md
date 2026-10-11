@@ -1,5 +1,24 @@
 # Progresso da primeira fase
 
+## Correccoes da revisao de 57c800e
+
+- [x] Suporte desconhecido distinto de nao suportado, por ECU e modo 01/02; motivo e mapa em falta apresentados.
+- [x] Apenas PIDs confirmados consultados; suporte anterior preservado e continuacao ausente conclusiva.
+- [x] Freeze frame completo/parcial/sem dados utilizaveis/indisponivel/falha, sem sucesso por lista vazia.
+- [x] Codigo isolado apresentado como parcial; respostas validas de outra ECU preservadas.
+- [x] Estados e detalhes em interface, Historico, exportacao e fotografia Gemini.
+- [x] Resposta atrasada identificada como sessao anterior, com cache/instantes; nova sessao guardada sem essa analise.
+- [x] Historico compara no instante guardado usando equivalencia existente; quatro mensagens e registos antigos preservados.
+- [x] 20 testes dedicados aprovados, sem ignorados, em 20,493 segundos; Qt, TCP controlado, SQLite temporario e Gemini simulado.
+- [x] Regressao completa: 113 testes aprovados, sem falhas/ignorados, em 326,703 segundos em 11/10/2026 (93 existentes e 20 novos).
+- [x] Janela Qt executada e capturas do Historico inspeccionadas; emuladores de teste em portas proprias, sem interferir com 35000.
+- [x] compileall, pip check e diff --check aprovados; .env, .venv, logs, bases locais e capturas ignorados pelo Git.
+- [x] Gemini exclusivamente simulado nesta correccao; dados locais e registos antigos preservados.
+- [ ] Hardware fisico, Android e Gemini remoto: validacao externa, nao executada nesta correccao.
+
+Roteiro e criterios em [docs/CORRECOES_REVISAO.md](docs/CORRECOES_REVISAO.md).
+As seccoes seguintes registam validacoes historicas.
+
 ## Entregue
 
 - [x] Inspeccao do projecto existente e preservacao do teste TCP funcional.

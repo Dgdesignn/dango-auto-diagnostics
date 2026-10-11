@@ -9,6 +9,10 @@ EMPTY_CODES = "Nenhum código devolvido"
 UNAVAILABLE = "Indisponível"
 QUERY_FAILED = "Falha de consulta"
 COMPLETE = "Consulta concluída"
+PARTIAL = "Consulta parcial"
+NO_USABLE_DATA = "Sem dados utilizáveis"
+SUPPORT_UNKNOWN = "Suporte não confirmado"
+UNSUPPORTED = "Não suportado"
 AVAILABLE = "Disponível"
 STALE = "Desactualizado"
 
@@ -76,6 +80,7 @@ class TroubleCode:
 @dataclass
 class Session:
     created_at: str = field(default_factory=now_iso)
+    captured_at: str | None = None
     simulation: bool = True
     connection: dict = field(default_factory=dict)
     adapter_status: str = "Desligado"
@@ -91,6 +96,7 @@ class Session:
     freeze_status: str = NOT_QUERIED
     freeze_detail: str = ""
     freeze_codes: dict[str, list[str]] = field(default_factory=dict)
+    freeze_ecus: dict = field(default_factory=dict)
     symptoms: str = ""
     analysis: dict | None = None
     analysis_input: dict | None = None

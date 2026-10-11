@@ -22,7 +22,7 @@ from scanner_outo.models import (
 )
 from scanner_outo.services import DiagnosticService
 from scanner_outo.persistence import SessionStore
-from scanner_outo.gemini import GeminiService, analysis_payload, analysis_fingerprint, AnalysisError, ANALYSIS_LABELS
+from scanner_outo.gemini import GeminiService, analysis_payload, analysis_fingerprint, saved_analysis_correspondence, AnalysisError, ANALYSIS_LABELS
 from scanner_outo.diagnostics.obd import PIDS, DEFAULT_PIDS
 from scanner_outo.diagnostics.timeseries import ReadingSeries
 from scanner_outo.ui.charts import ReadingChart
@@ -248,7 +248,7 @@ class MainWindow(QMainWindow):
         self.freeze_label = QLabel("Freeze frame: não consultado")
         self.freeze_label.setWordWrap(True)
         layout.addWidget(self.freeze_label)
-        self.freeze_table = self.table(["Parâmetro", "ECU", "Valor", "Unidade", "Disponibilidade"])
+        self.freeze_table = self.table(["Parâmetro", "ECU", "Valor", "Unidade", "Disponibilidade", "Detalhe"])
         layout.addWidget(self.freeze_table, 1)
         self.clear_label = QLabel()
         self.clear_label.setWordWrap(True)
@@ -469,6 +469,7 @@ class MainWindow(QMainWindow):
             self.service.read_freeze_frame()
             snapshot = self.service.session.to_dict()
             snapshot["symptoms"] = symptoms
+            snapshot["captured_at"] = datetime.now(timezone.utc).isoformat()
             session_id = self.store.save(snapshot, "Fotografia antes da limpeza")
             return snapshot, session_id
         def prepared(result):
@@ -505,7 +506,7 @@ class MainWindow(QMainWindow):
         query_text = " | ".join(f"{kind}: {q['status']}" + (f" ({q['detail']})" if q.get("detail") else "") for kind, q in state["code_queries"].items())
         self.codes_status.setText(query_text or "Codigos ainda não consultados")
         self.freeze_label.setText("Freeze frame: " + state["freeze_status"] + (" | " + state["freeze_detail"] if state.get("freeze_detail") else "") + (" | " + json.dumps(state["freeze_codes"], ensure_ascii=False) if state["freeze_codes"] else ""))
-        self.fill_table(self.freeze_table, [[r["name"], r["ecu"], self.value_text(r["value"]), r["unit"], r["status"]] for r in state["freeze_frame"]])
+        self.fill_table(self.freeze_table, [[r["name"], r["ecu"], self.value_text(r["value"]), r["unit"], r["status"], r.get("detail", "")] for r in state["freeze_frame"]])
         self.clear_label.setText(state["clear_status"])
         query = state.get("monitor_query", {"status": "Não consultado"})
         self.monitor_label.setText("MIL e prontidão: " + query["status"] + (" | " + query["detail"] if query.get("detail") else ""))
@@ -583,11 +584,13 @@ class MainWindow(QMainWindow):
 
     def snapshot(self) -> dict:
         snapshot = copy.deepcopy(self.state)
+        instant = datetime.now(timezone.utc)
+        snapshot["captured_at"] = instant.isoformat()
         snapshot["symptoms"] = self.symptoms.toPlainText()
         snapshot["freshness_seconds"] = max(10, self.interval.value() * 3)
         for reading in snapshot["readings"]:
             if reading["timestamp"] and reading["value"] is not None:
-                age = (datetime.now(timezone.utc) - datetime.fromisoformat(reading["timestamp"])).total_seconds()
+                age = (instant - datetime.fromisoformat(reading["timestamp"])).total_seconds()
                 if self.readings_paused or snapshot["adapter_status"] != "Ligado" or age > max(10, self.interval.value() * 3):
                     reading["stale"] = True
                     if reading["status"] == AVAILABLE:
@@ -650,9 +653,8 @@ class MainWindow(QMainWindow):
             self.last_analysis = result
             self.last_analysis_input = result.get("analysis_input", payload)
             self.last_analysis_session = session_token
-            if session_token != self.state["created_at"]:
-                self.ai_status.setText("Análise concluída para a sessão anterior; resultado não associado a esta ligação.")
-            else:
+            previous_session = session_token != self.state["created_at"]
+            if not previous_session:
                 self.state["analysis"] = result
                 self.state["analysis_input"] = self.last_analysis_input
             output = []
@@ -663,6 +665,9 @@ class MainWindow(QMainWindow):
             self.ai_output.setPlainText("\n".join(output))
             self.ai_views.setCurrentIndex(1)
             prefix = "Cache local; sem nova chamada. Tokens da resposta original: " if result["cache"] else "Análise concluída. Tokens informados pela API: "
+            if previous_session:
+                prefix = "Análise da sessão anterior; resultado não associado a esta ligação. " + (
+                    "Cache local; sem nova chamada. Tokens da resposta original: " if result["cache"] else "Tokens informados pela API: ")
             self.ai_status.setText(prefix + json.dumps(result["tokens"], ensure_ascii=False) + " | Captura: " + self.local_time(result.get("captured_at")) + " | Resposta original: " + self.local_time(result.get("analyzed_at")))
             self.ai_input.setPlainText(json.dumps(self.last_analysis_input, ensure_ascii=False, indent=2))
             self.render_analysis_validity()
@@ -702,6 +707,10 @@ class MainWindow(QMainWindow):
             summary = QLabel(f"{origin} | Sessão guardada | {self.local_time(snapshot['created_at'])}")
             summary.setWordWrap(True)
             layout.addWidget(summary)
+            correspondence = QLabel(saved_analysis_correspondence(snapshot))
+            correspondence.setObjectName("history_analysis_correspondence")
+            correspondence.setWordWrap(True)
+            layout.addWidget(correspondence)
             views = QTabWidget()
             layout.addWidget(views)
             readings = self.table(["Parâmetro", "ECU", "Valor", "Unidade", "Instante", "Estado"])
@@ -724,11 +733,12 @@ class MainWindow(QMainWindow):
             views.addTab(monitor, "MIL e prontidão")
             freeze_page = QWidget()
             freeze_layout = QVBoxLayout(freeze_page)
-            freeze_label = QLabel(snapshot["freeze_status"] + (" | " + snapshot["freeze_detail"] if snapshot.get("freeze_detail") else ""))
+            freeze_label = QLabel(snapshot["freeze_status"] + (" | " + snapshot["freeze_detail"] if snapshot.get("freeze_detail") else "")
+                                  + (" | " + json.dumps(snapshot["freeze_codes"], ensure_ascii=False) if snapshot.get("freeze_codes") else ""))
             freeze_label.setWordWrap(True)
             freeze_layout.addWidget(freeze_label)
-            freeze = self.table(["Parâmetro", "ECU", "Valor", "Unidade", "Estado"])
-            self.fill_table(freeze, [[r["name"], r["ecu"], self.value_text(r["value"]), r["unit"], r["status"]] for r in snapshot["freeze_frame"]])
+            freeze = self.table(["Parâmetro", "ECU", "Valor", "Unidade", "Estado", "Detalhe"])
+            self.fill_table(freeze, [[r["name"], r["ecu"], self.value_text(r["value"]), r["unit"], r["status"], r.get("detail", "")] for r in snapshot["freeze_frame"]])
             freeze_layout.addWidget(freeze)
             views.addTab(freeze_page, "Freeze frame")
             analysis_view = QPlainTextEdit()

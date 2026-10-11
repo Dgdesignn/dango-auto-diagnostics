@@ -83,6 +83,8 @@ def analysis_payload(session: dict, symptoms: str, captured_at: datetime | None 
         "freeze_frame": deepcopy(session["freeze_frame"]),
         "codigos_freeze_frame": deepcopy(session.get("freeze_codes", {})),
         "estado_freeze_frame": session["freeze_status"],
+        "detalhe_freeze_frame": session.get("freeze_detail", ""),
+        "estado_freeze_por_ecu": deepcopy(session.get("freeze_ecus", {})),
         "sintomas": symptoms.strip(),
     }
     payload["avisos"] = []
@@ -97,6 +99,23 @@ def analysis_payload(session: dict, symptoms: str, captured_at: datetime | None 
 
 def analysis_fingerprint(payload: dict) -> str:
     return hashlib.sha256(json.dumps(equivalent_data(payload), sort_keys=True).encode()).hexdigest()
+
+
+def saved_analysis_correspondence(session: dict) -> str:
+    if not session.get("analysis"):
+        return "Sem análise guardada"
+    sent = session.get("analysis_input")
+    try:
+        instant = datetime.fromisoformat(session["captured_at"])
+        if instant.tzinfo is None or not isinstance(sent, dict):
+            raise ValueError
+        expected = analysis_payload(session, session["symptoms"], captured_at=instant)
+        if not expected.keys() <= sent.keys():
+            raise ValueError
+        return ("Análise corresponde à fotografia guardada" if analysis_fingerprint(expected) == analysis_fingerprint(sent)
+                else "Dados da sessão diferem dos usados nesta análise")
+    except (KeyError, TypeError, ValueError, AnalysisError):
+        return "Correspondência não verificável"
 
 
 def official_generate(settings: Settings, model: str, payload: dict) -> dict:

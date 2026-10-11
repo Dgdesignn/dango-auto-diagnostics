@@ -95,6 +95,12 @@ de origem automática. Registos antigos sem MIL/instantes não ganham valores in
 
 ## Fotografia Gemini e cache
 
+As correcções posteriores de suporte, freeze frame, resposta da sessão anterior
+e correspondência no Histórico estão em [CORRECOES_REVISAO.md](CORRECOES_REVISAO.md).
+Novas fotografias guardam `captured_at` UTC; a comparação do Histórico usa
+esse instante e a equivalência da cache, preservando dados enviados e registos
+antigos. Sem metadados suficientes, a correspondência não é verificável.
+
 O pedido é uma cópia independente dos dados, com captura UTC, estado de ligação,
 idade em segundos e classificação por leitura. “Recente” exige valor disponível,
 instante conhecido, ligação activa e ausência de flag desactualizada. A janela usa
